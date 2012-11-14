@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="84">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f2" displayName="Header Files" projectFiles="true">
+      <itemPath>AddPointsToPathRequest.h</itemPath>
+      <itemPath>Color.h</itemPath>
+      <itemPath>DeletePathRequest.h</itemPath>
+      <itemPath>EndCurrentPathRequest.h</itemPath>
+      <itemPath>FileListAvailableRequest.h</itemPath>
+      <itemPath>InputData.h</itemPath>
+      <itemPath>NewPathRequest.h</itemPath>
+      <itemPath>OwnershipRequest.h</itemPath>
+      <itemPath>Painter.h</itemPath>
+      <itemPath>PalmRejection.h</itemPath>
+      <itemPath>Path.h</itemPath>
+      <itemPath>Point.h</itemPath>
+      <itemPath>Receiver.h</itemPath>
+      <itemPath>RedoRequest.h</itemPath>
+      <itemPath>Request.h</itemPath>
+      <itemPath>ScreenAreas.h</itemPath>
+      <itemPath>ScribbleArea.h</itemPath>
+      <itemPath>Sender.h</itemPath>
+      <itemPath>UI.h</itemPath>
+      <itemPath>UndoRequest.h</itemPath>
+      <itemPath>defines.h</itemPath>
+      <itemPath>main.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f3" displayName="Resource Files" projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="f1" displayName="Source Files" projectFiles="true">
+      <itemPath>AddPointsToPathRequest.cpp</itemPath>
+      <itemPath>Color.cpp</itemPath>
+      <itemPath>DeletePathRequest.cpp</itemPath>
+      <itemPath>EndCurrentPathRequest.cpp</itemPath>
+      <itemPath>FileListAvailableRequest.cpp</itemPath>
+      <itemPath>InputData.cpp</itemPath>
+      <itemPath>NewPathRequest.cpp</itemPath>
+      <itemPath>OwnershipRequest.cpp</itemPath>
+      <itemPath>Painter.cpp</itemPath>
+      <itemPath>PalmRejection.cpp</itemPath>
+      <itemPath>Path.cpp</itemPath>
+      <itemPath>Point.cpp</itemPath>
+      <itemPath>Receiver.cpp</itemPath>
+      <itemPath>RedoRequest.cpp</itemPath>
+      <itemPath>Request.cpp</itemPath>
+      <itemPath>ScreenAreas.cpp</itemPath>
+      <itemPath>ScribbleArea.cpp</itemPath>
+      <itemPath>Sender.cpp</itemPath>
+      <itemPath>UI.cpp</itemPath>
+      <itemPath>UndoRequest.cpp</itemPath>
+      <itemPath>main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>.</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt</commandLine>
+        </ccTool>
+        <linkerTool>
+          <linkerAddLib>
+            <pElem>/usr/local/lib</pElem>
+          </linkerAddLib>
+        </linkerTool>
+      </compileType>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <remote-sources-mode>LOCAL_SOURCES</remote-sources-mode>
+        <compilerSet>default</compilerSet>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>.</pElem>
+          </incDir>
+          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt</commandLine>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <linkerAddLib>
+            <pElem>/usr/local/lib</pElem>
+          </linkerAddLib>
+        </linkerTool>
+      </compileType>
+    </conf>
+  </confs>
+</configurationDescriptor>

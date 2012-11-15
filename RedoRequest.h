@@ -16,11 +16,6 @@ public:
     RedoRequest(int requestID, int page, int pathID);
     virtual ~RedoRequest();
 
-    static std::string const requestType()
-    {
-        return "RedoRequest";
-    }
-
     int getPage() const
     {
         return page;

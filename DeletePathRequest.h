@@ -16,11 +16,6 @@ public:
     DeletePathRequest(int requestID, int page, int pathID);
     virtual ~DeletePathRequest();
 
-    static std::string const requestType()
-    {
-        return "DeletePathRequest";
-    }
-
     int getPage() const
     {
         return page;

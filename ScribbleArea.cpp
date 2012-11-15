@@ -6,8 +6,6 @@
  */
 
 #include "ScribbleArea.h"
-#include "Point.h"
-#include "Path.h"
 
 ScribbleArea::ScribbleArea()
 {
@@ -16,33 +14,29 @@ ScribbleArea::ScribbleArea()
     penSize = 1.0;
     currentPage = 0;
 
-    /*   Point* point1 = new Point(0,0,0,100);
-       Point* point2 = new Point(0,0,100,100);
-    
-       std::vector<Point *> mPointsVector;
-
-       mPointsVector.push_back(point1);
-  
-       Path *path = new Path(mPointsVector.at(0), 0, penColor, penSize, 0, 1);
-
-       path->addPoint(point2);
-     */
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
-    /*pathsOnPage.at(currentPage).push_back(path);*/
 
+    //This is used for the paths received by the network that are not complete yet
+    pathOnPageNetwork.resize(5);
+
+    //Used to keep track of all the pending received requests (from the Scribble Server)
     mRequests = new Vector_Request();
+
+    //Used to lock the request vector (mRequests) when accessing it
     requestsMutex = new boost::mutex();
 
     //TODO server address and port should be variables that the user can change if needed
     std::string add = "127.0.0.1";
-    mySender = new Sender(add, 21223);
+    serverListeningPort = 21223;
+    mySender = new Sender(add, serverListeningPort);
 
     //TODO User will have to enter this (username and password)
     username = "greg";
     password = "pass";
-    
+
     //Vector_Request* mRequests, boost::mutex * requestsMutex, std::string username);
+    checkMyRequests = true;
     receiver = new Receiver(mRequests, requestsMutex, "greg");
     boost::thread(&ScribbleArea::NetworkRequestsAnalyzer, this);
 
@@ -200,6 +194,16 @@ void ScribbleArea::Draw()
 
 }
 
+bool compareByRequestID(Request *a, Request *b)
+{
+    return a->getRequestID() < b->getRequestID();
+}
+
+bool isNull(Request *a)
+{
+    return a == NULL;
+}
+
 /**
  * This function check and executes all the requests that have been received from the server
  */
@@ -207,17 +211,116 @@ void ScribbleArea::NetworkRequestsAnalyzer()
 {
     while ( checkMyRequests || mRequests->size() != 0 )
     {
+        //Removing all NULL from the vector and then sorting the vector by nextRequestID
+        mRequests->erase(std::remove_if(mRequests->begin(), mRequests->end(), isNull), mRequests->end());
         //sort the mRequests by requestID
+        std::sort(mRequests->begin(), mRequests->end(), compareByRequestID);
+        
+        std::cout<<"Requests in queue: "<<mRequests->size()<<std::endl;
         for ( uint i = 0; i < mRequests->size(); i++ )
         {
-
+            std::cout<<"ID: "<<mRequests->at(i)->getRequestID()<<"  type:  "<<mRequests->at(i)->getRequestType()<<std::endl;
         }
-        //if the first request in the queue has the nextRequestID then execute it
-        //increase nextRequestID
+        
+        for ( uint i = 0; i < mRequests->size(); i++ )
+        {
+            if ( mRequests->at(i)->getRequestID() == nextRequestID )
+            {
+                //Determine request type and act upon it
+                switch ( mRequests->at(i)->getRequestType() )
+                {
+                    case Request::ADDPOINTS:
+                    {
+                        std::cout << " ADDPOINTS" << std::endl;
+                        //((AddPointsToPathRequest)mRequests->at(i))->
+                        break;
+                    }
+                    case Request::NEWPATH:
+                    {
+                        std::cout << " NEWPATH" << std::endl;
+                        
+                        Color color = ( ( NewPathRequest* ) mRequests->at(i) )->getColor();
+                        int page = ( ( NewPathRequest* ) mRequests->at(i) )->getPage();
+                        int pathID = ( ( NewPathRequest* ) mRequests->at(i) )->getPathID();
+                        int width = ( ( NewPathRequest* ) mRequests->at(i) )->getWidth();
+                        bool active = ( ( NewPathRequest* ) mRequests->at(i) )->isActive();
+                        bool mode = ( ( NewPathRequest* ) mRequests->at(i) )->isMode();
+
+                        //new Path
+                        //(Point* point, int mode, Color color, int width, int id, bool fin, bool active
+
+
+                        Path * path = new Path( mode, color, width, pathID, active);
+
+                        pathOnPageNetwork.at(page) = path;
+
+
+                        break;
+                    }
+                    case Request::ENDPATH:
+                    {
+                        std::cout << " ENDPATH" << std::endl;
+                        break;
+                    }
+                    case Request::DELETEPATH:
+                    {
+                        std::cout << " DELETEPATH" << std::endl;
+                        break;
+                    }
+                    case Request::OWNERSHIP:
+                    {
+                        std::cout << " OWNERSHIP" << std::endl;
+                        break;
+                    }
+                    case Request::RELEASEOWNERSHIP:
+                    {
+                        std::cout << " RELEASEOWNERSHIP" << std::endl;
+                        break;
+                    }
+                    case Request::REDO:
+                    {
+                        std::cout << " REDO" << std::endl;
+                        break;
+                    }
+                    case Request::UNDO:
+                    {
+                        std::cout << "UNDO " << std::endl;
+                        break;
+                    }
+                    case Request::FILELIST:
+                    {
+                        std::cout << " FILELIST" << std::endl;
+                        break;
+                    }
+                    case Request::LOGIN:
+                    {
+                        std::cout << " LOGIN" << std::endl;
+                        break;
+                    }
+                    case Request::LOGOUT:
+                    {
+                        std::cout << " LOGOUT" << std::endl;
+                        break;
+                    }
+                    default:
+                    {
+                        std::cout << "SHOULD NEVER GET HERE!!!!!" << std::endl;
+                    }
+
+                }
+                std::cout << "In request type " << mRequests->at(i)->getRequestType() << "    " << mRequests->at(i)->getRequestID() << std::endl;
+                nextRequestID++;
+
+                //Deleting the request and then setting it to NULL so that it can be removed from the vector at the next run
+                delete mRequests->at(i);
+                mRequests->at(i) = NULL;
+            }
+        }
         //repeat the 2 above steps until either all requests are met or the nextRequestID does not match the ID of the next request in the queue
 
         //Repeat the requests each 200 milliseconds
-        boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+        //std::cout<<"NetworkRequestsAnalyzer"<<std::endl;
+        boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
 
     }
 }
@@ -240,7 +343,7 @@ void ScribbleArea::SendTests()
     mPoints.push_back(m3);
     mPoints.push_back(m4);
 
-    mySender->NewPath(3, true, 34567, true, 0);
+    mySender->NewPath(3, true, 34567, true, 0, 1);
     mySender->AddPoints(3, 4, mPoints);
     mySender->EndPath(3);
     mySender->Logout();

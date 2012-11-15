@@ -15,6 +15,7 @@
  * @param width The width of the pen
  * @param id A unique ID representing the path
  * @param fin Is the point final (presently not in use but could be used for palm correction algorithm)
+ * @param active This is used to know if this path is active or not
  * 
  * @return A Path object is created
  * 
@@ -27,13 +28,18 @@
  * 
  * The vector of *Points represents the actual path. Since it is a vector of pointers it needs to be iterated through in to delete all the Point objects
  */
-Path::Path(Point* point, int mode, Color color, int width, int id, bool fin) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(id), active(true), final(fin), totalLength(0)
+Path::Path(Point* point, int mode, Color color, int width, int id, bool fin/*, bool active*/) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(id), active(active), final(fin), totalLength(0)
 {
     mX = point->getX();
     mY = point->getY();
     mPointsVector.push_back(point);
     area = new ScreenAreas();
     area->set(point->getColumn(), point->getRow());
+}
+
+Path::Path(int mode, Color color, int width, int ID, bool active) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(ID), active(active)
+{
+
 }
 
 /** Paths Copy constructor
@@ -57,7 +63,7 @@ Path::Path(const Path& orig) : WriteEraseMode(orig.WriteEraseMode), myPenWidth(o
  */
 Path::~Path()
 {
-    for (uint i = 0; i < mPointsVector.size(); i++)
+    for ( uint i = 0; i < mPointsVector.size(); i++ )
     {
         delete mPointsVector[i];
     }
@@ -213,7 +219,7 @@ inline int Path::sqrt(const int x)
         float x;
     } u;
     u.x = x;
-    u.i = (1 << 29) + (u.i >> 1) - (1 << 22);
+    u.i = ( 1 << 29 ) + ( u.i >> 1 ) - ( 1 << 22 );
     return u.x;
 }
 

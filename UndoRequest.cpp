@@ -7,7 +7,7 @@
 
 #include "UndoRequest.h"
 
-UndoRequest::UndoRequest(int request, int page, int pathID) : Request(request)
+UndoRequest::UndoRequest(int request, int page, int pathID) : Request(request, Request::UNDO)
 {
     this->page = page;
     this->pathID = pathID;

@@ -7,7 +7,7 @@
 
 #include "AddPointsToPathRequest.h"
 
-AddPointsToPathRequest::AddPointsToPathRequest(int request, int pathID, int numberOfPoints, std::string points): Request(request)
+AddPointsToPathRequest::AddPointsToPathRequest(int request, int pathID, int numberOfPoints, std::string points): Request(request,Request::ADDPOINTS)
 {
     this->pathID=pathID;
     this->numberOfPoints=numberOfPoints;

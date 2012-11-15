@@ -189,7 +189,7 @@ void Sender::DownloadFile(std::string filename)
  * @param active
  * @param page
  */
-void Sender::NewPath(int pathID, bool mode, int color, bool active, int page)
+void Sender::NewPath(int pathID, bool mode, int color, bool active, int page, int width)
 {
     //creating New Path request
     std::string toSend = NumberToString(NEW_PATH);
@@ -214,6 +214,9 @@ void Sender::NewPath(int pathID, bool mode, int color, bool active, int page)
     toSend += separator;
 
     toSend += NumberToString(page);
+    toSend += separator;
+    
+    toSend += NumberToString(width);
     toSend += separator;
 
     //std::cout << "NewPath: " << toSend << std::endl;

@@ -17,10 +17,6 @@ public:
     AddPointsToPathRequest(int requestID, int pathID, int numberOfPoints, std::string Points);
     virtual ~AddPointsToPathRequest();
 
-    static std::string const requestType()
-    {
-        return "AddPointsToPathRequest";
-    }
     std::string getPoints() const
     {
         return points;

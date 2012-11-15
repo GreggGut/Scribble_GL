@@ -7,7 +7,7 @@
 
 #include "RedoRequest.h"
 
-RedoRequest::RedoRequest(int request, int page, int pathID) : Request(request)
+RedoRequest::RedoRequest(int request, int page, int pathID) : Request(request, Request::REDO)
 {
     this->page = page;
     this->pathID = pathID;

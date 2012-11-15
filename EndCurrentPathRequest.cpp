@@ -7,7 +7,7 @@
 
 #include "EndCurrentPathRequest.h"
 
-EndCurrentPathRequest::EndCurrentPathRequest(int request, int pathID):Request(request)
+EndCurrentPathRequest::EndCurrentPathRequest(int request, int pathID):Request(request, Request::ENDPATH)
 {
     this->pathID=pathID;
 }

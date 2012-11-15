@@ -23,6 +23,7 @@
 #include <boost/thread/mutex.hpp>
 
 #include "Sender.h"
+#include "Color.h"
 
 #include "Request.h"
 #include "NewPathRequest.h"
@@ -31,6 +32,10 @@
 #include "UndoRequest.h"
 #include "RedoRequest.h"
 #include "DeletePathRequest.h"
+#include "LogoutRequest.h"
+#include "OwnershipRequest.h"
+#include "FileListAvailableRequest.h"
+#include "LoginRequest.h"
 
 class Receiver
 {
@@ -38,6 +43,7 @@ class Receiver
 public:
     Receiver(Vector_Request* mRequests, boost::mutex * requestsMutex, std::string username); // mRequests);
     virtual ~Receiver();
+
     int GetMListeningPort() const
     {
         return mListeningPort;
@@ -57,7 +63,7 @@ private:
     int mListeningPort;
     int sockfd;
     int newsockfd;
-    bool loggedIn;
+    //bool loggedIn;
     bool hasOwnership;
     int nextRequestID;
 
@@ -65,7 +71,7 @@ private:
     Vector_Request *mRequests;
 
     boost::mutex* requestsMutex;
-    
+
     std::string username;
     //std::string userFileOwner;
 

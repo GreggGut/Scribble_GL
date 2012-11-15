@@ -7,7 +7,7 @@
 
 #include "DeletePathRequest.h"
 
-DeletePathRequest::DeletePathRequest(int request, int page, int pathID) : Request(request)
+DeletePathRequest::DeletePathRequest(int request, int page, int pathID) : Request(request, Request::DELETEPATH)
 {
     this->page = page;
     this->pathID = pathID;

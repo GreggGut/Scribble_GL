@@ -13,16 +13,33 @@
 class Request
 {
 public:
-    Request(int);
+    Request(int id, int type);
     virtual ~Request();
     int getRequestID();
-    static std::string const requestType()
+
+    int getRequestType()
     {
-        return "none";
+        return requestType;
     }
+
+    static enum RequestType
+    {
+        LOGIN,
+        LOGOUT,
+        NEWPATH,
+        ADDPOINTS,
+        ENDPATH,
+        UNDO,
+        REDO,
+        OWNERSHIP,
+        RELEASEOWNERSHIP,
+        DELETEPATH,
+        FILELIST
+
+    } res;
 private:
     int requestID;
-
+    int requestType;
 };
 
 #endif	/* REQUEST_H */

@@ -9,18 +9,14 @@
 #define	NEWPATHREQUEST_H
 
 #include "Request.h"
+#include "Color.h"
 
 class NewPathRequest : public Request
 {
 public:
     //requestID - pathID - mode - color - active - page
-    NewPathRequest(int requestID, int pathID, bool mode, int color, bool active, int page);
+    NewPathRequest(int requestID, int pathID, bool mode, Color color, bool active, int page, int width);
     virtual ~NewPathRequest();
-
-    static std::string const requestType()
-    {
-        return "NewPathRequest";
-    }
 
     int getPathID() const
     {
@@ -32,7 +28,7 @@ public:
         return active;
     }
 
-    int getColor() const
+    Color getColor() const
     {
         return color;
     }
@@ -47,12 +43,18 @@ public:
         return page;
     }
 
+    int getWidth() const
+    {
+        return width;
+    }
+
 private:
     int pathID;
     bool mode;
-    int color;
+    Color color;
     bool active;
     int page;
+    int width;
 
 };
 

@@ -14,7 +14,7 @@
 class FileListAvailableRequest:  public Request
 {
 public:
-    FileListAvailableRequest(/*int reqID,*/ std::string files);
+    FileListAvailableRequest(int reqID, std::string files);
     virtual ~FileListAvailableRequest();
 private:
     std::string files;

@@ -6,8 +6,7 @@
  */
 
 #include "Receiver.h"
-#include "OwnershipRequest.h"
-#include "FileListAvailableRequest.h"
+
 
 Receiver::Receiver(Vector_Request* requests, boost::mutex * requestsMutex, std::string username) : mRequests(requests), requestsMutex(requestsMutex), username(username)
 {
@@ -105,11 +104,11 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
     std::vector<std::string> info;
     boost::split(info, *toAnalyze, boost::is_any_of(Sender::getSeparator()));
 
-    std::cout << "Size is: " << info.size() << std::endl;
-    for ( uint i = 0; i < info.size(); i++ )
-    {
-        std::cout << info.at(i) << std::endl;
-    }
+//    std::cout << "Size is: " << info.size() << std::endl;
+//    for ( uint i = 0; i < info.size(); i++ )
+//    {
+//        std::cout << info.at(i) << std::endl;
+//    }
 
     int choice = atoi(info[0].c_str());
 
@@ -117,19 +116,36 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
     {
         case LOG_IN_SUCCESSFUL:
             //At this point user can use the network interface/capabilities of Scribble
-            loggedIn = true;
-            std::cout << "Login fine" << std::endl;
-            break;
+            //loggedIn = true;
+            //std::cout << "Login fine" << std::endl;
+        {
+            int reqID = atoi(info[1].c_str());
+            LoginRequest* request = new LoginRequest(reqID);
 
+            //Adding the add new path request to the request list
+            requestsMutex->lock();
+            mRequests->push_back(request);
+            requestsMutex->unlock();
+
+            break;
+        }
         case LOG_IN_FAILED_WRONG_PASSWORD:
             //TODO Error message, wrong username/password
             break;
 
         case LOG_OUT_SUCCESSFUL:
+        {
             //User is logged out, cannot do anything else related to the network capabilities of Scribble
-            loggedIn = false;
-            break;
+            int reqID = atoi(info[1].c_str());
+            LogoutRequest* request = new LogoutRequest(reqID);
 
+            //Adding the add new path request to the request list
+            requestsMutex->lock();
+            mRequests->push_back(request);
+            requestsMutex->unlock();
+            //loggedIn = false;
+            break;
+        }
         case LOG_OUT_FAILED:
             //TOCONF why would this happen???? Is this needed?
             break;
@@ -154,24 +170,32 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
 
         case DISALLOW_OWNERSHIP:
             //TODO What can I do with this?
-            std::cout << "Someone else has ownership" << std::endl;
+            //std::cout << "Someone else has ownership" << std::endl;
             break;
 
         case NEW_PATH:
         {
-            std::cout << "Been in new path" << std::endl;
+            //std::cout << "Been in new path" << std::endl;
             //newPath - username - requestID - pathID - mode - color - active - page
 
             //Converting received info to a new path
             int reqID = atoi(info[2].c_str());
             int pathID = atoi(info[3].c_str());
             bool mode = ( info[4].c_str() != "0" );
-            int color = atoi(info[5].c_str());
+            int colorInt = atoi(info[5].c_str());
+
+            int colorR = ( ( colorInt >> 16 ) & 0xFF );
+            int colorG = ( ( colorInt >> 8 ) & 0xFF );
+            int colorB = ( ( colorInt ) & 0xFF );
+
+            Color color(colorR, colorG, colorB);
+
             bool active = ( info[6].c_str() != "0" );
             int page = atoi(info[7].c_str());
+            int width = atoi(info[8].c_str());
 
             //Creating a new path request
-            NewPathRequest* request = new NewPathRequest(reqID, pathID, mode, color, active, page);
+            NewPathRequest* request = new NewPathRequest(reqID, pathID, mode, color, active, page, width);
 
             //Adding the add new path request to the request list
             requestsMutex->lock();
@@ -182,7 +206,7 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
 
         case ADD_POINTS_TO_PATH:
         {
-            std::cout << "Been in add points to path" << std::endl;
+            //std::cout << "Been in add points to path" << std::endl;
             //AddPoints - username - requestID++ - pathID - numberOfPoints - Points
 
             //Converting received info to a new path
@@ -203,7 +227,7 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
         }
         case END_CURRENT_PATH:
         {
-            std::cout << "Been in end path" << std::endl;
+            //std::cout << "Been in end path" << std::endl;
             //EndPath - username - requestID - pathID
 
             //Converting received info to end current path
@@ -223,7 +247,7 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
         case UNDO_LAST_ACTION:
         {
             //Undo - username - requestID - page - pathID
-            std::cout << "Been in undo" << std::endl;
+            //std::cout << "Been in undo" << std::endl;
 
             int reqID = atoi(info[2].c_str());
             int page = atoi(info[3].c_str());
@@ -240,7 +264,7 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
         case REDO_LAST_ACTION:
         {
             //Redo - username - requestID - page - pathID
-            std::cout << "Been in redo" << std::endl;
+            //std::cout << "Been in redo" << std::endl;
 
             int reqID = atoi(info[2].c_str());
             int page = atoi(info[3].c_str());
@@ -257,7 +281,7 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
         case DELETE_PATH:
         {
             //Delete - username - requestID - page - pathID 
-            std::cout << "Been in delete path" << std::endl;
+            //std::cout << "Been in delete path" << std::endl;
 
             int reqID = atoi(info[2].c_str());
             int page = atoi(info[3].c_str());
@@ -276,10 +300,11 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
         {
             //Parsing received info
             //TOCONF we might need to have a request ID for this, for now the constructor of this request sets the request ID as -1;
-            std::string files = info[1];
+            int reqID = atoi(info[1].c_str());
+            std::string files = info[2];
 
             //Creating the new request
-            FileListAvailableRequest* request = new FileListAvailableRequest(files);
+            FileListAvailableRequest* request = new FileListAvailableRequest(reqID, files);
 
             //Adding the add new path request to the request list
             requestsMutex->lock();

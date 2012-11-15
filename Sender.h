@@ -52,7 +52,7 @@ public:
     void DownloadFile(std::string filename);
 
     //newPath - username - requestID - pathID - mode - color - active - page
-    void NewPath(int pathID, bool mode, int color, bool active, int page);
+    void NewPath(int pathID, bool mode, int color, bool active, int page, int width);
 
     //AddPoints - username - requestID - pathID - numberOfPoints - Points
     void AddPoints(int pathID, int numberOfPoints, std::vector<Point> points);
@@ -88,7 +88,7 @@ private:
     //Need to initialise this in login
     std::string username;
 
-    enum
+    enum Protocol
     {
         LOGIN = 0,
         LOGOUT = 1,

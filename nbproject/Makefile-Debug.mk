@@ -43,6 +43,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Painter.o \
 	${OBJECTDIR}/RedoRequest.o \
 	${OBJECTDIR}/NewPathRequest.o \
+	${OBJECTDIR}/LoginRequest.o \
 	${OBJECTDIR}/DeletePathRequest.o \
 	${OBJECTDIR}/AddPointsToPathRequest.o \
 	${OBJECTDIR}/Color.o \
@@ -55,6 +56,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ScreenAreas.o \
 	${OBJECTDIR}/Sender.o \
 	${OBJECTDIR}/ScribbleArea.o \
+	${OBJECTDIR}/LogoutRequest.o \
 	${OBJECTDIR}/UI.o
 
 
@@ -122,6 +124,11 @@ ${OBJECTDIR}/NewPathRequest.o: NewPathRequest.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/NewPathRequest.o NewPathRequest.cpp
 
+${OBJECTDIR}/LoginRequest.o: LoginRequest.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoginRequest.o LoginRequest.cpp
+
 ${OBJECTDIR}/DeletePathRequest.o: DeletePathRequest.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -181,6 +188,11 @@ ${OBJECTDIR}/ScribbleArea.o: ScribbleArea.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScribbleArea.o ScribbleArea.cpp
+
+${OBJECTDIR}/LogoutRequest.o: LogoutRequest.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/LogoutRequest.o LogoutRequest.cpp
 
 ${OBJECTDIR}/UI.o: UI.cpp 
 	${MKDIR} -p ${OBJECTDIR}

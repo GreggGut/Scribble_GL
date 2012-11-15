@@ -16,11 +16,6 @@ public:
     EndCurrentPathRequest(int requestID, int pathID);
     virtual ~EndCurrentPathRequest();
 
-    static std::string const requestType()
-    {
-        return "EndCurrentPathRequest";
-    }
-
     int getPathID() const
     {
         return pathID;

@@ -7,7 +7,7 @@
 
 #include "OwnershipRequest.h"
 
-OwnershipRequest::OwnershipRequest(int request, std::string username, int nextRequestID) : Request(request)
+OwnershipRequest::OwnershipRequest(int request, std::string username, int nextRequestID) : Request(request, Request::OWNERSHIP)
 {
     this->username = username;
     this->nextRequestID = nextRequestID;

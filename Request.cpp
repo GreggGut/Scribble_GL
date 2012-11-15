@@ -7,9 +7,10 @@
 
 #include "Request.h"
 
-Request::Request(int request)
+Request::Request(int request, int type)
 {
     this->requestID = request;
+    this->requestType = type;
 }
 
 Request::~Request()

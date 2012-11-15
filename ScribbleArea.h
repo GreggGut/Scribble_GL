@@ -15,10 +15,12 @@
 #include <boost/thread/mutex.hpp>
 #include "Request.h"
 #include "Receiver.h"
+#include "Point.h"
+#include "Path.h"
+#include <algorithm>
 
 class ScribbleArea
 {
-    
 public:
     ScribbleArea();
     ScribbleArea(const ScribbleArea& orig);
@@ -59,7 +61,10 @@ private:
     std::vector<std::vector<Path*> > pathsOnPage;
 
 
-    //Used for networking
+    /***********************************
+     *****Used for networking***********
+     **********************************/
+
     void SendTests();
     void NetworkRequestsAnalyzer();
 
@@ -68,11 +73,13 @@ private:
 
     typedef std::vector <Request*> Vector_Request;
     Vector_Request *mRequests;
+    std::vector<Path* > pathOnPageNetwork;
     Receiver* receiver;
     boost::mutex *requestsMutex;
     Sender * mySender;
     std::string username;
     std::string password;
+    int serverListeningPort;
 };
 
 #endif	/* SCRIBBLEAREA_H */

@@ -7,7 +7,8 @@
 
 #include "FileListAvailableRequest.h"
 
-FileListAvailableRequest::FileListAvailableRequest(std::string files): Request(-1)
+//TODO request ID
+FileListAvailableRequest::FileListAvailableRequest(int reqID, std::string files): Request(reqID, Request::FILELIST)
 {
     this->files=files;
 }

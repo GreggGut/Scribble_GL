@@ -16,11 +16,6 @@ public:
     UndoRequest(int requestID, int page, int pathID);
     virtual ~UndoRequest();
 
-    static std::string const requestType()
-    {
-        return "UndoRequest";
-    }
-
     int getPage() const
     {
         return page;

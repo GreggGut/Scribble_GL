@@ -6,8 +6,6 @@
  */
 
 #include "ScribbleArea.h"
-#include "Point.h"
-#include "Path.h"
 
 ScribbleArea::ScribbleArea()
 {
@@ -152,7 +150,7 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/)
         }
         else
         {
-            pathsOnPage[currentPage].push_back(mTempPath);
+            pathsOnPage.at(currentPage).push_back(mTempPath);
         }
 
         mTempPath = NULL;
@@ -197,6 +195,18 @@ void ScribbleArea::Draw()
         }
         glEnd();
     }
+    
+    lockForTempPath.lock();
+   
+    glBegin (GL_LINE_STRIP);
+        for (int j = 0; j < mTempPath->getPath().size(); ++j){
+            
+             glVertex3f(mTempPath->getPath().at(j)->getX(),mTempPath->getPath().at(j)->getY(), 0.0f);
+        }
+    
+    glEnd();   
+   
+    lockForTempPath.unlock();
 
 }
 

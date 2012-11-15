@@ -62,8 +62,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-lglut -lGL -lGLU -lboost_thread-mt
-CXXFLAGS=-lglut -lGL -lGLU -lboost_thread-mt
+CCFLAGS=-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt
+CXXFLAGS=-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt
 
 # Fortran Compiler Flags
 FFLAGS=

@@ -18,6 +18,8 @@
 #include "ScreenAreas.h"
 //#include <QWidget>
 //#include "QTimer"
+#include <boost/asio.hpp>
+#include <boost/bind.hpp>
 ///////////////////////////
 
 class PalmRejection
@@ -30,7 +32,7 @@ public:
     void eventRelease(/*Points *point*/);
 
 private:
-    void resetPalm();
+    void resetPalm(const boost::system::error_code &ec);
     int mod(int, const int x = ANALYZE_BUFFER);
     int abs(int);
     float sqrt(int x);
@@ -59,8 +61,8 @@ private:
     ScreenAreas mPalm;
     ScreenAreas mPen;
 
-    //boost::asio::deadline_timer palmResetTimer;
-    //boost::asio::io_service io;
+    boost::asio::deadline_timer* palmResetTimer;
+    boost::asio::io_service io_service;
 
     //used as reference points
     int mX;

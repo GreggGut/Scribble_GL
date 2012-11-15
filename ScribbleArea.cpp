@@ -14,20 +14,8 @@ ScribbleArea::ScribbleArea()
     penSize = 1.0;
     currentPage = 0;
 
-    /*   Point* point1 = new Point(0,0,0,100);
-       Point* point2 = new Point(0,0,100,100);
-    
-       std::vector<Point *> mPointsVector;
-
-       mPointsVector.push_back(point1);
-  
-       Path *path = new Path(mPointsVector.at(0), 0, penColor, penSize, 0, 1);
-
-       path->addPoint(point2);
-     */
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
-    /*pathsOnPage.at(currentPage).push_back(path);*/
 
     mRequests = new Vector_Request();
     requestsMutex = new boost::mutex();
@@ -195,6 +183,9 @@ void ScribbleArea::Draw()
         }
         glEnd();
     }
+   
+    if (mTempPath == NULL)
+        return;
     
     lockForTempPath.lock();
    
@@ -204,7 +195,7 @@ void ScribbleArea::Draw()
              glVertex3f(mTempPath->getPath().at(j)->getX(),mTempPath->getPath().at(j)->getY(), 0.0f);
         }
     
-    glEnd();   
+    glEnd();    
    
     lockForTempPath.unlock();
 

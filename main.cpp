@@ -78,14 +78,14 @@ void display()
 int main(int argc, char *argv[])
 {
   
-    glInit (argc, argv);
+    glInit(argc, argv);
     
     painter = new Painter();
     inputData = new InputData(painter->getScribbleArea());
 
-    //boost::thread getInput(&InputData::run,inputData);
-
-    glutMainLoop();  
+//    boost::thread getInput(&InputData::run,inputData);
+    
+    glutMainLoop();
    
     return 0;
 }

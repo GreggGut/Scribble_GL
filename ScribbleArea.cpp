@@ -190,6 +190,21 @@ void ScribbleArea::Draw()
         }
         glEnd();
     }
+   
+    if (mTempPath == NULL)
+        return;
+    
+    lockForTempPath.lock();
+   
+    glBegin (GL_LINE_STRIP);
+        for (int j = 0; j < mTempPath->getPath().size(); ++j){
+            
+             glVertex3f(mTempPath->getPath().at(j)->getX(),mTempPath->getPath().at(j)->getY(), 0.0f);
+        }
+    
+    glEnd();    
+   
+    lockForTempPath.unlock();
 
     if ( mTempPath != NULL )
     {

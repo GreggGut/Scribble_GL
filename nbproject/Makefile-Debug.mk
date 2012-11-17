@@ -41,6 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Point.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/Painter.o \
+	${OBJECTDIR}/ReleaseOwnershipRequest.o \
 	${OBJECTDIR}/RedoRequest.o \
 	${OBJECTDIR}/NewPathRequest.o \
 	${OBJECTDIR}/LoginRequest.o \
@@ -113,6 +114,11 @@ ${OBJECTDIR}/Painter.o: Painter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Painter.o Painter.cpp
+
+${OBJECTDIR}/ReleaseOwnershipRequest.o: ReleaseOwnershipRequest.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ReleaseOwnershipRequest.o ReleaseOwnershipRequest.cpp
 
 ${OBJECTDIR}/RedoRequest.o: RedoRequest.cpp 
 	${MKDIR} -p ${OBJECTDIR}

@@ -9,6 +9,9 @@
 #define	REQUEST_H
 
 #include <string>
+#include <vector>
+
+#include "Point.h"
 
 class Request
 {
@@ -24,17 +27,17 @@ public:
 
     static enum RequestType
     {
-        LOGIN,
-        LOGOUT,
-        NEWPATH,
-        ADDPOINTS,
-        ENDPATH,
-        UNDO,
-        REDO,
-        OWNERSHIP,
-        RELEASEOWNERSHIP,
-        DELETEPATH,
-        FILELIST
+        LOGIN=0,
+        LOGOUT=1,
+        NEWPATH=2,
+        ADDPOINTS=3,
+        ENDPATH=4,
+        UNDO=5,
+        REDO=6,
+        OWNERSHIP=7,
+        RELEASEOWNERSHIP=8,
+        DELETEPATH=9,
+        FILELIST=10
 
     } res;
 private:

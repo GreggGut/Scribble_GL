@@ -17,6 +17,7 @@
       <itemPath>Point.h</itemPath>
       <itemPath>Receiver.h</itemPath>
       <itemPath>RedoRequest.h</itemPath>
+      <itemPath>ReleaseOwnershipRequest.h</itemPath>
       <itemPath>Request.h</itemPath>
       <itemPath>ScreenAreas.h</itemPath>
       <itemPath>ScribbleArea.h</itemPath>
@@ -46,6 +47,7 @@
       <itemPath>Point.cpp</itemPath>
       <itemPath>Receiver.cpp</itemPath>
       <itemPath>RedoRequest.cpp</itemPath>
+      <itemPath>ReleaseOwnershipRequest.cpp</itemPath>
       <itemPath>Request.cpp</itemPath>
       <itemPath>ScreenAreas.cpp</itemPath>
       <itemPath>ScribbleArea.cpp</itemPath>

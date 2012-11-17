@@ -73,13 +73,24 @@ private:
 
     typedef std::vector <Request*> Vector_Request;
     Vector_Request *mRequests;
-    std::vector<Path* > pathOnPageNetwork;
+    
+    
+    //The 2 below structures will point to the same Path at all times
+    //Used for rendering
+    //std::vector<Path* > pathOnPageNetwork;
+    //Used for easier access 
+    Path* myNetworkPath;
+    int myNetworkPathPage;
+    
+    
     Receiver* receiver;
     boost::mutex *requestsMutex;
     Sender * mySender;
     std::string username;
     std::string password;
     int serverListeningPort;
+    
+    std::string fileOwner;
 };
 
 #endif	/* SCRIBBLEAREA_H */

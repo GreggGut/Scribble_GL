@@ -15,6 +15,11 @@ class OwnershipRequest : public Request
 public:
     OwnershipRequest(int request, std::string username, int nextRequestID);
     virtual ~OwnershipRequest();
+    
+    std::string getOwner() const 
+    {
+        return username;
+    }
 private:
     std::string username;
     int nextRequestID;

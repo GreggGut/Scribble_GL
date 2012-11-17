@@ -24,6 +24,7 @@
 
 #include "Sender.h"
 #include "Color.h"
+#include "Point.h"
 
 #include "Request.h"
 #include "NewPathRequest.h"

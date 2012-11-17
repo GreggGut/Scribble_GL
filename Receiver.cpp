@@ -6,7 +6,7 @@
  */
 
 #include "Receiver.h"
-
+#include "ReleaseOwnershipRequest.h"
 
 Receiver::Receiver(Vector_Request* requests, boost::mutex * requestsMutex, std::string username) : mRequests(requests), requestsMutex(requestsMutex), username(username)
 {
@@ -25,6 +25,7 @@ void Receiver::InitializeNetwork()
     workerThread = new boost::thread(&Receiver::ReceiverFunction, this);
 
     //randomly assigned listening port within the acceptable range
+    srand ( time(NULL) );
     mListeningPort = rand() % ( 65535 - 49152 ) + 49152; //49152 through 65535
 
     std::cout << "My listening port: " << mListeningPort << std::endl;
@@ -104,11 +105,11 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
     std::vector<std::string> info;
     boost::split(info, *toAnalyze, boost::is_any_of(Sender::getSeparator()));
 
-//    std::cout << "Size is: " << info.size() << std::endl;
-//    for ( uint i = 0; i < info.size(); i++ )
-//    {
-//        std::cout << info.at(i) << std::endl;
-//    }
+    //    std::cout << "Size is: " << info.size() << std::endl;
+    //    for ( uint i = 0; i < info.size(); i++ )
+    //    {
+    //        std::cout << info.at(i) << std::endl;
+    //    }
 
     int choice = atoi(info[0].c_str());
 
@@ -213,10 +214,30 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
             int reqID = atoi(info[2].c_str());
             int pathID = atoi(info[3].c_str());
             int nPoints = atoi(info[4].c_str());
+
+            std::vector<Point *> mPoints;
+
+            std::vector<std::string> pointsStrings;
+
+            boost::split(pointsStrings, info[5], boost::is_any_of(Sender::getSeparatorPoints()));
+            for ( int i = 0; i < nPoints; i + 2 )
+            {
+                int x = atoi(pointsStrings[i].c_str());
+                int y = atoi(pointsStrings[i + 1].c_str());
+
+                //TOCONF For this maybe we can create a new constructor that only takes x and y
+                Point* newPoint = new Point(-1, -1, x, y);
+
+                mPoints.push_back(newPoint);
+
+                //TESTING
+                std::cout << "New point created/received x: " << x << " y " << y << std::endl;
+
+            }
             std::string points = info[5];
 
             //Creating add points to path request
-            AddPointsToPathRequest* request = new AddPointsToPathRequest(reqID, pathID, nPoints, points);
+            AddPointsToPathRequest* request = new AddPointsToPathRequest(reqID, pathID, nPoints, mPoints);
 
             //Adding the add new path request to the request list
             requestsMutex->lock();
@@ -320,7 +341,13 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
         }
         case OWNERSHIP_IS_AVAILABLE:
         {
-
+            int reqID = atoi(info[1].c_str());
+            ReleaseOwnershipRequest* request = new ReleaseOwnershipRequest(reqID);
+            
+            //Adding the add new path request to the request list
+            requestsMutex->lock();
+            mRequests->push_back(request);
+            requestsMutex->unlock();
             break;
         }
         case LOG_IN_FAIL_USER_ALREADY_LOGGED_IN:

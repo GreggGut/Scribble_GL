@@ -9,7 +9,6 @@
 #define	PAINTER_H
 
 #include <GL/glu.h>
-#include "UI.h"
 #include "ScribbleArea.h"
 
 class Painter {
@@ -22,8 +21,15 @@ public:
     ScribbleArea* getScribbleArea();
     
 private:
-    UI *ui;
+    enum modes
+    {
+        WRITE, ERASE, MENU_PRESS, LOAD, SAVE_AS, COLOUR, SIZE_WRITE, SIZE_ERASE
+    };
+   
     ScribbleArea *scribbleArea;
+    
+    void DrawPaths();
+    void DrawUI();
 };
 
 #endif	/* PAINTER_H */

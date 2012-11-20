@@ -57,8 +57,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ScreenAreas.o \
 	${OBJECTDIR}/Sender.o \
 	${OBJECTDIR}/ScribbleArea.o \
-	${OBJECTDIR}/LogoutRequest.o \
-	${OBJECTDIR}/UI.o
+	${OBJECTDIR}/LogoutRequest.o
 
 
 # C Compiler Flags
@@ -199,11 +198,6 @@ ${OBJECTDIR}/LogoutRequest.o: LogoutRequest.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/LogoutRequest.o LogoutRequest.cpp
-
-${OBJECTDIR}/UI.o: UI.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/UI.o UI.cpp
 
 # Subprojects
 .build-subprojects:

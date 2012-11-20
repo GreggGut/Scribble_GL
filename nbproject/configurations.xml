@@ -23,7 +23,6 @@
       <itemPath>ScreenAreas.h</itemPath>
       <itemPath>ScribbleArea.h</itemPath>
       <itemPath>Sender.h</itemPath>
-      <itemPath>UI.h</itemPath>
       <itemPath>UndoRequest.h</itemPath>
       <itemPath>defines.h</itemPath>
       <itemPath>main.h</itemPath>
@@ -52,7 +51,6 @@
       <itemPath>ScreenAreas.cpp</itemPath>
       <itemPath>ScribbleArea.cpp</itemPath>
       <itemPath>Sender.cpp</itemPath>
-      <itemPath>UI.cpp</itemPath>
       <itemPath>UndoRequest.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>

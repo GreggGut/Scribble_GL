@@ -29,20 +29,44 @@ public:
 
     Color getPenColor();
     float getPenSize();
-
+    void setPenColor(Color &newColor);
+    void setPenWidth(int newWidth);
+    
     void screenPressEvent(Point* point);
     void screenMoveEvent(Point* point);
     void screenReleaseEvent(/*Points *point*/);
 
+    //void nextPage();
+    //void previousPage();
+    void undo();
+    void redo();
     void write();
+    void erase();
+    void clearAll();
 
+    int getMode();
+    std::vector<std::vector<Path*> > getPathsOnPage();
+    int getCurrentPage();
+    void setLockForPath(bool lock);
+    Path* getTempPath();
+    
 private:
-
+    
+    void cleanRedoVector();
+    void cleanPathsOnCurentPageVector();
+    
     enum modes
     {
-        WRITE/*, ERASE, MENU_PRESS, LOAD, SAVE_AS, COLOUR, SIZE_WRITE, SIZE_ERASE*/
+        WRITE, ERASE, MENU_PRESS, LOAD, SAVE_AS, COLOUR, SIZE_WRITE, SIZE_ERASE
     };
 
+    enum
+    {
+        MENU_BUTTON_H = 40,
+        MENU_BUTTON_W = 47,
+        MENU_BUTTON_SPACING = 17
+    };
+    
     Color penColor;
     float penSize;
 
@@ -60,7 +84,7 @@ private:
 
     int currentPage;
     std::vector<std::vector<Path*> > pathsOnPage;
-
+    std::vector< std::vector<Path*> > redoVector;
 
     /***********************************
      *****Used for networking***********

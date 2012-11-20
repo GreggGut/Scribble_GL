@@ -16,8 +16,13 @@ ScribbleArea::ScribbleArea()
 
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
+<<<<<<< HEAD
 
     //Used to keep track of all the pending received requests (from the Scribble Server)
+=======
+    redoVector.resize(5);
+    
+>>>>>>> Started Making ScribbleArea complete plus moving all drawing to Painter. ScribbleArea will now just be a storage class.
     mRequests = new Vector_Request();
 
     //Used to lock the request vector (mRequests) when accessing it
@@ -63,6 +68,50 @@ float ScribbleArea::getPenSize()
     return penSize;
 }
 
+void ScribbleArea::setPenColor(Color &newColor)
+{
+    penColor = newColor;
+}
+
+/*! Set Pen Width
+ *
+ * \param newWidth An integer representing the new width of the pen
+ *
+ * This function set the width of the pen to be used.
+ */
+void ScribbleArea::setPenWidth(int newWidth)
+{
+    penSize = newWidth;
+}
+
+int ScribbleArea::getMode(){
+    
+   return mMode; 
+}
+
+ 
+ std::vector<std::vector<Path*> > ScribbleArea::getPathsOnPage(){
+     return pathsOnPage;
+ }
+ 
+int ScribbleArea::getCurrentPage(){
+    return currentPage;
+}
+
+void ScribbleArea::setLockForPath(bool lock){
+    
+    if (lock == 1) {
+        lockForTempPath.lock();
+    }
+        
+    else {
+         lockForTempPath.unlock();
+    }
+}
+
+Path* ScribbleArea::getTempPath(){
+ return mTempPath;   
+}
 /*! Screen Press Event
  *
  * \param *point A pointer to a Point object
@@ -161,6 +210,70 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/)
     }
 }
 
+
+/*! Undo
+ *
+ * This function allows the user to undo the last actions. Presently, there is no limit of now many undo can be performed, meaning the user can press undo until there is nothing present on the screen
+ */
+void ScribbleArea::undo()
+{
+    pathsLock.lock();
+    if (!pathsOnPage.at(currentPage).empty())
+    {
+        for (int i = (int) pathsOnPage.at(currentPage).size() - 1; i >= 0; i--)
+        {
+            if (pathsOnPage.at(currentPage).at(i) != NULL)
+            {
+                redoVector.at(currentPage).push_back(pathsOnPage.at(currentPage).at(i));
+
+                int id = pathsOnPage.at(currentPage).at(i)->getPathID();
+                pathsOnPage.at(currentPage).at(i) = NULL; //pop_back();
+
+                for (int j = i - 1; j >= 0; j--)
+                {
+                    if (pathsOnPage.at(currentPage).at(j) != NULL && id == pathsOnPage.at(currentPage).at(j)->getPathID())
+                    {
+                        pathsOnPage.at(currentPage).at(j)->enablePath();
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        //updatePageContent();
+    }
+    pathsLock.unlock();
+}
+
+/*! Redo
+ *
+ * This function allows the user to redo the last undone actions. This action is only available if the last action(s) is an undo, otherwise this function will have no effect
+ */
+void ScribbleArea::redo()
+{
+    pathsLock.lock();
+    if (!redoVector.at(currentPage).empty())
+    {
+        int id = redoVector.at(currentPage).back()->getPathID();
+        for (int i = pathsOnPage.at(currentPage).size() - 1; i >= 0; i--)
+        {
+            if (pathsOnPage.at(currentPage).at(i) != NULL && id == pathsOnPage.at(currentPage).at(i)->getPathID())
+            {
+                //std::cout << "Redone Path " << id << std::endl;
+                pathsOnPage.at(currentPage).at(i)->disablePath();
+                break;
+            }
+        }
+
+        pathsOnPage.at(currentPage).push_back(redoVector.at(currentPage).back());
+        redoVector.at(currentPage).pop_back();
+
+        //updatePageContent();
+    }
+    pathsLock.unlock();
+}
+
 /*! Set write mode
  *
  * This function set the mode to write, allowing the user to write on top of the PDF
@@ -168,17 +281,82 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/)
 void ScribbleArea::write()
 {
     mMode = WRITE;
-    //modified = true;
+}
+
+/*! Set erase mode
+ *
+ * This function set the mode to erase, allowing the user to erase anything that has been written on top of the PDF, leaving the PDF intact
+ */
+void ScribbleArea::erase()
+{
+    mMode = ERASE;
+}
+
+/*! Clear all
+ *
+ * This function clears the current page from all writing. This action <b>cannot</b> be undone.
+ */
+void ScribbleArea::clearAll()
+{
+    cleanRedoVector();
+    cleanPathsOnCurentPageVector();
+
+    Paths_IDs[currentPage] = 0;
+
+    //updatePDF();
+    //lockForImage.lock();
+    //image = imageCopy.copy();
+    //lockForImage.unlock();
+    //updatePageContent();
+
+}
+
+/*! Clean Redo Vector (Delete all objects)
+ *
+ * This function iterates through the Redo vector, compares all paths to the paths in PathOnPages vector while deleting only the points that are only present in the Redo vector.
+ * Otherwise the vector of points is cleared and then the Path object deleted
+ */
+void ScribbleArea::cleanRedoVector()
+{
+    int redoVecSize = (int) redoVector.at(currentPage).size();
+
+    //For each Path in redoVector, find if the same path ID is present on the current page of PathsOnPage
+    //If present then clear the points vector and then delete the Path object
+    //Otherwise delete delete Path without cleaning it which will delete all Point objects
+    for (int i = 0; i < redoVecSize; i++)
+    {
+        delete redoVector.at(currentPage).at(i);
+        redoVector.at(currentPage).at(i) = NULL;
+    }
+
+    redoVector.at(currentPage).clear();
+}
+
+/*! Clean PathOnPageVector (Delete all objects)
+ *
+ * This functions cleans all the path object present in the vector. Since the Point objects are shared it makes sure that it is deleted only once
+ */
+void ScribbleArea::cleanPathsOnCurentPageVector()
+{
+    pathsLock.lock();
+    int vectorSize = pathsOnPage.at(currentPage).size();
+
+    for (int i = 0; i < vectorSize; i++)
+    {
+        delete pathsOnPage.at(currentPage).at(i);
+        pathsOnPage.at(currentPage).at(i) = NULL;
+    }
+
+    pathsOnPage.at(currentPage).clear();
+    pathsLock.unlock();
+
+    //delete[] deleted;
 }
 
 void ScribbleArea::Draw()
 {
-
     glColor3f(penColor.getRed(), penColor.getGreen(), penColor.getBlue());
 
-
-    // glVertex3f(100,0,0);
-    //glVertex3f(100,100,0);
     for ( int i = 0; i < pathsOnPage.at(currentPage).size(); ++i )
     {
 

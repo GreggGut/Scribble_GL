@@ -56,6 +56,7 @@ private:
 
     boost::mutex pathsLock;
     boost::mutex lockForTempPath;
+    boost::mutex lockForNetworkPath;
 
     int currentPage;
     std::vector<std::vector<Path*> > pathsOnPage;

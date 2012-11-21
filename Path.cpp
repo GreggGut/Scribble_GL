@@ -28,7 +28,7 @@
  * 
  * The vector of *Points represents the actual path. Since it is a vector of pointers it needs to be iterated through in to delete all the Point objects
  */
-Path::Path(Point* point, int mode, Color color, int width, int id, bool fin/*, bool active*/) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(id), active(active), final(fin), totalLength(0)
+Path::Path(Point* point, int mode, Color color, int width, int id, bool fin/*, bool active*/) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(id), active(true), final(fin), totalLength(0)
 {
     mX = point->getX();
     mY = point->getY();
@@ -37,9 +37,14 @@ Path::Path(Point* point, int mode, Color color, int width, int id, bool fin/*, b
     area->set(point->getColumn(), point->getRow());
 }
 
-Path::Path(int mode, Color color, int width, int ID, bool active) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(ID), active(active)
+Path::Path(int mode, Color color, int width, int ID, bool active) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(ID), active(active),final(false), totalLength(0)
 {
+    mX = 0;
+    mY = 0;
 
+    //?@?@?@?@?@?
+    area = new ScreenAreas();
+    area->set(1, 1);
 }
 
 /** Paths Copy constructor
@@ -51,7 +56,7 @@ Path::Path(int mode, Color color, int width, int ID, bool active) : WriteEraseMo
  * The return object is a new path object (with the same ID) with the exception of the path points. 
  * This object contains a vector of pointers to the original points and therefore special care needs to be taken when deleting this object.
  */
-Path::Path(const Path& orig) : WriteEraseMode(orig.WriteEraseMode), myPenWidth(orig.myPenWidth), myPenColor(orig.myPenColor), mPointsVector(NULL), ID(orig.ID), active(orig.active), final(orig.final)
+Path::Path(const Path& orig) : WriteEraseMode(orig.WriteEraseMode), myPenWidth(orig.myPenWidth), myPenColor(orig.myPenColor), mPointsVector(NULL), ID(orig.ID), active(orig.active), final(orig.final), totalLength(orig.totalLength), mX(orig.mX), mY(orig.mY)
 {
     area = new ScreenAreas(*orig.area);
 }
@@ -63,7 +68,7 @@ Path::Path(const Path& orig) : WriteEraseMode(orig.WriteEraseMode), myPenWidth(o
  */
 Path::~Path()
 {
-    for ( uint i = 0; i < mPointsVector.size(); i++ )
+    for (uint i = 0; i < mPointsVector.size(); i++)
     {
         delete mPointsVector[i];
     }
@@ -81,10 +86,11 @@ Path::~Path()
  */
 void Path::addPoint(Point* point)
 {
-    int dX = mX - point->getX();
-    int dY = mY - point->getY();
-    totalLength += sqrt(dX * dX + dY * dY);
-    area->set(point->getColumn(), point->getRow());
+    std::cout << " from addPOint: " << point->getX() << " " << point->getY() << std::endl;
+//    int dX = /*mX*/0 - point->getX();
+//    int dY = /*mY*/0 - point->getY();
+//    totalLength += sqrt(dX * dX + dY * dY);
+//    area->set(point->getColumn(), point->getRow());
     mPointsVector.push_back(point);
 }
 
@@ -219,7 +225,7 @@ inline int Path::sqrt(const int x)
         float x;
     } u;
     u.x = x;
-    u.i = ( 1 << 29 ) + ( u.i >> 1 ) - ( 1 << 22 );
+    u.i = (1 << 29) + (u.i >> 1) - (1 << 22);
     return u.x;
 }
 

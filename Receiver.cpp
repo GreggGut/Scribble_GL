@@ -25,8 +25,8 @@ void Receiver::InitializeNetwork()
     workerThread = new boost::thread(&Receiver::ReceiverFunction, this);
 
     //randomly assigned listening port within the acceptable range
-    srand ( time(NULL) );
-    mListeningPort = rand() % ( 65535 - 49152 ) + 49152; //49152 through 65535
+    srand(time(NULL));
+    mListeningPort = 55555; //rand() % ( 65535 - 49152 ) + 49152; //49152 through 65535
 
     std::cout << "My listening port: " << mListeningPort << std::endl;
 
@@ -52,36 +52,36 @@ void Receiver::ReceiverFunction()
     int n;
 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if ( sockfd < 0 )
+    if (sockfd < 0)
     {
         std::cout << "ERROR opening socket";
     }
 
 
-    bzero(( char * ) &serv_addr, sizeof (serv_addr ));
+    bzero((char *) &serv_addr, sizeof (serv_addr));
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = INADDR_ANY;
     serv_addr.sin_port = htons(mListeningPort);
 
-    if ( bind(sockfd, ( struct sockaddr * ) &serv_addr, sizeof (serv_addr )) < 0 )
+    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof (serv_addr)) < 0)
     {
         std::cout << "ERROR on binding";
     }
 
     listen(sockfd, 5);
-    clilen = sizeof (cli_addr );
+    clilen = sizeof (cli_addr);
 
-    while ( 1 )
+    while (1)
     {
-        newsockfd = accept(sockfd, ( struct sockaddr * ) &cli_addr, &clilen);
-        if ( newsockfd < 0 )
+        newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
+        if (newsockfd < 0)
         {
             std::cout << "ERROR on accept";
         }
         bzero(buffer, 256);
 
         n = read(newsockfd, buffer, 255);
-        if ( n < 0 )
+        if (n < 0)
         {
             std::cout << "ERROR reading from socket";
         }
@@ -113,7 +113,7 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
 
     int choice = atoi(info[0].c_str());
 
-    switch ( choice )
+    switch (choice)
     {
         case LOG_IN_SUCCESSFUL:
             //At this point user can use the network interface/capabilities of Scribble
@@ -182,16 +182,16 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
             //Converting received info to a new path
             int reqID = atoi(info[2].c_str());
             int pathID = atoi(info[3].c_str());
-            bool mode = ( info[4].c_str() != "0" );
+            bool mode = (info[4].c_str() != "0");
             int colorInt = atoi(info[5].c_str());
 
-            int colorR = ( ( colorInt >> 16 ) & 0xFF );
-            int colorG = ( ( colorInt >> 8 ) & 0xFF );
-            int colorB = ( ( colorInt ) & 0xFF );
+            int colorR = ((colorInt >> 16) & 0xFF);
+            int colorG = ((colorInt >> 8) & 0xFF);
+            int colorB = ((colorInt) & 0xFF);
 
             Color color(colorR, colorG, colorB);
 
-            bool active = ( info[6].c_str() != "0" );
+            bool active = (info[6].c_str() != "0");
             int page = atoi(info[7].c_str());
             int width = atoi(info[8].c_str());
 
@@ -215,26 +215,27 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
             int pathID = atoi(info[3].c_str());
             int nPoints = atoi(info[4].c_str());
 
-            std::vector<Point *> mPoints;
+            std::vector<Point *>* mPoints = new std::vector<Point *>();
 
             std::vector<std::string> pointsStrings;
 
             boost::split(pointsStrings, info[5], boost::is_any_of(Sender::getSeparatorPoints()));
-            for ( int i = 0; i < nPoints; i + 2 )
+            std::cout << "nPoints: " << nPoints << std::endl;
+            for (int i = 0; i < (2*nPoints); i=i + 2)
             {
                 int x = atoi(pointsStrings[i].c_str());
                 int y = atoi(pointsStrings[i + 1].c_str());
 
                 //TOCONF For this maybe we can create a new constructor that only takes x and y
-                Point* newPoint = new Point(-1, -1, x, y);
+                Point* newPoint = new Point(1, 1, x, y);
 
-                mPoints.push_back(newPoint);
+                mPoints->push_back(newPoint);
 
                 //TESTING
                 std::cout << "New point created/received x: " << x << " y " << y << std::endl;
-
+                std::cout << "i " << i << std::endl;
             }
-            std::string points = info[5];
+            //std::string points = info[5];
 
             //Creating add points to path request
             AddPointsToPathRequest* request = new AddPointsToPathRequest(reqID, pathID, nPoints, mPoints);
@@ -343,7 +344,7 @@ void Receiver::AnalyzeThread(std::string *toAnalyze)
         {
             int reqID = atoi(info[1].c_str());
             ReleaseOwnershipRequest* request = new ReleaseOwnershipRequest(reqID);
-            
+
             //Adding the add new path request to the request list
             requestsMutex->lock();
             mRequests->push_back(request);
@@ -372,9 +373,9 @@ std::string Receiver::ToBytesConv(int integer)
 {
     integer = 1100;
     unsigned char bytes[2];
-    bytes[0] = ( integer >> 8 ) & 0xFF;
+    bytes[0] = (integer >> 8) & 0xFF;
     bytes[1] = integer & 0xFF;
-    std::cout << ( int ) bytes[0] << " " << ( int ) bytes[1] << std::endl;
+    std::cout << (int) bytes[0] << " " << (int) bytes[1] << std::endl;
 
     std::stringstream s;
     s << bytes[0];

@@ -14,10 +14,10 @@ class AddPointsToPathRequest : public Request
 {
 public:
     //AddPoints - username - requestID++ - pathID - numberOfPoints - Points
-    AddPointsToPathRequest(int requestID, int pathID, int numberOfPoints, std::vector<Point *> mPoints);
+    AddPointsToPathRequest(int requestID, int pathID, int numberOfPoints, std::vector<Point *>* mPoints);
     virtual ~AddPointsToPathRequest();
 
-    std::vector<Point *> getPoints() const
+    std::vector<Point *>* getPoints()
     {
         return mPoints;
     }
@@ -35,7 +35,7 @@ public:
 private:
     int pathID;
     int numberOfPoints;
-    std::vector<Point *> mPoints;
+    std::vector<Point *>* mPoints;
 
 };
 

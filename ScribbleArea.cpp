@@ -24,12 +24,12 @@ ScribbleArea::ScribbleArea()
     requestsMutex = new boost::mutex();
 
     //TODO server address and port should be variables that the user can change if needed
-    std::string add = "127.0.0.1";
+    std::string add ="MHO.encs.concordia.ca";//127.0.0.1"; 132.205.8.68";/
     serverListeningPort = 21223;
     mySender = new Sender(add, serverListeningPort);
 
     //TODO User will have to enter this (username and password)
-    username = "greg13";
+    username = "aaa";
     password = "pass";
 
     //Vector_Request* mRequests, boost::mutex * requestsMutex, std::string username);
@@ -190,21 +190,6 @@ void ScribbleArea::Draw()
         }
         glEnd();
     }
-   
-    if (mTempPath == NULL)
-        return;
-    
-    lockForTempPath.lock();
-   
-    glBegin (GL_LINE_STRIP);
-        for (int j = 0; j < mTempPath->getPath().size(); ++j){
-            
-             glVertex3f(mTempPath->getPath().at(j)->getX(),mTempPath->getPath().at(j)->getY(), 0.0f);
-        }
-    
-    glEnd();    
-   
-    lockForTempPath.unlock();
 
     if ( mTempPath != NULL )
     {
@@ -224,6 +209,7 @@ void ScribbleArea::Draw()
 
     if ( myNetworkPath != NULL && myNetworkPathPage == currentPage )
     {
+        lockForNetworkPath.lock();
         //TODO We need a lock here
         glBegin(GL_LINE_STRIP);
         for ( int j = 0; j < myNetworkPath->getPath().size(); ++j )
@@ -233,6 +219,7 @@ void ScribbleArea::Draw()
         }
 
         glEnd();
+        lockForNetworkPath.unlock();
     }
 
 
@@ -253,6 +240,8 @@ bool isNull(Request *a)
  */
 void ScribbleArea::NetworkRequestsAnalyzer()
 {
+    nextRequestID =0;
+    
     while ( checkMyRequests || mRequests->size() != 0 )
     {
         //Removing all NULL from the vector and then sorting the vector by nextRequestID
@@ -284,12 +273,15 @@ void ScribbleArea::NetworkRequestsAnalyzer()
                         int nPoints = ( ( AddPointsToPathRequest* ) mRequests->at(i) )->getNumberOfPoints();
                         //TOCONF pathID with the new points seems useless
                         int pathID = ( ( AddPointsToPathRequest* ) mRequests->at(i) )->getPathID();
-                        std::vector<Point *> myNewNetworkPoints = ( ( AddPointsToPathRequest * ) mRequests->at(i) )->getPoints();
+                        std::vector<Point *>* myNewNetworkPoints = ( ( AddPointsToPathRequest * ) mRequests->at(i) )->getPoints();
 
-                        for ( int i = 0; i < nPoints; i++ )
+                        lockForNetworkPath.lock();
+                        for ( int i = 0; i < myNewNetworkPoints->size(); i++ )
                         {
-                            myNetworkPath->addPoint(myNewNetworkPoints[i]);
+                            std::cout<<"Point from network: x "<<myNewNetworkPoints->at(i)->getX()<<" y "<<myNewNetworkPoints->at(i)->getY()<<std::endl;
+                            myNetworkPath->addPoint(new Point(1,1,30,50));//myNewNetworkPoints->at(i));
                         }
+                        lockForNetworkPath.unlock();
 
                         break;
                     }
@@ -310,7 +302,9 @@ void ScribbleArea::NetworkRequestsAnalyzer()
                         //This constructor does not have an initial point so we have to be careful when drawing this.. we might get a NULL pointer
                         Path * path = new Path(mode, color, width, pathID, active);
 
+                        lockForNetworkPath.lock();
                         myNetworkPath = path;
+                        lockForNetworkPath.unlock();
                         myNetworkPathPage = page;
 
 
@@ -323,7 +317,9 @@ void ScribbleArea::NetworkRequestsAnalyzer()
                         //Move this path to the permanent pathsOnPage
                         pathsOnPage[myNetworkPathPage].push_back(myNetworkPath);
 
+                        lockForNetworkPath.lock();
                         myNetworkPath = NULL;
+                        lockForNetworkPath.unlock();
                         myNetworkPathPage = -1;
 
                         break;

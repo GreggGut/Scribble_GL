@@ -9,6 +9,7 @@
       <itemPath>FileListAvailableRequest.h</itemPath>
       <itemPath>InputData.h</itemPath>
       <itemPath>LoginRequest.h</itemPath>
+      <itemPath>LogoutRequest.h</itemPath>
       <itemPath>NewPathRequest.h</itemPath>
       <itemPath>OwnershipRequest.h</itemPath>
       <itemPath>Painter.h</itemPath>
@@ -38,7 +39,6 @@
       <itemPath>InputData.cpp</itemPath>
       <itemPath>LoginRequest.cpp</itemPath>
       <itemPath>LogoutRequest.cpp</itemPath>
-      <itemPath>LogoutRequest.h</itemPath>
       <itemPath>NewPathRequest.cpp</itemPath>
       <itemPath>OwnershipRequest.cpp</itemPath>
       <itemPath>Painter.cpp</itemPath>

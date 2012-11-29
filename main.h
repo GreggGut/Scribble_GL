@@ -14,7 +14,14 @@
 #include "Painter.h"
 #include "InputData.h"
 #include <boost/thread.hpp>
-#include "NetworkConnection.h"
+#include <boost/bind.hpp>
+#include <boost/asio.hpp>
+//#include "NetworkConnection.h"
+
+#include <cstdlib>
+#include "RequestMessage.h"
+#include "Sender.h"
+#include "NetworkClient.h"
 
 Painter *painter;
 InputData *inputData;

@@ -5,6 +5,9 @@
  * Created on November 25, 2012, 11:18 PM
  */
 
+/*
+ * NOT IN USE!!!!!!!!
+ */
 #include "NetworkConnection.h"
 
 NetworkConnection::NetworkConnection(std::string address, std::string ip) : address(address), ip(ip)
@@ -34,51 +37,51 @@ NetworkConnection::NetworkConnection(std::string address, std::string ip) : addr
 
         Sender s("greg");
         std::string toSend;
-        //        toSend = s.Login("greg", "pass");
-        //        c.write(sendMessage(toSend));
-
-        toSend = s.GetFilesList();
-        client->write(encodeMessage(toSend));
-
-        toSend = s.RequestOwnership();
-        client->write(encodeMessage(toSend));
-
-        int pathID = 10;
-        int page = 2;
-        toSend = s.NewPath(pathID, true, 32453, true, page, 1);
-        client->write(encodeMessage(toSend));
-
-        Point m1(0, 0, 10, 10);
-        Point m2(0, 0, 20, 20);
-        Point m3(0, 0, 30, 30);
-        Point m4(0, 0, 40, 40);
-
-        std::vector<Point> mPoints;
-        mPoints.push_back(m1);
-        mPoints.push_back(m2);
-        mPoints.push_back(m3);
-        mPoints.push_back(m4);
-
-        toSend = s.AddPoints(mPoints);
-        client->write(encodeMessage(toSend));
-
-        toSend = s.AddPoints(mPoints);
-        client->write(encodeMessage(toSend));
-
-        toSend = s.EndPath();
-        client->write(encodeMessage(toSend));
-
-        toSend = s.Undo(2);
-        client->write(encodeMessage(toSend));
-
-        toSend = s.GetFilesList();
-        client->write(encodeMessage(toSend));
-
-        toSend = s.DeletePath(page, pathID);
-        client->write(encodeMessage(toSend));
-
-        toSend = s.ReleaseOwnership();
-        client->write(encodeMessage(toSend));
+//        //        toSend = s.Login("greg", "pass");
+//        //        c.write(sendMessage(toSend));
+//
+//        toSend = s.GetFilesList();
+//        client->write(encodeMessage(toSend));
+//
+//        toSend = s.RequestOwnership();
+//        client->write(encodeMessage(toSend));
+//
+//        int pathID = 10;
+//        int page = 2;
+//        toSend = s.NewPath(pathID, true, 32453, true, page, 1);
+//        client->write(encodeMessage(toSend));
+//
+//        Point m1(0, 0, 10, 10);
+//        Point m2(0, 0, 20, 20);
+//        Point m3(0, 0, 30, 30);
+//        Point m4(0, 0, 40, 40);
+//
+//        std::vector<Point> mPoints;
+//        mPoints.push_back(m1);
+//        mPoints.push_back(m2);
+//        mPoints.push_back(m3);
+//        mPoints.push_back(m4);
+//
+//        toSend = s.AddPoints(mPoints);
+//        client->write(encodeMessage(toSend));
+//
+//        toSend = s.AddPoints(mPoints);
+//        client->write(encodeMessage(toSend));
+//
+//        toSend = s.EndPath();
+//        client->write(encodeMessage(toSend));
+//
+//        toSend = s.Undo(2);
+//        client->write(encodeMessage(toSend));
+//
+//        toSend = s.GetFilesList();
+//        client->write(encodeMessage(toSend));
+//
+//        toSend = s.DeletePath(page, pathID);
+//        client->write(encodeMessage(toSend));
+//
+//        toSend = s.ReleaseOwnership();
+//        client->write(encodeMessage(toSend));
 
         //This is the sending function
         std::string line;

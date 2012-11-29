@@ -48,6 +48,7 @@ socket_(io_service)
 
 void NetworkClient::write(const RequestMessage& msg)
 {
+    //RequestMessage encodeMessage(std::string line)
     io_service_.post(boost::bind(&NetworkClient::do_write, this, msg));
 }
 
@@ -269,4 +270,18 @@ void NetworkClient::decodeRequest(std::string msg)
             std::cout << "Should not be here" << std::endl;
 
     }
+}
+
+void NetworkClient::sendMessage(std::string line)
+{
+    //We need to add an end of line to the message
+    line += '\n';
+    RequestMessage msg;
+    msg.body_length(std::strlen(line.c_str()));
+    std::memcpy(msg.body(), line.c_str(), msg.body_length());
+    msg.encode_header();
+
+    write(msg);
+    //return msg;
+
 }

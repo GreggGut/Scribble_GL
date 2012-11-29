@@ -30,11 +30,12 @@ public:
     NetworkClient(boost::asio::io_service& io_service, tcp::resolver::iterator endpoint_iterator);
     NetworkClient(const NetworkClient& org);
     NetworkClient & operator=(const NetworkClient &org);
-    void write(const RequestMessage& msg);
+
     void close();
+    void sendMessage(std::string line);
 
 private:
-
+    void write(const RequestMessage& msg);
     void handle_connect(const boost::system::error_code& error, tcp::resolver::iterator endpoint_iterator);
     void handle_read_header(const boost::system::error_code& error);
     void handle_read_body(const boost::system::error_code& error);
@@ -42,6 +43,8 @@ private:
     void handle_write(const boost::system::error_code& error);
     void do_close();
     void decodeRequest(std::string msg);
+
+    RequestMessage encodeMessage(std::string line);
 
 private:
     boost::asio::io_service& io_service_;

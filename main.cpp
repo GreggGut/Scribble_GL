@@ -119,15 +119,15 @@ int main(int argc, char *argv[])
     //        c.write(sendMessage(toSend));
 
     toSend = s.GetFilesList();
-    client.write(encodeMessage(toSend));
+    client.sendMessage(toSend);
 
     toSend = s.RequestOwnership();
-    client.write(encodeMessage(toSend));
+    client.sendMessage(toSend);
 
     int pathID = 10;
     int page = 2;
     toSend = s.NewPath(pathID, true, 32453, true, page, 1);
-    client.write(encodeMessage(toSend));
+    client.sendMessage(toSend);
 
     Point m1(0, 0, 10, 10);
     Point m2(0, 0, 20, 20);
@@ -140,19 +140,19 @@ int main(int argc, char *argv[])
     mPoints.push_back(m3);
     mPoints.push_back(m4);
     toSend = s.AddPoints(mPoints);
-    client.write(encodeMessage(toSend));
+    client.sendMessage(toSend);
     toSend = s.AddPoints(mPoints);
-    client.write(encodeMessage(toSend));
+    client.sendMessage(toSend);
     toSend = s.EndPath();
-    client.write(encodeMessage(toSend));
+    client.sendMessage(toSend);
     toSend = s.Undo(2);
-    client.write(encodeMessage(toSend));
+    client.sendMessage(toSend);
     toSend = s.GetFilesList();
-    client.write(encodeMessage(toSend));
+    client.sendMessage(toSend);
     toSend = s.DeletePath(page, pathID);
-    client.write(encodeMessage(toSend));
+    client.sendMessage(toSend);
     toSend = s.ReleaseOwnership();
-    client.write(encodeMessage(toSend));
+    client.sendMessage(toSend);
 
     glutMainLoop();
 

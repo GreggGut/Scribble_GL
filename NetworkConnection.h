@@ -5,6 +5,10 @@
  * Created on November 25, 2012, 11:18 PM
  */
 
+/*
+ * NOT IN USE!!!!!!!!
+ */
+
 #ifndef NETWORKCONNECTION_H
 #define	NETWORKCONNECTION_H
 

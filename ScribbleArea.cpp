@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   ScribbleArea.cpp
  * Author: scribble
- * 
+ *
  * Created on October 25, 2012, 2:17 PM
  */
 
@@ -17,24 +17,8 @@ ScribbleArea::ScribbleArea()
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
     redoVector.resize(5);
-    
-    mRequests = new Vector_Request();
+
     requestsMutex = new boost::mutex();
-
-    //TODO server address and port should be variables that the user can change if needed
-    std::string add = "127.0.0.1";
-    mySender = new Sender(add, 21223);
-
-    //TODO User will have to enter this (username and password)
-    username = "greg";
-    password = "pass";
-    
-    //Vector_Request* mRequests, boost::mutex * requestsMutex, std::string username);
-    receiver = new Receiver(mRequests, requestsMutex, "greg");
-    boost::thread(&ScribbleArea::NetworkRequestsAnalyzer, this);
-
-    mySender->Login(username, password, receiver->GetMListeningPort());
-    boost::thread(&ScribbleArea::SendTests, this);
 }
 
 ScribbleArea::ScribbleArea(int x, int y, int w, int h)
@@ -44,7 +28,7 @@ ScribbleArea::ScribbleArea(int x, int y, int w, int h)
     yPos = y;
     width = w;
     height = h;
-    
+
     penColor = Color();
     penSize = 1.0;
     currentPage = 0;
@@ -52,24 +36,9 @@ ScribbleArea::ScribbleArea(int x, int y, int w, int h)
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
     redoVector.resize(5);
-    
-    mRequests = new Vector_Request();
+
     requestsMutex = new boost::mutex();
 
-    //TODO server address and port should be variables that the user can change if needed
-    std::string add = "127.0.0.1";
-    mySender = new Sender(add, 21223);
-
-    //TODO User will have to enter this (username and password)
-    username = "greg";
-    password = "pass";
-    
-    //Vector_Request* mRequests, boost::mutex * requestsMutex, std::string username);
-    receiver = new Receiver(mRequests, requestsMutex, "greg");
-    boost::thread(&ScribbleArea::NetworkRequestsAnalyzer, this);
-
-    mySender->Login(username, password, receiver->GetMListeningPort());
-    boost::thread(&ScribbleArea::SendTests, this);
 }
 
 ScribbleArea::ScribbleArea(const ScribbleArea& orig)
@@ -109,41 +78,41 @@ void ScribbleArea::setPenWidth(int newWidth)
 }
 
 int ScribbleArea::getMode(){
-    
-   return mMode; 
+
+   return mMode;
 }
 
- 
+
  std::vector<std::vector<Path*> > ScribbleArea::getPathsOnPage(){
      return pathsOnPage;
  }
- 
+
 int ScribbleArea::getCurrentPage(){
     return currentPage;
 }
 
 void ScribbleArea::setLockForPath(bool lock){
-    
+
     if (lock == 1) {
         lockForTempPath.lock();
     }
-        
+
     else {
          lockForTempPath.unlock();
     }
 }
 
 Path* ScribbleArea::getTempPath(){
- return mTempPath;   
+ return mTempPath;
 }
 
 bool ScribbleArea::pointInsideArea(Point * point){
- 
+
     //point has to be inside frame. could be changed but overlaps may occur
     if((point->getX() > xPos) && (point->getX() < width+xPos) && (point->getY() > yPos) && (point->getY() < height+yPos)){
         return true;
     }
-    
+
     return false;
 }
 /*! Screen Press Event
@@ -402,68 +371,20 @@ void ScribbleArea::Draw()
         }
         glEnd();
     }
-   
+
     if (mTempPath == NULL)
         return;
-    
+
     lockForTempPath.lock();
-   
+
     glBegin (GL_LINE_STRIP);
         for (int j = 0; j < mTempPath->getPath().size(); ++j){
-            
+
              glVertex3f(mTempPath->getPath().at(j)->getX(),mTempPath->getPath().at(j)->getY(), 0.0f);
         }
-    
-    glEnd();    
-   
+
+    glEnd();
+
     lockForTempPath.unlock();
 
-}
-
-/**
- * This function check and executes all the requests that have been received from the server
- */
-void ScribbleArea::NetworkRequestsAnalyzer()
-{
-    while ( checkMyRequests || mRequests->size() != 0 )
-    {
-        //sort the mRequests by requestID
-        for ( uint i = 0; i < mRequests->size(); i++ )
-        {
-
-        }
-        //if the first request in the queue has the nextRequestID then execute it
-        //increase nextRequestID
-        //repeat the 2 above steps until either all requests are met or the nextRequestID does not match the ID of the next request in the queue
-
-        //Repeat the requests each 200 milliseconds
-        boost::this_thread::sleep(boost::posix_time::milliseconds(200));
-
-    }
-}
-
-void ScribbleArea::SendTests()
-{
-    boost::this_thread::sleep(boost::posix_time::milliseconds(500));
-    mySender->GetFilesList();
-    //boost::this_thread::sleep(boost::posix_time::milliseconds(100));
-    mySender->RequestOwnership();
-
-    Point m1(0, 0, 10, 10);
-    Point m2(0, 0, 20, 20);
-    Point m3(0, 0, 30, 30);
-    Point m4(0, 0, 40, 40);
-
-    std::vector<Point> mPoints;
-    mPoints.push_back(m1);
-    mPoints.push_back(m2);
-    mPoints.push_back(m3);
-    mPoints.push_back(m4);
-
-    mySender->NewPath(3, true, 34567, true, 0, 1);
-    mySender->AddPoints(3, 4, mPoints);
-    mySender->EndPath(3);
-    mySender->Logout();
-
-    std::cout << "Scribble area end of SendTests function" << std::endl;
 }

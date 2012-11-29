@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   ScribbleArea.h
  * Author: scribble
  *
@@ -13,12 +13,9 @@
 #include "Path.h"
 #include "Point.h"
 #include <boost/thread/mutex.hpp>
-#include "Request.h"
-#include "Receiver.h"
 
 class ScribbleArea
 {
-    
 public:
     ScribbleArea();
     ScribbleArea(int x, int y, int w, int h);
@@ -31,7 +28,7 @@ public:
     void setPenColor(Color &newColor);
     void setPenWidth(int newWidth);
     bool pointInsideArea(Point * point);
-    
+
     void screenPressEvent(Point* point);
     void screenMoveEvent(Point* point);
     void screenReleaseEvent(/*Points *point*/);
@@ -49,12 +46,12 @@ public:
     int getCurrentPage();
     void setLockForPath(bool lock);
     Path* getTempPath();
-    
+
 private:
-    
+
     void cleanRedoVector();
     void cleanPathsOnCurentPageVector();
-    
+
     enum modes
     {
         WRITE, ERASE, MENU_PRESS, LOAD, SAVE_AS, COLOUR, SIZE_WRITE, SIZE_ERASE
@@ -66,12 +63,12 @@ private:
         MENU_BUTTON_W = 47,
         MENU_BUTTON_SPACING = 17
     };
-    
+
     int xPos;
     int yPos;
     int width;
     int height;
-    
+
     Color penColor;
     float penSize;
 
@@ -91,19 +88,7 @@ private:
     std::vector< std::vector<Path*> > redoVector;
 
     //Used for networking
-    void SendTests();
-    void NetworkRequestsAnalyzer();
-
-    bool checkMyRequests;
-    int nextRequestID;
-
-    typedef std::vector <Request*> Vector_Request;
-    Vector_Request *mRequests;
-    Receiver* receiver;
     boost::mutex *requestsMutex;
-    Sender * mySender;
-    std::string username;
-    std::string password;
 };
 
 #endif	/* SCRIBBLEAREA_H */

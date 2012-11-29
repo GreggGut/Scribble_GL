@@ -35,31 +35,17 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/EndCurrentPathRequest.o \
-	${OBJECTDIR}/OwnershipRequest.o \
 	${OBJECTDIR}/InputData.o \
 	${OBJECTDIR}/Point.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/Painter.o \
-	${OBJECTDIR}/ReleaseOwnershipRequest.o \
-	${OBJECTDIR}/RedoRequest.o \
-	${OBJECTDIR}/NewPathRequest.o \
-	${OBJECTDIR}/LoginRequest.o \
-	${OBJECTDIR}/DeletePathRequest.o \
-	${OBJECTDIR}/AddPointsToPathRequest.o \
 	${OBJECTDIR}/Color.o \
 	${OBJECTDIR}/ScreenInterpreter.o \
-	${OBJECTDIR}/Receiver.o \
-	${OBJECTDIR}/UndoRequest.o \
 	${OBJECTDIR}/Menu.o \
 	${OBJECTDIR}/PalmRejection.o \
-	${OBJECTDIR}/Request.o \
-	${OBJECTDIR}/FileListAvailableRequest.o \
 	${OBJECTDIR}/Path.o \
 	${OBJECTDIR}/ScreenAreas.o \
-	${OBJECTDIR}/Sender.o \
-	${OBJECTDIR}/ScribbleArea.o \
-	${OBJECTDIR}/LogoutRequest.o
+	${OBJECTDIR}/ScribbleArea.o
 
 
 # C Compiler Flags
@@ -86,16 +72,6 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl_working_copy: ${OBJECTFIL
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl_working_copy ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
-${OBJECTDIR}/EndCurrentPathRequest.o: EndCurrentPathRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/EndCurrentPathRequest.o EndCurrentPathRequest.cpp
-
-${OBJECTDIR}/OwnershipRequest.o: OwnershipRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/OwnershipRequest.o OwnershipRequest.cpp
-
 ${OBJECTDIR}/InputData.o: InputData.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -116,36 +92,6 @@ ${OBJECTDIR}/Painter.o: Painter.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Painter.o Painter.cpp
 
-${OBJECTDIR}/ReleaseOwnershipRequest.o: ReleaseOwnershipRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ReleaseOwnershipRequest.o ReleaseOwnershipRequest.cpp
-
-${OBJECTDIR}/RedoRequest.o: RedoRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/RedoRequest.o RedoRequest.cpp
-
-${OBJECTDIR}/NewPathRequest.o: NewPathRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/NewPathRequest.o NewPathRequest.cpp
-
-${OBJECTDIR}/LoginRequest.o: LoginRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoginRequest.o LoginRequest.cpp
-
-${OBJECTDIR}/DeletePathRequest.o: DeletePathRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/DeletePathRequest.o DeletePathRequest.cpp
-
-${OBJECTDIR}/AddPointsToPathRequest.o: AddPointsToPathRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/AddPointsToPathRequest.o AddPointsToPathRequest.cpp
-
 ${OBJECTDIR}/Color.o: Color.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -155,16 +101,6 @@ ${OBJECTDIR}/ScreenInterpreter.o: ScreenInterpreter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenInterpreter.o ScreenInterpreter.cpp
-
-${OBJECTDIR}/Receiver.o: Receiver.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Receiver.o Receiver.cpp
-
-${OBJECTDIR}/UndoRequest.o: UndoRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/UndoRequest.o UndoRequest.cpp
 
 ${OBJECTDIR}/Menu.o: Menu.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -176,16 +112,6 @@ ${OBJECTDIR}/PalmRejection.o: PalmRejection.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/PalmRejection.o PalmRejection.cpp
 
-${OBJECTDIR}/Request.o: Request.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Request.o Request.cpp
-
-${OBJECTDIR}/FileListAvailableRequest.o: FileListAvailableRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/FileListAvailableRequest.o FileListAvailableRequest.cpp
-
 ${OBJECTDIR}/Path.o: Path.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -196,20 +122,10 @@ ${OBJECTDIR}/ScreenAreas.o: ScreenAreas.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenAreas.o ScreenAreas.cpp
 
-${OBJECTDIR}/Sender.o: Sender.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Sender.o Sender.cpp
-
 ${OBJECTDIR}/ScribbleArea.o: ScribbleArea.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScribbleArea.o ScribbleArea.cpp
-
-${OBJECTDIR}/LogoutRequest.o: LogoutRequest.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/LogoutRequest.o LogoutRequest.cpp
 
 # Subprojects
 .build-subprojects:

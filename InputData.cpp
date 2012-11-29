@@ -16,7 +16,7 @@
  * - <b>Move event:</b> <br>An event informing ScribbleArea that a move has occurred on the screen; includes the XY coordinates of the event.<pre></pre>
  * - <b>Release event:</b> <br>An event informing ScribbleArea of a complete release; nothing is touching the screen and no coordinates are sent.<pre></pre> 
  */
-InputData::InputData(ScribbleArea* scribble) : scribbleAreaAccess(scribble), stop_request(false), palm(scribble)
+InputData::InputData(ScreenInterpreter* s) : scribbleAreaAccess(s), stop_request(false), palm(s)
 {
     //std::cout<<"Input Data constructed"<<std::endl;
 

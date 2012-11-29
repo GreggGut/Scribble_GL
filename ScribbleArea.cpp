@@ -1,7 +1,7 @@
-/*
+/* 
  * File:   ScribbleArea.cpp
  * Author: scribble
- *
+ * 
  * Created on October 25, 2012, 2:17 PM
  */
 
@@ -16,29 +16,55 @@ ScribbleArea::ScribbleArea()
 
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
-<<<<<<< HEAD
-
-    //Used to keep track of all the pending received requests (from the Scribble Server)
-=======
     redoVector.resize(5);
     
->>>>>>> Started Making ScribbleArea complete plus moving all drawing to Painter. ScribbleArea will now just be a storage class.
     mRequests = new Vector_Request();
-
-    //Used to lock the request vector (mRequests) when accessing it
     requestsMutex = new boost::mutex();
 
     //TODO server address and port should be variables that the user can change if needed
-    std::string add ="MHO.encs.concordia.ca";//127.0.0.1"; 132.205.8.68";/
-    serverListeningPort = 21223;
-    mySender = new Sender(add, serverListeningPort);
+    std::string add = "127.0.0.1";
+    mySender = new Sender(add, 21223);
 
     //TODO User will have to enter this (username and password)
-    username = "aaa";
+    username = "greg";
     password = "pass";
-
+    
     //Vector_Request* mRequests, boost::mutex * requestsMutex, std::string username);
-    checkMyRequests = true;
+    receiver = new Receiver(mRequests, requestsMutex, "greg");
+    boost::thread(&ScribbleArea::NetworkRequestsAnalyzer, this);
+
+    mySender->Login(username, password, receiver->GetMListeningPort());
+    boost::thread(&ScribbleArea::SendTests, this);
+}
+
+ScribbleArea::ScribbleArea(int x, int y, int w, int h)
+{
+
+    xPos = x;
+    yPos = y;
+    width = w;
+    height = h;
+    
+    penColor = Color();
+    penSize = 1.0;
+    currentPage = 0;
+
+    pathsOnPage.resize(5);
+    Paths_IDs.resize(5);
+    redoVector.resize(5);
+    
+    mRequests = new Vector_Request();
+    requestsMutex = new boost::mutex();
+
+    //TODO server address and port should be variables that the user can change if needed
+    std::string add = "127.0.0.1";
+    mySender = new Sender(add, 21223);
+
+    //TODO User will have to enter this (username and password)
+    username = "greg";
+    password = "pass";
+    
+    //Vector_Request* mRequests, boost::mutex * requestsMutex, std::string username);
     receiver = new Receiver(mRequests, requestsMutex, "greg");
     boost::thread(&ScribbleArea::NetworkRequestsAnalyzer, this);
 
@@ -54,8 +80,6 @@ ScribbleArea::~ScribbleArea()
 {
 
     delete mTempPath;
-    delete myNetworkPath;
-
 }
 
 Color ScribbleArea::getPenColor()
@@ -111,6 +135,16 @@ void ScribbleArea::setLockForPath(bool lock){
 
 Path* ScribbleArea::getTempPath(){
  return mTempPath;   
+}
+
+bool ScribbleArea::pointInsideArea(Point * point){
+ 
+    //point has to be inside frame. could be changed but overlaps may occur
+    if((point->getX() > xPos) && (point->getX() < width+xPos) && (point->getY() > yPos) && (point->getY() < height+yPos)){
+        return true;
+    }
+    
+    return false;
 }
 /*! Screen Press Event
  *
@@ -368,49 +402,22 @@ void ScribbleArea::Draw()
         }
         glEnd();
     }
-
-    if ( mTempPath != NULL )
-    {
-        lockForTempPath.lock();
-
-        glBegin(GL_LINE_STRIP);
-        for ( int j = 0; j < mTempPath->getPath().size(); ++j )
-        {
-
-            glVertex3f(mTempPath->getPath().at(j)->getX(), mTempPath->getPath().at(j)->getY(), 0.0f);
+   
+    if (mTempPath == NULL)
+        return;
+    
+    lockForTempPath.lock();
+   
+    glBegin (GL_LINE_STRIP);
+        for (int j = 0; j < mTempPath->getPath().size(); ++j){
+            
+             glVertex3f(mTempPath->getPath().at(j)->getX(),mTempPath->getPath().at(j)->getY(), 0.0f);
         }
+    
+    glEnd();    
+   
+    lockForTempPath.unlock();
 
-        glEnd();
-
-        lockForTempPath.unlock();
-    }
-
-    if ( myNetworkPath != NULL && myNetworkPathPage == currentPage )
-    {
-        lockForNetworkPath.lock();
-        //TODO We need a lock here
-        glBegin(GL_LINE_STRIP);
-        for ( int j = 0; j < myNetworkPath->getPath().size(); ++j )
-        {
-
-            glVertex3f(myNetworkPath->getPath().at(j)->getX(), myNetworkPath->getPath().at(j)->getY(), 0.0f);
-        }
-
-        glEnd();
-        lockForNetworkPath.unlock();
-    }
-
-
-}
-
-bool compareByRequestID(Request *a, Request *b)
-{
-    return a->getRequestID() < b->getRequestID();
-}
-
-bool isNull(Request *a)
-{
-    return a == NULL;
 }
 
 /**
@@ -418,151 +425,19 @@ bool isNull(Request *a)
  */
 void ScribbleArea::NetworkRequestsAnalyzer()
 {
-    nextRequestID =0;
-    
     while ( checkMyRequests || mRequests->size() != 0 )
     {
-        //Removing all NULL from the vector and then sorting the vector by nextRequestID
-        mRequests->erase(std::remove_if(mRequests->begin(), mRequests->end(), isNull), mRequests->end());
         //sort the mRequests by requestID
-        std::sort(mRequests->begin(), mRequests->end(), compareByRequestID);
-
-        std::cout << "Requests in queue: " << mRequests->size() << std::endl;
         for ( uint i = 0; i < mRequests->size(); i++ )
         {
-            std::cout << "ID: " << mRequests->at(i)->getRequestID() << "  type:  " << mRequests->at(i)->getRequestType() << std::endl;
+
         }
-
-        std::cout<<"nextRequestID: "<<nextRequestID<<std::endl;
-
-        for ( uint i = 0; i < mRequests->size(); i++ )
-        {
-            if ( mRequests->at(i)->getRequestID() == nextRequestID )
-            {
-                //Determine request type and act upon it
-                switch ( mRequests->at(i)->getRequestType() )
-                {
-                    case Request::ADDPOINTS:
-                    {
-                        std::cout << " ADDPOINTS" << std::endl;
-                        //AddPoints - username - requestID++ - pathID - numberOfPoints - Points (vector of points*)
-
-
-                        int nPoints = ( ( AddPointsToPathRequest* ) mRequests->at(i) )->getNumberOfPoints();
-                        //TOCONF pathID with the new points seems useless
-                        int pathID = ( ( AddPointsToPathRequest* ) mRequests->at(i) )->getPathID();
-                        std::vector<Point *>* myNewNetworkPoints = ( ( AddPointsToPathRequest * ) mRequests->at(i) )->getPoints();
-
-                        lockForNetworkPath.lock();
-                        for ( int i = 0; i < myNewNetworkPoints->size(); i++ )
-                        {
-                            std::cout<<"Point from network: x "<<myNewNetworkPoints->at(i)->getX()<<" y "<<myNewNetworkPoints->at(i)->getY()<<std::endl;
-                            myNetworkPath->addPoint(new Point(1,1,30,50));//myNewNetworkPoints->at(i));
-                        }
-                        lockForNetworkPath.unlock();
-
-                        break;
-                    }
-                    case Request::NEWPATH:
-                    {
-                        std::cout << " NEWPATH" << std::endl;
-
-                        Color color = ( ( NewPathRequest* ) mRequests->at(i) )->getColor();
-                        int page = ( ( NewPathRequest* ) mRequests->at(i) )->getPage();
-                        int pathID = ( ( NewPathRequest* ) mRequests->at(i) )->getPathID();
-                        int width = ( ( NewPathRequest* ) mRequests->at(i) )->getWidth();
-                        bool active = ( ( NewPathRequest* ) mRequests->at(i) )->isActive();
-                        bool mode = ( ( NewPathRequest* ) mRequests->at(i) )->isMode();
-
-                        //new Path
-                        //(Point* point, int mode, Color color, int width, int id, bool fin, bool active
-
-                        //This constructor does not have an initial point so we have to be careful when drawing this.. we might get a NULL pointer
-                        Path * path = new Path(mode, color, width, pathID, active);
-
-                        lockForNetworkPath.lock();
-                        myNetworkPath = path;
-                        lockForNetworkPath.unlock();
-                        myNetworkPathPage = page;
-
-
-                        break;
-                    }
-                    case Request::ENDPATH:
-                    {
-                        std::cout << " ENDPATH" << std::endl;
-
-                        //Move this path to the permanent pathsOnPage
-                        pathsOnPage[myNetworkPathPage].push_back(myNetworkPath);
-
-                        lockForNetworkPath.lock();
-                        myNetworkPath = NULL;
-                        lockForNetworkPath.unlock();
-                        myNetworkPathPage = -1;
-
-                        break;
-                    }
-                    case Request::DELETEPATH:
-                    {
-                        std::cout << " DELETEPATH" << std::endl;
-                        break;
-                    }
-                    case Request::OWNERSHIP:
-                    {
-                        std::cout << " OWNERSHIP" << std::endl;
-
-                        fileOwner = ( ( OwnershipRequest* ) mRequests->at(i) )->getOwner();
-                        break;
-                    }
-                    case Request::RELEASEOWNERSHIP:
-                    {
-                        std::cout << " RELEASEOWNERSHIP" << std::endl;
-                        break;
-                    }
-                    case Request::REDO:
-                    {
-                        std::cout << " REDO" << std::endl;
-                        break;
-                    }
-                    case Request::UNDO:
-                    {
-                        std::cout << "UNDO " << std::endl;
-                        break;
-                    }
-                    case Request::FILELIST:
-                    {
-                        std::cout << " FILELIST" << std::endl;
-                        break;
-                    }
-                    case Request::LOGIN:
-                    {
-                        std::cout << " LOGIN" << std::endl;
-                        break;
-                    }
-                    case Request::LOGOUT:
-                    {
-                        std::cout << " LOGOUT" << std::endl;
-                        break;
-                    }
-                    default:
-                    {
-                        std::cout << "SHOULD NEVER GET HERE!!!!!" << std::endl;
-                    }
-
-                }
-                std::cout << "In request type " << mRequests->at(i)->getRequestType() << "    " << mRequests->at(i)->getRequestID() << std::endl;
-                nextRequestID++;
-
-                //Deleting the request and then setting it to NULL so that it can be removed from the vector at the next run
-                delete mRequests->at(i);
-                mRequests->at(i) = NULL;
-            }
-        }
+        //if the first request in the queue has the nextRequestID then execute it
+        //increase nextRequestID
         //repeat the 2 above steps until either all requests are met or the nextRequestID does not match the ID of the next request in the queue
 
         //Repeat the requests each 200 milliseconds
-        //std::cout<<"NetworkRequestsAnalyzer"<<std::endl;
-        boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(200));
 
     }
 }
@@ -588,8 +463,7 @@ void ScribbleArea::SendTests()
     mySender->NewPath(3, true, 34567, true, 0, 1);
     mySender->AddPoints(3, 4, mPoints);
     mySender->EndPath(3);
-    mySender->ReleaseOwnership();
-    //mySender->Logout();
+    mySender->Logout();
 
     std::cout << "Scribble area end of SendTests function" << std::endl;
 }

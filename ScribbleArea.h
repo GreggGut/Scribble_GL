@@ -15,14 +15,13 @@
 #include <boost/thread/mutex.hpp>
 #include "Request.h"
 #include "Receiver.h"
-#include "Point.h"
-#include "Path.h"
-#include <algorithm>
 
 class ScribbleArea
 {
+    
 public:
     ScribbleArea();
+    ScribbleArea(int x, int y, int w, int h);
     ScribbleArea(const ScribbleArea& orig);
     virtual ~ScribbleArea();
     void Draw();
@@ -31,6 +30,7 @@ public:
     float getPenSize();
     void setPenColor(Color &newColor);
     void setPenWidth(int newWidth);
+    bool pointInsideArea(Point * point);
     
     void screenPressEvent(Point* point);
     void screenMoveEvent(Point* point);
@@ -67,6 +67,11 @@ private:
         MENU_BUTTON_SPACING = 17
     };
     
+    int xPos;
+    int yPos;
+    int width;
+    int height;
+    
     Color penColor;
     float penSize;
 
@@ -80,16 +85,12 @@ private:
 
     boost::mutex pathsLock;
     boost::mutex lockForTempPath;
-    boost::mutex lockForNetworkPath;
 
     int currentPage;
     std::vector<std::vector<Path*> > pathsOnPage;
     std::vector< std::vector<Path*> > redoVector;
 
-    /***********************************
-     *****Used for networking***********
-     **********************************/
-
+    //Used for networking
     void SendTests();
     void NetworkRequestsAnalyzer();
 
@@ -98,24 +99,11 @@ private:
 
     typedef std::vector <Request*> Vector_Request;
     Vector_Request *mRequests;
-    
-    
-    //The 2 below structures will point to the same Path at all times
-    //Used for rendering
-    //std::vector<Path* > pathOnPageNetwork;
-    //Used for easier access 
-    Path* myNetworkPath;
-    int myNetworkPathPage;
-    
-    
     Receiver* receiver;
     boost::mutex *requestsMutex;
     Sender * mySender;
     std::string username;
     std::string password;
-    int serverListeningPort;
-    
-    std::string fileOwner;
 };
 
 #endif	/* SCRIBBLEAREA_H */

@@ -8,8 +8,11 @@
 #include "Painter.h"
 
 Painter::Painter() {
+  
+    menu = new Menu(0, 0, WIDTH, 50);
+    scribbleArea = new ScribbleArea(0, 50, WIDTH, HEIGHT - 50);
     
-    scribbleArea = new ScribbleArea();
+    interpreter = new ScreenInterpreter(scribbleArea, menu);
 }
 
 Painter::Painter(const Painter& orig) {
@@ -18,17 +21,25 @@ Painter::Painter(const Painter& orig) {
 
 Painter::~Painter() {
     delete scribbleArea;
+    delete menu;
 }
 
 ScribbleArea* Painter::getScribbleArea(){
     return scribbleArea;
 }
 
+Menu* Painter::getMenu(){
+    return menu;
+}
+
+ScreenInterpreter* Painter::getInterpreter(){
+    return interpreter;
+}
 
 void Painter::Draw() {
     
      DrawPaths();
-     DrawUI();
+     DrawMenu();
 
 }
 
@@ -65,7 +76,7 @@ void Painter::DrawPaths(){
 
 }
 
-void Painter::DrawUI(){
+void Painter::DrawMenu(){
 
      switch (scribbleArea->getMode()){
         case WRITE:

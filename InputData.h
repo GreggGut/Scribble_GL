@@ -18,7 +18,7 @@
 #include <stdio.h>   /* Standard input/output definitions */
 #include <unistd.h>  /* UNIX standard function definitions */
 #include <queue>
-#include "ScribbleArea.h"
+#include "ScreenInterpreter.h"
 #include <stdlib.h>     /* Needed for the exit() function */
 
 #include "PalmRejection.h"
@@ -28,7 +28,7 @@ using namespace std;
 class InputData
 {
 public:
-    InputData(ScribbleArea *);
+    InputData(ScreenInterpreter *);
     ~InputData();
     void run();
     void stop();
@@ -37,7 +37,7 @@ private:
     void initialise_port(int fd);
     int open_port();
     Point * read_data_from_file(int fd);
-    ScribbleArea * scribbleAreaAccess;
+    ScreenInterpreter * scribbleAreaAccess;
     queue<Point* > *mPointsQueue;
 
     volatile bool stop_request;

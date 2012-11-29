@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     glInit(argc, argv);
     
     painter = new Painter();
-    inputData = new InputData(painter->getScribbleArea());
+    inputData = new InputData(painter->getInterpreter());
 
 //    boost::thread getInput(&InputData::run,inputData);
     

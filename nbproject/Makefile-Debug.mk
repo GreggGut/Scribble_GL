@@ -48,8 +48,10 @@ OBJECTFILES= \
 	${OBJECTDIR}/DeletePathRequest.o \
 	${OBJECTDIR}/AddPointsToPathRequest.o \
 	${OBJECTDIR}/Color.o \
+	${OBJECTDIR}/ScreenInterpreter.o \
 	${OBJECTDIR}/Receiver.o \
 	${OBJECTDIR}/UndoRequest.o \
+	${OBJECTDIR}/Menu.o \
 	${OBJECTDIR}/PalmRejection.o \
 	${OBJECTDIR}/Request.o \
 	${OBJECTDIR}/FileListAvailableRequest.o \
@@ -149,6 +151,11 @@ ${OBJECTDIR}/Color.o: Color.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Color.o Color.cpp
 
+${OBJECTDIR}/ScreenInterpreter.o: ScreenInterpreter.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenInterpreter.o ScreenInterpreter.cpp
+
 ${OBJECTDIR}/Receiver.o: Receiver.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -158,6 +165,11 @@ ${OBJECTDIR}/UndoRequest.o: UndoRequest.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/UndoRequest.o UndoRequest.cpp
+
+${OBJECTDIR}/Menu.o: Menu.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Menu.o Menu.cpp
 
 ${OBJECTDIR}/PalmRejection.o: PalmRejection.cpp 
 	${MKDIR} -p ${OBJECTDIR}

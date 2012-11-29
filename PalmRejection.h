@@ -13,19 +13,20 @@
 #include <pthread.h>
 #include <iostream>
 #include <vector>
-#include "ScribbleArea.h"
+#include "ScreenInterpreter.h"
 #include <queue>
 #include "ScreenAreas.h"
 //#include <QWidget>
 //#include "QTimer"
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+
 ///////////////////////////
 
 class PalmRejection
 {
 public:
-    PalmRejection(ScribbleArea* scribble);
+    PalmRejection(ScreenInterpreter* s);
     virtual ~PalmRejection();
     void eventTouch(std::queue<Point* > *mPointsQueue);
     void eventMove(std::queue<Point* > *mPointsQueue);
@@ -49,7 +50,7 @@ private:
 
     float getDistance(int, int);
 
-    ScribbleArea* scribble;
+    ScreenInterpreter* interpreter;
     bool stopRequest;
     ushort position;
 

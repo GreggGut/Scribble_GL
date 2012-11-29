@@ -12,7 +12,7 @@
  * @param scribbleA This is a pointer to the a ScribbleArea
  */
 
-PalmRejection::PalmRejection(ScribbleArea* scribbleA) : scribble(scribbleA), stopRequest(false), position(0), sampling(0), penPresent(false), mX(-1), mY(-1)
+PalmRejection::PalmRejection(ScreenInterpreter* s) : interpreter(s), stopRequest(false), position(0), sampling(0), penPresent(false), mX(-1), mY(-1)
 {
     //for now limit vector to 5, analyze data and decide what to do with it
     pointToAnalyze.resize(ANALYZE_BUFFER);
@@ -136,12 +136,12 @@ bool PalmRejection::firstTryFindingPenAndPalm()
             //We found a pen
             penPresent = true;
             //std::cout << "Been here, pen found only 1 point in each set" << std::endl;
-
+            
             //Send events to the drawing area
-            scribble->screenPressEvent(pointToAnalyze[pos[0]][0]);
+            interpreter->screenPressEvent(pointToAnalyze[pos[0]][0]);
             for ( int i = 1; i < 4; i++ )
             {
-                scribble->screenMoveEvent(pointToAnalyze[pos[i]][0]);
+                interpreter->screenMoveEvent(pointToAnalyze[pos[i]][0]);
             }
 
             mPen.clearMatrix();
@@ -233,11 +233,11 @@ bool PalmRejection::firstTryFindingPenAndPalm()
                 mX = pointToAnalyze[forthSet][index[3]]->getX();
                 mY = pointToAnalyze[forthSet][index[3]]->getY();
 
-                scribble->screenPressEvent(pointToAnalyze[pos[0]][index[0]]);
+                interpreter->screenPressEvent(pointToAnalyze[pos[0]][index[0]]);
                 pointToAnalyze[pos[0]][index[0]] = NULL;
                 for ( int i = 1; i < 4; i++ )
                 {
-                    scribble->screenMoveEvent(pointToAnalyze[pos[i]][index[i]]);
+                    interpreter->screenMoveEvent(pointToAnalyze[pos[i]][index[i]]);
                     pointToAnalyze[pos[i]][index[i]] = NULL;
                 }
 
@@ -287,12 +287,12 @@ void PalmRejection::compact_pointToAnalyze()
  * adjustments (points, commas...). If the pen area would not be saved then the pen would need to be re-detected causing a slowdown 
  * in user writing and not allowing the user to add small writing
  */
-void PalmRejection::eventRelease(/*Points *point*/)
+void PalmRejection::eventRelease(/*aaPoints *point*/)
 {
     //Disable penPresent, send release event to scribbleArea, clean buffer, and start palm reset timer
     if (penPresent)
     {
-        scribble->screenReleaseEvent();
+        interpreter->screenReleaseEvent();
     }
    
     penPresent = false;
@@ -402,7 +402,7 @@ void PalmRejection::findPen()
             {
 
 
-                scribble->screenPressEvent(pointToAnalyze[position][i]);
+                interpreter->screenPressEvent(pointToAnalyze[position][i]);
                 //std::cout<<"Press -         findPen() first loop"<<std::endl;
 
                 //NEW
@@ -534,11 +534,11 @@ void PalmRejection::findPen()
                                                                 mY = pointToAnalyze[forthSet][l]->getY();
 
                                                                 //Send the four points to the acribbleArea for drawing
-                                                                scribble->screenPressEvent(pointToAnalyze[firstSet][i]);
+                                                                interpreter->screenPressEvent(pointToAnalyze[firstSet][i]);
                                                                 // std::cout<<"Press -         findPen() second loop"<<std::endl;
-                                                                scribble->screenMoveEvent(pointToAnalyze[secondSet][j]);
-                                                                scribble->screenMoveEvent(pointToAnalyze[thirdSet][k]);
-                                                                scribble->screenMoveEvent(pointToAnalyze[forthSet][l]);
+                                                                interpreter->screenMoveEvent(pointToAnalyze[secondSet][j]);
+                                                                interpreter->screenMoveEvent(pointToAnalyze[thirdSet][k]);
+                                                                interpreter->screenMoveEvent(pointToAnalyze[forthSet][l]);
 
                                                                 //Update palm matrix
                                                                 mPalm.clearMatrix();
@@ -606,7 +606,7 @@ void PalmRejection::findPen()
     //if we didn't completely break it means we didn't find a pen, setting the value accordingly
     if ( !completeBreak )
     {
-        scribble->screenReleaseEvent();
+        interpreter->screenReleaseEvent();
         penPresent = false;
 
         //        for ( int i = 0; i < where; i++ )
@@ -774,7 +774,7 @@ void PalmRejection::findNextPoint()
                     updatePalmMatrix(position, i);
                     mPalm.reset(pointToAnalyze[position][i]->getColumn(), pointToAnalyze[position][i]->getRow());
 
-                    scribble->screenMoveEvent(pointToAnalyze[position][i]);
+                    interpreter->screenMoveEvent(pointToAnalyze[position][i]);
                     found = true;
                     pointToAnalyze[position][i] = NULL;
                     break;
@@ -799,7 +799,7 @@ void PalmRejection::findNextPoint()
     //if the pen was not found in the above loop then set penPresent to false which will initialize a search for a pen at the next event
     if (found == false)
     {
-        scribble->screenReleaseEvent();
+        interpreter->screenReleaseEvent();
         penPresent = false;
     }
 }

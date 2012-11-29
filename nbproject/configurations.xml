@@ -10,6 +10,7 @@
       <itemPath>InputData.h</itemPath>
       <itemPath>LoginRequest.h</itemPath>
       <itemPath>LogoutRequest.h</itemPath>
+      <itemPath>Menu.h</itemPath>
       <itemPath>NewPathRequest.h</itemPath>
       <itemPath>OwnershipRequest.h</itemPath>
       <itemPath>Painter.h</itemPath>
@@ -21,6 +22,7 @@
       <itemPath>ReleaseOwnershipRequest.h</itemPath>
       <itemPath>Request.h</itemPath>
       <itemPath>ScreenAreas.h</itemPath>
+      <itemPath>ScreenInterpreter.h</itemPath>
       <itemPath>ScribbleArea.h</itemPath>
       <itemPath>Sender.h</itemPath>
       <itemPath>UndoRequest.h</itemPath>
@@ -38,6 +40,7 @@
       <itemPath>InputData.cpp</itemPath>
       <itemPath>LoginRequest.cpp</itemPath>
       <itemPath>LogoutRequest.cpp</itemPath>
+      <itemPath>Menu.cpp</itemPath>
       <itemPath>NewPathRequest.cpp</itemPath>
       <itemPath>OwnershipRequest.cpp</itemPath>
       <itemPath>Painter.cpp</itemPath>
@@ -49,6 +52,7 @@
       <itemPath>ReleaseOwnershipRequest.cpp</itemPath>
       <itemPath>Request.cpp</itemPath>
       <itemPath>ScreenAreas.cpp</itemPath>
+      <itemPath>ScreenInterpreter.cpp</itemPath>
       <itemPath>ScribbleArea.cpp</itemPath>
       <itemPath>Sender.cpp</itemPath>
       <itemPath>UndoRequest.cpp</itemPath>

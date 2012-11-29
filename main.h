@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   main.h
  * Author: scribble
  *
@@ -14,6 +14,7 @@
 #include "Painter.h"
 #include "InputData.h"
 #include <boost/thread.hpp>
+#include "NetworkConnection.h"
 
 Painter *painter;
 InputData *inputData;

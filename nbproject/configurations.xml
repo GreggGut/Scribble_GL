@@ -5,13 +5,17 @@
       <itemPath>Color.h</itemPath>
       <itemPath>InputData.h</itemPath>
       <itemPath>Menu.h</itemPath>
+      <itemPath>NetworkClient.h</itemPath>
+      <itemPath>NetworkConnection.h</itemPath>
       <itemPath>Painter.h</itemPath>
       <itemPath>PalmRejection.h</itemPath>
       <itemPath>Path.h</itemPath>
       <itemPath>Point.h</itemPath>
+      <itemPath>RequestMessage.h</itemPath>
       <itemPath>ScreenAreas.h</itemPath>
       <itemPath>ScreenInterpreter.h</itemPath>
       <itemPath>ScribbleArea.h</itemPath>
+      <itemPath>Sender.h</itemPath>
       <itemPath>defines.h</itemPath>
       <itemPath>main.h</itemPath>
     </logicalFolder>
@@ -21,13 +25,17 @@
       <itemPath>Color.cpp</itemPath>
       <itemPath>InputData.cpp</itemPath>
       <itemPath>Menu.cpp</itemPath>
+      <itemPath>NetworkClient.cpp</itemPath>
+      <itemPath>NetworkConnection.cpp</itemPath>
       <itemPath>Painter.cpp</itemPath>
       <itemPath>PalmRejection.cpp</itemPath>
       <itemPath>Path.cpp</itemPath>
       <itemPath>Point.cpp</itemPath>
+      <itemPath>RequestMessage.cpp</itemPath>
       <itemPath>ScreenAreas.cpp</itemPath>
       <itemPath>ScreenInterpreter.cpp</itemPath>
       <itemPath>ScribbleArea.cpp</itemPath>
+      <itemPath>Sender.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"

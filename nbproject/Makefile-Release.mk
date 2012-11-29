@@ -35,16 +35,20 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/NetworkConnection.o \
 	${OBJECTDIR}/InputData.o \
 	${OBJECTDIR}/Point.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/Painter.o \
+	${OBJECTDIR}/RequestMessage.o \
 	${OBJECTDIR}/Color.o \
 	${OBJECTDIR}/ScreenInterpreter.o \
 	${OBJECTDIR}/Menu.o \
 	${OBJECTDIR}/PalmRejection.o \
 	${OBJECTDIR}/Path.o \
+	${OBJECTDIR}/NetworkClient.o \
 	${OBJECTDIR}/ScreenAreas.o \
+	${OBJECTDIR}/Sender.o \
 	${OBJECTDIR}/ScribbleArea.o
 
 
@@ -72,6 +76,11 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl_working_copy: ${OBJECTFIL
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl_working_copy ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
+${OBJECTDIR}/NetworkConnection.o: NetworkConnection.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/NetworkConnection.o NetworkConnection.cpp
+
 ${OBJECTDIR}/InputData.o: InputData.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -91,6 +100,11 @@ ${OBJECTDIR}/Painter.o: Painter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Painter.o Painter.cpp
+
+${OBJECTDIR}/RequestMessage.o: RequestMessage.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/RequestMessage.o RequestMessage.cpp
 
 ${OBJECTDIR}/Color.o: Color.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -117,10 +131,20 @@ ${OBJECTDIR}/Path.o: Path.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Path.o Path.cpp
 
+${OBJECTDIR}/NetworkClient.o: NetworkClient.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/NetworkClient.o NetworkClient.cpp
+
 ${OBJECTDIR}/ScreenAreas.o: ScreenAreas.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenAreas.o ScreenAreas.cpp
+
+${OBJECTDIR}/Sender.o: Sender.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Sender.o Sender.cpp
 
 ${OBJECTDIR}/ScribbleArea.o: ScribbleArea.cpp 
 	${MKDIR} -p ${OBJECTDIR}

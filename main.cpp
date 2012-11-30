@@ -97,15 +97,13 @@ int main(int argc, char *argv[])
     painter = new Painter();
     inputData = new InputData(painter->getInterpreter());
 
-
-
-        boost::thread getInput(&InputData::run,inputData);
+    boost::thread getInput(&InputData::run, inputData);
 
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
 
-    std::cout<<"Connecting..."<<std::endl;
-    tcp::resolver::query query("localhost", "21223");//"132.205.8.68"   localhost, MHO.encs.concordia.ca
+    std::cout << "Connecting..." << std::endl;
+    tcp::resolver::query query("localhost", "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
     tcp::resolver::iterator iterator = resolver.resolve(query);
 
     //NetworkClient
@@ -155,11 +153,17 @@ int main(int argc, char *argv[])
     client.sendMessage(toSend);
     toSend = s.ReleaseOwnership();
     client.sendMessage(toSend);
+    //Testing until here....
+
 
     glutMainLoop();
 
     client.close();
     t.join();
+
+    //We need to find a way to stop the dataInput thread...
+    //and then getInput.join();
+    //getInput.join();
 
     return 0;
 }

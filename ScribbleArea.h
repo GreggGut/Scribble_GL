@@ -47,6 +47,10 @@ public:
     void setLockForPath(bool lock);
     Path* getTempPath();
 
+    void setNetworkPage(int p);
+    void setNetworkPath(Path* p);
+    void addNetworkPoint(Point * p);
+
 private:
 
     void cleanRedoVector();
@@ -88,7 +92,10 @@ private:
     std::vector< std::vector<Path*> > redoVector;
 
     //Used for networking
-    boost::mutex *requestsMutex;
+    boost::mutex lockForNetworkPath;
+    int networkPathPage;
+    Path* mNetworkPath;
+
 };
 
 #endif	/* SCRIBBLEAREA_H */

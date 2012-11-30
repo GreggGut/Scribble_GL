@@ -18,6 +18,7 @@
 
 #include "RequestMessage.h"
 #include "Path.h"
+#include "ScribbleArea.h"
 
 using boost::asio::ip::tcp;
 
@@ -27,9 +28,9 @@ class NetworkClient
 {
 public:
 
-    NetworkClient(boost::asio::io_service& io_service, tcp::resolver::iterator endpoint_iterator);
-    NetworkClient(const NetworkClient& org);
-    NetworkClient & operator=(const NetworkClient &org);
+    NetworkClient(boost::asio::io_service& io_service, tcp::resolver::iterator endpoint_iterator, ScribbleArea* scribbleArea);
+    //NetworkClient(const NetworkClient& org);
+    //NetworkClient & operator=(const NetworkClient &org);
 
     void close();
     void sendMessage(std::string line);
@@ -51,6 +52,8 @@ private:
     tcp::socket socket_;
     RequestMessage read_msg_;
     chat_message_queue write_msgs_;
+
+    ScribbleArea* scribbleArea;
 };
 
 

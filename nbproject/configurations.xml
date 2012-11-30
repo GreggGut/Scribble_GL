@@ -6,7 +6,6 @@
       <itemPath>InputData.h</itemPath>
       <itemPath>Menu.h</itemPath>
       <itemPath>NetworkClient.h</itemPath>
-      <itemPath>NetworkConnection.h</itemPath>
       <itemPath>Painter.h</itemPath>
       <itemPath>PalmRejection.h</itemPath>
       <itemPath>Path.h</itemPath>
@@ -26,7 +25,6 @@
       <itemPath>InputData.cpp</itemPath>
       <itemPath>Menu.cpp</itemPath>
       <itemPath>NetworkClient.cpp</itemPath>
-      <itemPath>NetworkConnection.cpp</itemPath>
       <itemPath>Painter.cpp</itemPath>
       <itemPath>PalmRejection.cpp</itemPath>
       <itemPath>Path.cpp</itemPath>

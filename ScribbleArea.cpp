@@ -17,8 +17,6 @@ ScribbleArea::ScribbleArea()
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
     redoVector.resize(5);
-
-    requestsMutex = new boost::mutex();
 }
 
 ScribbleArea::ScribbleArea(int x, int y, int w, int h)
@@ -36,9 +34,6 @@ ScribbleArea::ScribbleArea(int x, int y, int w, int h)
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
     redoVector.resize(5);
-
-    requestsMutex = new boost::mutex();
-
 }
 
 ScribbleArea::ScribbleArea(const ScribbleArea& orig)
@@ -77,44 +72,53 @@ void ScribbleArea::setPenWidth(int newWidth)
     penSize = newWidth;
 }
 
-int ScribbleArea::getMode(){
+int ScribbleArea::getMode()
+{
 
-   return mMode;
+    return mMode;
 }
 
+std::vector<std::vector<Path*> > ScribbleArea::getPathsOnPage()
+{
+    return pathsOnPage;
+}
 
- std::vector<std::vector<Path*> > ScribbleArea::getPathsOnPage(){
-     return pathsOnPage;
- }
-
-int ScribbleArea::getCurrentPage(){
+int ScribbleArea::getCurrentPage()
+{
     return currentPage;
 }
 
-void ScribbleArea::setLockForPath(bool lock){
+void ScribbleArea::setLockForPath(bool lock)
+{
 
-    if (lock == 1) {
+    if ( lock == 1 )
+    {
         lockForTempPath.lock();
     }
 
-    else {
-         lockForTempPath.unlock();
+    else
+    {
+        lockForTempPath.unlock();
     }
 }
 
-Path* ScribbleArea::getTempPath(){
- return mTempPath;
+Path* ScribbleArea::getTempPath()
+{
+    return mTempPath;
 }
 
-bool ScribbleArea::pointInsideArea(Point * point){
+bool ScribbleArea::pointInsideArea(Point * point)
+{
 
     //point has to be inside frame. could be changed but overlaps may occur
-    if((point->getX() > xPos) && (point->getX() < width+xPos) && (point->getY() > yPos) && (point->getY() < height+yPos)){
+    if ( ( point->getX() > xPos ) && ( point->getX() < width + xPos ) && ( point->getY() > yPos ) && ( point->getY() < height + yPos ) )
+    {
         return true;
     }
 
     return false;
 }
+
 /*! Screen Press Event
  *
  * \param *point A pointer to a Point object
@@ -204,15 +208,12 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/)
 
         lockForTempPath.unlock();
         pathsLock.unlock();
-
     }
-
     else
     {
 
     }
 }
-
 
 /*! Undo
  *
@@ -221,20 +222,20 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/)
 void ScribbleArea::undo()
 {
     pathsLock.lock();
-    if (!pathsOnPage.at(currentPage).empty())
+    if ( !pathsOnPage.at(currentPage).empty() )
     {
-        for (int i = (int) pathsOnPage.at(currentPage).size() - 1; i >= 0; i--)
+        for ( int i = ( int ) pathsOnPage.at(currentPage).size() - 1; i >= 0; i-- )
         {
-            if (pathsOnPage.at(currentPage).at(i) != NULL)
+            if ( pathsOnPage.at(currentPage).at(i) != NULL )
             {
                 redoVector.at(currentPage).push_back(pathsOnPage.at(currentPage).at(i));
 
                 int id = pathsOnPage.at(currentPage).at(i)->getPathID();
                 pathsOnPage.at(currentPage).at(i) = NULL; //pop_back();
 
-                for (int j = i - 1; j >= 0; j--)
+                for ( int j = i - 1; j >= 0; j-- )
                 {
-                    if (pathsOnPage.at(currentPage).at(j) != NULL && id == pathsOnPage.at(currentPage).at(j)->getPathID())
+                    if ( pathsOnPage.at(currentPage).at(j) != NULL && id == pathsOnPage.at(currentPage).at(j)->getPathID() )
                     {
                         pathsOnPage.at(currentPage).at(j)->enablePath();
                         break;
@@ -256,12 +257,12 @@ void ScribbleArea::undo()
 void ScribbleArea::redo()
 {
     pathsLock.lock();
-    if (!redoVector.at(currentPage).empty())
+    if ( !redoVector.at(currentPage).empty() )
     {
         int id = redoVector.at(currentPage).back()->getPathID();
-        for (int i = pathsOnPage.at(currentPage).size() - 1; i >= 0; i--)
+        for ( int i = pathsOnPage.at(currentPage).size() - 1; i >= 0; i-- )
         {
-            if (pathsOnPage.at(currentPage).at(i) != NULL && id == pathsOnPage.at(currentPage).at(i)->getPathID())
+            if ( pathsOnPage.at(currentPage).at(i) != NULL && id == pathsOnPage.at(currentPage).at(i)->getPathID() )
             {
                 //std::cout << "Redone Path " << id << std::endl;
                 pathsOnPage.at(currentPage).at(i)->disablePath();
@@ -321,12 +322,12 @@ void ScribbleArea::clearAll()
  */
 void ScribbleArea::cleanRedoVector()
 {
-    int redoVecSize = (int) redoVector.at(currentPage).size();
+    int redoVecSize = ( int ) redoVector.at(currentPage).size();
 
     //For each Path in redoVector, find if the same path ID is present on the current page of PathsOnPage
     //If present then clear the points vector and then delete the Path object
     //Otherwise delete delete Path without cleaning it which will delete all Point objects
-    for (int i = 0; i < redoVecSize; i++)
+    for ( int i = 0; i < redoVecSize; i++ )
     {
         delete redoVector.at(currentPage).at(i);
         redoVector.at(currentPage).at(i) = NULL;
@@ -344,7 +345,7 @@ void ScribbleArea::cleanPathsOnCurentPageVector()
     pathsLock.lock();
     int vectorSize = pathsOnPage.at(currentPage).size();
 
-    for (int i = 0; i < vectorSize; i++)
+    for ( int i = 0; i < vectorSize; i++ )
     {
         delete pathsOnPage.at(currentPage).at(i);
         pathsOnPage.at(currentPage).at(i) = NULL;
@@ -372,19 +373,54 @@ void ScribbleArea::Draw()
         glEnd();
     }
 
-    if (mTempPath == NULL)
-        return;
-
     lockForTempPath.lock();
+    if ( mTempPath != NULL )
+    {
+        glBegin(GL_LINE_STRIP);
+        for ( int j = 0; j < mTempPath->getPath().size(); ++j )
+        {
 
-    glBegin (GL_LINE_STRIP);
-        for (int j = 0; j < mTempPath->getPath().size(); ++j){
-
-             glVertex3f(mTempPath->getPath().at(j)->getX(),mTempPath->getPath().at(j)->getY(), 0.0f);
+            glVertex3f(mTempPath->getPath().at(j)->getX(), mTempPath->getPath().at(j)->getY(), 0.0f);
         }
 
-    glEnd();
-
+        glEnd();
+    }
     lockForTempPath.unlock();
 
+    lockForNetworkPath.lock();
+    if ( currentPage = networkPathPage )
+    {
+        glBegin(GL_LINE_STRIP);
+        for ( int j = 0; j < mNetworkPath->getPath().size(); ++j )
+        {
+
+            glVertex3f(mNetworkPath->getPath().at(j)->getX(), mNetworkPath->getPath().at(j)->getY(), 0.0f);
+        }
+
+        glEnd();
+    }
+    lockForNetworkPath.unlock();
+
+
+}
+
+void ScribbleArea::setNetworkPage(int p)
+{
+    lockForNetworkPath.lock();
+    networkPathPage = p;
+    lockForNetworkPath.unlock();
+}
+
+void ScribbleArea::setNetworkPath(Path* p)
+{
+    lockForNetworkPath.lock();
+    mNetworkPath = p;
+    lockForNetworkPath.unlock();
+}
+
+void ScribbleArea::addNetworkPoint(Point * p)
+{
+    lockForNetworkPath.lock();
+    mNetworkPath->addPoint(p);
+    lockForNetworkPath.unlock();
 }

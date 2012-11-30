@@ -35,7 +35,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/NetworkConnection.o \
 	${OBJECTDIR}/InputData.o \
 	${OBJECTDIR}/Point.o \
 	${OBJECTDIR}/main.o \
@@ -75,11 +74,6 @@ LDLIBSOPTIONS=-L/usr/local/lib -Wl,-rpath,. -Wl,-rpath,/usr/local/lib
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl_working_copy: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl_working_copy ${OBJECTFILES} ${LDLIBSOPTIONS} 
-
-${OBJECTDIR}/NetworkConnection.o: NetworkConnection.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/NetworkConnection.o NetworkConnection.cpp
 
 ${OBJECTDIR}/InputData.o: InputData.cpp 
 	${MKDIR} -p ${OBJECTDIR}

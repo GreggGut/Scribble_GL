@@ -13,8 +13,8 @@
 #include "NetworkClient.h"
 #include "Sender.h"
 
-NetworkClient::NetworkClient(boost::asio::io_service& io_service, tcp::resolver::iterator endpoint_iterator) : io_service_(io_service),
-socket_(io_service)
+NetworkClient::NetworkClient(boost::asio::io_service& io_service, tcp::resolver::iterator endpoint_iterator, ScribbleArea* scribbleArea) : io_service_(io_service),
+socket_(io_service), scribbleArea(scribbleArea)
 {
     tcp::endpoint endpoint = *endpoint_iterator;
     socket_.async_connect(endpoint, boost::bind(&NetworkClient::handle_connect, this, boost::asio::placeholders::error, ++endpoint_iterator));

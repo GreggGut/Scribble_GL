@@ -97,19 +97,24 @@ int main(int argc, char *argv[])
     painter = new Painter();
     inputData = new InputData(painter->getInterpreter());
 
+
+
         boost::thread getInput(&InputData::run,inputData);
 
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
 
-    tcp::resolver::query query("localhost", "1234");
+    std::cout<<"Connecting..."<<std::endl;
+    tcp::resolver::query query("localhost", "21223");//"132.205.8.68"   localhost, MHO.encs.concordia.ca
     tcp::resolver::iterator iterator = resolver.resolve(query);
 
     //NetworkClient
-    NetworkClient client(io_service, iterator);
+    NetworkClient client(io_service, iterator, painter->getScribbleArea());
 
     boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service));
 
+
+    //All the bellow is for testing
     Sender s("greg");
     std::string toSend;
     //        toSend = s.Login("greg", "pass");

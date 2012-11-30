@@ -65,8 +65,9 @@
           <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>.</pElem>
+            <pElem>/usr/local/lib</pElem>
           </incDir>
-          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt</commandLine>
+          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt</commandLine>
         </ccTool>
         <linkerTool>
           <linkerAddLib>
@@ -88,6 +89,7 @@
           <developmentMode>5</developmentMode>
           <incDir>
             <pElem>.</pElem>
+            <pElem>/usr/local/lib</pElem>
           </incDir>
           <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt</commandLine>
         </ccTool>
@@ -98,6 +100,7 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <linkerTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl_working_copy</output>
           <linkerAddLib>
             <pElem>/usr/local/lib</pElem>
           </linkerAddLib>

@@ -39,12 +39,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/InputData.o \
 	${OBJECTDIR}/Point.o \
 	${OBJECTDIR}/main.o \
-	${OBJECTDIR}/Painter.o \
 	${OBJECTDIR}/RequestMessage.o \
+	${OBJECTDIR}/Painter.o \
 	${OBJECTDIR}/Color.o \
 	${OBJECTDIR}/ScreenInterpreter.o \
-	${OBJECTDIR}/Menu.o \
 	${OBJECTDIR}/PalmRejection.o \
+	${OBJECTDIR}/Menu.o \
 	${OBJECTDIR}/Path.o \
 	${OBJECTDIR}/NetworkClient.o \
 	${OBJECTDIR}/ScreenAreas.o \
@@ -56,8 +56,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt
-CXXFLAGS=-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt
+CCFLAGS=-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt
+CXXFLAGS=-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -79,77 +79,77 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl_working_copy: ${OBJECTFIL
 ${OBJECTDIR}/NetworkConnection.o: NetworkConnection.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/NetworkConnection.o NetworkConnection.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/NetworkConnection.o NetworkConnection.cpp
 
 ${OBJECTDIR}/InputData.o: InputData.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/InputData.o InputData.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/InputData.o InputData.cpp
 
 ${OBJECTDIR}/Point.o: Point.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Point.o Point.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/Point.o Point.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
-
-${OBJECTDIR}/Painter.o: Painter.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Painter.o Painter.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
 
 ${OBJECTDIR}/RequestMessage.o: RequestMessage.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/RequestMessage.o RequestMessage.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/RequestMessage.o RequestMessage.cpp
+
+${OBJECTDIR}/Painter.o: Painter.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/Painter.o Painter.cpp
 
 ${OBJECTDIR}/Color.o: Color.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Color.o Color.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/Color.o Color.cpp
 
 ${OBJECTDIR}/ScreenInterpreter.o: ScreenInterpreter.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenInterpreter.o ScreenInterpreter.cpp
-
-${OBJECTDIR}/Menu.o: Menu.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Menu.o Menu.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenInterpreter.o ScreenInterpreter.cpp
 
 ${OBJECTDIR}/PalmRejection.o: PalmRejection.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/PalmRejection.o PalmRejection.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/PalmRejection.o PalmRejection.cpp
+
+${OBJECTDIR}/Menu.o: Menu.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/Menu.o Menu.cpp
 
 ${OBJECTDIR}/Path.o: Path.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Path.o Path.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/Path.o Path.cpp
 
 ${OBJECTDIR}/NetworkClient.o: NetworkClient.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/NetworkClient.o NetworkClient.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/NetworkClient.o NetworkClient.cpp
 
 ${OBJECTDIR}/ScreenAreas.o: ScreenAreas.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenAreas.o ScreenAreas.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenAreas.o ScreenAreas.cpp
 
 ${OBJECTDIR}/Sender.o: Sender.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Sender.o Sender.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/Sender.o Sender.cpp
 
 ${OBJECTDIR}/ScribbleArea.o: ScribbleArea.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScribbleArea.o ScribbleArea.cpp
+	$(COMPILE.cc) -g -I. -I/usr/local/lib -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScribbleArea.o ScribbleArea.cpp
 
 # Subprojects
 .build-subprojects:

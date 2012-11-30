@@ -97,13 +97,10 @@ int main(int argc, char *argv[])
     painter = new Painter();
     inputData = new InputData(painter->getInterpreter());
 
-    //    boost::thread getInput(&InputData::run,inputData);
+        boost::thread getInput(&InputData::run,inputData);
 
     boost::asio::io_service io_service;
-
     tcp::resolver resolver(io_service);
-
-
 
     tcp::resolver::query query("localhost", "1234");
     tcp::resolver::iterator iterator = resolver.resolve(query);

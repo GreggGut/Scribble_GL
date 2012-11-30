@@ -8,7 +8,7 @@
 #include "PalmRejection.h"
 
 /** Default constructor
- * 
+ *
  * @param scribbleA This is a pointer to the a ScribbleArea
  */
 
@@ -21,7 +21,7 @@ PalmRejection::PalmRejection(ScreenInterpreter* s) : interpreter(s), stopRequest
     //The palm will be fully reset after x seconds of 0 activity on the screen
     palmResetTimer = new boost::asio::deadline_timer(io_service);
     palmResetTimer->expires_from_now(boost::posix_time::seconds(RESET_TIMER));
-    palmResetTimer->async_wait(boost::bind(&PalmRejection::resetPalm, this,_1)); 
+    palmResetTimer->async_wait(boost::bind(&PalmRejection::resetPalm, this, _1));
 }
 
 /** Default destructor
@@ -32,16 +32,16 @@ PalmRejection::~PalmRejection()
 {
     palmResetTimer->cancel();
     delete palmResetTimer;
-    
+
     flushPointBuffer();
 }
 
 /** Reset palm
- * 
+ *
  * This function is called x seconds after the last event on the screen (when resetTimer expires). Once called it will reset the palm area.
- * 
+ *
  * The resetTimer is only set once there is a complete release on the screen and is stopped as soon as the a new activity occurs. If the timer doesn't have the time to expire
- * this function will not be called and no reset will occur. 
+ * this function will not be called and no reset will occur.
  */
 void PalmRejection::resetPalm(const boost::system::error_code &ec)
 {
@@ -50,20 +50,21 @@ void PalmRejection::resetPalm(const boost::system::error_code &ec)
 
     //FOR TESTING
     //mPen.clearMatrix();
-    
+
     palmResetTimer->cancel();
 }
 
 /** Touch event
- * 
+ *
  * @param mPointsQueue This is a queue of Point pointers (std::queue<Point* >)
- * 
+ *
  * This function is called when the first set of points is available.
  */
 void PalmRejection::eventTouch(std::queue<Point* > *mPointsQueue)
 {
+    //std::cout << "Palm rejection Touch" << std::endl;
     //Copy all points from the received queue to a local queue
-    while (!mPointsQueue->empty())
+    while ( !mPointsQueue->empty() )
     {
         pointToAnalyze[position].push_back(mPointsQueue->front());
         mPointsQueue->pop();
@@ -77,16 +78,17 @@ void PalmRejection::eventTouch(std::queue<Point* > *mPointsQueue)
 }
 
 /** Move event
- * 
+ *
  * @param mPointsQueue This is a queue of Point pointers (std::queue<Point* >)
- * 
+ *
  * This function is called by the InpitData whenever a new set of points is available, however not when it is the first set of points available
- * Calling this function does not mean that a move occurred since all previous points could have been considered as the palm 
+ * Calling this function does not mean that a move occurred since all previous points could have been considered as the palm
  */
 void PalmRejection::eventMove(std::queue<Point* > *mPointsQueue)
 {
+    //std::cout << "Palm rejection move" << std::endl;
     //Copy all points from the received queue to a local queue
-    while (!mPointsQueue->empty())
+    while ( !mPointsQueue->empty() )
     {
         pointToAnalyze[position].push_back(mPointsQueue->front());
         mPointsQueue->pop();
@@ -116,9 +118,32 @@ void PalmRejection::eventMove(std::queue<Point* > *mPointsQueue)
     updatePosition();
 }
 
+/** Release event
+ *
+ * This function is called by the inputData only when there was a complete release on the screen i.e: nothing is touching it.
+ *
+ * This function will reset the palm detection but keep the area where the pen was last. This is done so that the user can make small
+ * adjustments (points, commas...). If the pen area would not be saved then the pen would need to be re-detected causing a slowdown
+ * in user writing and not allowing the user to add small writing
+ */
+void PalmRejection::eventRelease(/*aaPoints *point*/)
+{
+    //std::cout << "Palm rejection release" << std::endl;
+    //Disable penPresent, send release event to scribbleArea, clean buffer, and start palm reset timer
+    if ( penPresent )
+    {
+        interpreter->screenReleaseEvent();
+    }
+
+    penPresent = false;
+    flushPointBuffer();
+    palmResetTimer->expires_from_now(boost::posix_time::seconds(RESET_TIMER));
+    palmResetTimer->async_wait(boost::bind(&PalmRejection::resetPalm, this, _1));
+}
+
 bool PalmRejection::firstTryFindingPenAndPalm()
 {
-    //    //Used for set comparison to find possible points that will result in a pen. 
+    //    //Used for set comparison to find possible points that will result in a pen.
     int firstSet = mod(position - 3);
     int secondSet = mod(firstSet + 1);
     int thirdSet = mod(secondSet + 1);
@@ -136,7 +161,7 @@ bool PalmRejection::firstTryFindingPenAndPalm()
             //We found a pen
             penPresent = true;
             //std::cout << "Been here, pen found only 1 point in each set" << std::endl;
-            
+
             //Send events to the drawing area
             interpreter->screenPressEvent(pointToAnalyze[pos[0]][0]);
             for ( int i = 1; i < 4; i++ )
@@ -149,7 +174,7 @@ bool PalmRejection::firstTryFindingPenAndPalm()
             mX = pointToAnalyze[forthSet][0]->getX();
             mY = pointToAnalyze[forthSet][0]->getY();
 
-            //Releasing ownership of the pass points. 
+            //Releasing ownership of the pass points.
             pointToAnalyze[firstSet][0] = NULL;
             pointToAnalyze[secondSet][0] = NULL;
             pointToAnalyze[thirdSet][0] = NULL;
@@ -279,62 +304,40 @@ void PalmRejection::compact_pointToAnalyze()
     }
 }
 
-/** Release event
- *
- * This function is called by the inputData only when there was a complete release on the screen i.e: nothing is touching it.
- *
- * This function will reset the palm detection but keep the area where the pen was last. This is done so that the user can make small 
- * adjustments (points, commas...). If the pen area would not be saved then the pen would need to be re-detected causing a slowdown 
- * in user writing and not allowing the user to add small writing
- */
-void PalmRejection::eventRelease(/*aaPoints *point*/)
-{
-    //Disable penPresent, send release event to scribbleArea, clean buffer, and start palm reset timer
-    if (penPresent)
-    {
-        interpreter->screenReleaseEvent();
-    }
-   
-    penPresent = false;
-    flushPointBuffer();
-    palmResetTimer->expires_from_now(boost::posix_time::seconds(RESET_TIMER));
-    palmResetTimer->async_wait(boost::bind(&PalmRejection::resetPalm, this,_1));
-}
-
 /** Modulo function (always positive)
- * 
+ *
  * @param x The number to be divided (dividend)
  * @param m The "limit" (divisor) - If not entered it will automatically be the value of ANALYZEBUFFER
  * @return The positive modulo of input x
- * 
+ *
  * This function returns a positive modulo of x.
  * Default divisor is ANALYZEBUFFER however passing a second parameter to the function will overwrite it
  */
 int PalmRejection::mod(int x, const int m)
 {
-    return (x % m + m) % m;
+    return (x % m + m ) % m;
 }
 
 /** Absolute value function
- * 
+ *
  * @param x The integer of which we want the absolute value
  * @return The absolute value of x
- * 
+ *
  * This function return the absolute value of any integer
  */
 int PalmRejection::abs(int x)
 {
-    if (x < 0)
+    if ( x < 0 )
         return -x;
     else
         return x;
 }
 
 /** Square root of an integer
- * 
+ *
  * @param x The integer that we need the square root of
  * @return The square root of the x parameter
- * 
+ *
  * This function is about 5 times faster than the sqrt() on the cmath library. It is less precise however this is not an issue in our case
  */
 inline float PalmRejection::sqrt(const int x)
@@ -346,7 +349,7 @@ inline float PalmRejection::sqrt(const int x)
         float x;
     } u;
     u.x = x;
-    u.i = (1 << 29) + (u.i >> 1) - (1 << 22);
+    u.i = ( 1 << 29 ) + ( u.i >> 1 ) - ( 1 << 22 );
     return u.x;
 }
 
@@ -378,14 +381,13 @@ float PalmRejection::getDistance(int currentPosition, int ignore)
 
 }
 
-
 /** Find the Pen
  *
  * This function determines which 4 consecutive points can be assumed to be a pen.
  *
  * The presence of a pen can be assumed whenever there are four points (in four different sets) that meet the following criteria:
  * - Two consecutive points have to be a minimum distance from each other without exceeding a maximum distance
- * - The total total distance between the four points need to be a minimum of 6 times the minimum distance between two consecutive points. 
+ * - The total total distance between the four points need to be a minimum of 6 times the minimum distance between two consecutive points.
  *
  */
 void PalmRejection::findPen()
@@ -393,9 +395,9 @@ void PalmRejection::findPen()
 
     //check in a point in the current set falls into the mPen area. If yes, assume it is the pen
     bool foundPen = false;
-    for (int i = 0; i < (int) pointToAnalyze[position].size(); i++)
+    for ( int i = 0; i < ( int ) pointToAnalyze[position].size(); i++ )
     {
-        if (pointToAnalyze[position][i] != NULL)
+        if ( pointToAnalyze[position][i] != NULL )
         {
             //std::cout << "(pointToAnalyze[position][i]->getRow(): " << pointToAnalyze[position][i]->getRow() << " pointToAnalyze[position][i]->getColumn(): " << pointToAnalyze[position][i]->getColumn() << std::endl;
             if ( ( mPalm.possiblePen(pointToAnalyze[position][i]->getColumn(), pointToAnalyze[position][i]->getRow()) || mPen.isSet(pointToAnalyze[position][i]->getColumn(), pointToAnalyze[position][i]->getRow()) ) && !foundPen )// || ( pointToAnalyze[position][i]->getRow() > 4 ) ) )
@@ -445,7 +447,7 @@ void PalmRejection::findPen()
 
     //std::cout << "All failed, failing back on old method" << std::endl;
 
-    //Used for set comparison to find possible points that will result in a pen. 
+    //Used for set comparison to find possible points that will result in a pen.
     int firstSet = mod(position - 3);
     int secondSet = mod(firstSet + 1);
     int thirdSet = mod(secondSet + 1);
@@ -519,7 +521,7 @@ void PalmRejection::findPen()
 
                                                             int distance = radius_ij + radius_jk + radius_kl;
 
-                                                            //Four points in four consecutive sets are determined to be a pen, use the point 
+                                                            //Four points in four consecutive sets are determined to be a pen, use the point
                                                             if ( ( radius_kl > MINIMUM_RADIUS ) && ( radius_kl < MAXIMUM_RADIUS ) && ( distance > ( 5 * MINIMUM_RADIUS ) ) )
                                                             {
                                                                 //found 4 points that look like a pen
@@ -616,7 +618,7 @@ void PalmRejection::findPen()
         //                if(pointToAnalyze[pos[i]][j]!=NULL)
         //                {
         //                    mPalm.set(pointToAnalyze[pos[i]][j]->getColumn(), pointToAnalyze[pos[i]][j]->getRow());
-        //                }                
+        //                }
         //            }
         //        }
     }
@@ -638,19 +640,19 @@ void PalmRejection::analyzeNewSetOfPoints()
     //  - if they are at a distance less that MIN_R eliminate one (eliminating the one furthest from the last point and keeping the closest one)
     //if no:
     //  - leave both points and let other functions (findPalm(), findPen()) take care of it
-    for (int i = 0; i < size - 1; i++)
+    for ( int i = 0; i < size - 1; i++ )
     {
-        if (pointToAnalyze[position][i] != NULL)
+        if ( pointToAnalyze[position][i] != NULL )
         {
-            for (int j = i + 1; j < size; j++)
+            for ( int j = i + 1; j < size; j++ )
             {
-                if (pointToAnalyze[position][j] != NULL)
+                if ( pointToAnalyze[position][j] != NULL )
                 {
                     int deltaColumn = abs(pointToAnalyze[position][i]->getColumn() - pointToAnalyze[position][j]->getColumn());
                     int deltaRow = abs(pointToAnalyze[position][i]->getRow() - pointToAnalyze[position][j]->getRow());
 
                     //If the points in the same set are in adjacent areas
-                    if (deltaColumn == 1 || deltaRow == 1)
+                    if ( deltaColumn == 1 || deltaRow == 1 )
                     {
                         //If the radius is less than MIN_R, delete the point that is the furthest from last touch point
                         //and if that point does not exist eliminate the second point from the set
@@ -659,9 +661,9 @@ void PalmRejection::analyzeNewSetOfPoints()
 
                         int radius = sqrt(deltaX * deltaX + deltaY * deltaY);
 
-                        if (radius < MIN_R)
+                        if ( radius < MIN_R )
                         {
-                            if (penPresent == true)// pen exists
+                            if ( penPresent == true )// pen exists
                             {
                                 int deltaXi = mX - pointToAnalyze[position][i]->getX();
                                 int deltaYi = mY - pointToAnalyze[position][i]->getY();
@@ -673,7 +675,7 @@ void PalmRejection::analyzeNewSetOfPoints()
 
                                 int distance_j = sqrt(deltaXj * deltaXj + deltaYj * deltaYj);
 
-                                if (distance_i < distance_j)
+                                if ( distance_i < distance_j )
                                 {
                                     delete pointToAnalyze[position][j];
                                     pointToAnalyze[position][j] = NULL;
@@ -699,19 +701,19 @@ void PalmRejection::analyzeNewSetOfPoints()
 }
 
 /** Update palm matrix
- * 
+ *
  * @param slot slot This variable represents the position in pointToAnalyze from which we need to update the palm matrix. Usually it will
  * correspond to the position variable however, at occasions, it can represent an older position
  * @param ignore ignore This variable represents which position in a given set of points corresponds to the pen point and should not be present on the palm matrix
- * 
+ *
  * This function updates the palm matrix by setting high all the areas pressed on the last sampling set with the exception
  * of the area where the pen has been determined to be present
  */
 void PalmRejection::updatePalmMatrix(ushort slot, ushort ignore)
 {
-    for (ushort i = 0; i < pointToAnalyze[slot].size(); i++)
+    for ( ushort i = 0; i < pointToAnalyze[slot].size(); i++ )
     {
-        if ((pointToAnalyze[slot][i] != NULL) && (i != ignore))
+        if ( ( pointToAnalyze[slot][i] != NULL ) && ( i != ignore ) )
         {
             mPalm.setArea(pointToAnalyze[slot][i]->getColumn(), pointToAnalyze[slot][i]->getRow());
         }
@@ -726,7 +728,7 @@ void PalmRejection::updatePosition()
 {
     position = mod(++position);
 
-    for (uint i = 0; i < pointToAnalyze[position].size(); i++)
+    for ( uint i = 0; i < pointToAnalyze[position].size(); i++ )
     {
         //Do not need to check for NULL since delete NULL has not effect
         delete pointToAnalyze[position][i];
@@ -745,21 +747,21 @@ void PalmRejection::findNextPoint()
     //compare distance to last saved mX and mY in mPen area
     //choose min?
     bool found = false;
-    for (ushort i = 0; i < pointToAnalyze[position].size(); i++)
+    for ( ushort i = 0; i < pointToAnalyze[position].size(); i++ )
     {
-        if (pointToAnalyze[position][i] != NULL)
+        if ( pointToAnalyze[position][i] != NULL )
         {
             //if the point is in the pen area and not in the palm area
             if ( mPen.isSet(pointToAnalyze[position][i]->getColumn(), pointToAnalyze[position][i]->getRow()) && !mPalm.isSet(pointToAnalyze[position][i]->getColumn(), pointToAnalyze[position][i]->getRow()) )
             {
-                //std::cout << "Next point 
+                //std::cout << "Next point
                 // We should find the radius from the last point and make sure that we do not exceed a MAXIMUM (minimum not necessary)
                 int Dx = mX - pointToAnalyze[position][i]->getX();
                 int Dy = mY - pointToAnalyze[position][i]->getY();
 
 
 
-                //if the new pen point is within the 
+                //if the new pen point is within the
                 if ( sqrt(Dx * Dx + Dy * Dy) < 2 * MAXIMUM_RADIUS ) //This was 2*MAXIMUM_RADIUS and worked well. testing with different values
                 {
                     mX = pointToAnalyze[position][i]->getX();
@@ -797,7 +799,7 @@ void PalmRejection::findNextPoint()
     }
 
     //if the pen was not found in the above loop then set penPresent to false which will initialize a search for a pen at the next event
-    if (found == false)
+    if ( found == false )
     {
         interpreter->screenReleaseEvent();
         penPresent = false;
@@ -810,9 +812,9 @@ void PalmRejection::findNextPoint()
  */
 void PalmRejection::flushPointBuffer()
 {
-    for (uint i = 0; i < ANALYZE_BUFFER; i++)
+    for ( uint i = 0; i < ANALYZE_BUFFER; i++ )
     {
-        for (uint j = 0; j < pointToAnalyze[i].size(); j++)
+        for ( uint j = 0; j < pointToAnalyze[i].size(); j++ )
         {
             delete pointToAnalyze[i][j];
         }

@@ -34,6 +34,7 @@ ScreenInterpreter::~ScreenInterpreter()
 void ScreenInterpreter::screenPressEvent(Point* point)
 {
     //state 1
+    //std::cout<<"Screen touch"<<std::endl;
     bool pointInMenu = menu->pointInsideArea(point);
     bool pointInScribble = scribbleArea->pointInsideArea(point);
 
@@ -61,6 +62,7 @@ void ScreenInterpreter::screenPressEvent(Point* point)
 void ScreenInterpreter::screenMoveEvent(Point* point)
 {
     //state 2
+    //std::cout<<"Screen move"<<std::endl;
     bool pointInMenu = menu->pointInsideArea(point);
     bool pointInScribble = scribbleArea->pointInsideArea(point);
 
@@ -89,6 +91,7 @@ void ScreenInterpreter::screenReleaseEvent()
 {
     //state 0
 
+    //std::cout<<"Screen release"<<std::endl;
     if ( scribbleState != 1 )
     {
         scribbleState = 0;

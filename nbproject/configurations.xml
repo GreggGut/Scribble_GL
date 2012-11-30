@@ -61,6 +61,12 @@
         <compilerSet>default</compilerSet>
       </toolsSet>
       <compileType>
+        <cTool>
+          <incDir>
+            <pElem>.</pElem>
+            <pElem>/usr/local/lib</pElem>
+          </incDir>
+        </cTool>
         <ccTool>
           <commandlineTool>g++</commandlineTool>
           <incDir>
@@ -73,6 +79,10 @@
           <linkerAddLib>
             <pElem>/usr/local/lib</pElem>
           </linkerAddLib>
+          <linkerDynSerch>
+            <pElem>.</pElem>
+            <pElem>/usr/local/lib</pElem>
+          </linkerDynSerch>
         </linkerTool>
       </compileType>
     </conf>
@@ -84,6 +94,10 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
+          <incDir>
+            <pElem>.</pElem>
+            <pElem>/usr/local/lib</pElem>
+          </incDir>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
@@ -104,6 +118,10 @@
           <linkerAddLib>
             <pElem>/usr/local/lib</pElem>
           </linkerAddLib>
+          <linkerDynSerch>
+            <pElem>.</pElem>
+            <pElem>/usr/local/lib</pElem>
+          </linkerDynSerch>
         </linkerTool>
       </compileType>
     </conf>

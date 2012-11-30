@@ -132,11 +132,15 @@ void PalmRejection::eventRelease(/*aaPoints *point*/)
     //Disable penPresent, send release event to scribbleArea, clean buffer, and start palm reset timer
     if ( penPresent )
     {
+        penPresent = false;
+        //std::cout << "From eventRelease" << std::endl;
         interpreter->screenReleaseEvent();
     }
 
-    penPresent = false;
+    mPalm.clearMatrix();
+
     flushPointBuffer();
+    //TODO this is not working and therefore I am clearing the matrix manually
     palmResetTimer->expires_from_now(boost::posix_time::seconds(RESET_TIMER));
     palmResetTimer->async_wait(boost::bind(&PalmRejection::resetPalm, this, _1));
 }
@@ -184,7 +188,7 @@ bool PalmRejection::firstTryFindingPenAndPalm()
         }
     }
         //if all of the sets have less than 3 points but not 0 then we assume (could be a very bad assumption) that we have a palm
-    else if ( pointToAnalyze[firstSet].size() < 3 && pointToAnalyze[firstSet].size() != 0 && pointToAnalyze[secondSet].size() < 3 && pointToAnalyze[secondSet].size() != 0 && pointToAnalyze[thirdSet].size() < 3 && pointToAnalyze[thirdSet].size() != 0 && pointToAnalyze[forthSet].size() < 3 && pointToAnalyze[forthSet].size() != 0 )
+    else if ( pointToAnalyze[firstSet].size() == 2 && pointToAnalyze[secondSet].size() == 2 && pointToAnalyze[thirdSet].size() == 2 && pointToAnalyze[forthSet].size() == 2 )//( pointToAnalyze[firstSet].size() < 3 && pointToAnalyze[firstSet].size() > 0 && pointToAnalyze[secondSet].size() < 3 && pointToAnalyze[secondSet].size() > 0 && pointToAnalyze[thirdSet].size() < 3 && pointToAnalyze[thirdSet].size() > 0 && pointToAnalyze[forthSet].size() < 3 && pointToAnalyze[forthSet].size() > 0 )
     {
         for ( int i = 0; i < 4; i++ )
         {
@@ -467,6 +471,7 @@ void PalmRejection::findPen()
             //check if the point is in a possible pen area. If yes keep comparing points, otherwise set it as Palm area
             if ( !mPalm./*possiblePen*/isSet(pointToAnalyze[firstSet][i]->getColumn(), pointToAnalyze[firstSet][i]->getRow()) )
             {
+                std::cout << "Palm not set" << std::endl;
                 //for each point in the second set
                 for ( ushort j = 0; j < pointToAnalyze[secondSet].size(); j++ )
                 {
@@ -608,6 +613,7 @@ void PalmRejection::findPen()
     //if we didn't completely break it means we didn't find a pen, setting the value accordingly
     if ( !completeBreak )
     {
+        //std::cout << "From completeBreak: where: " << where << std::endl;
         interpreter->screenReleaseEvent();
         penPresent = false;
 
@@ -759,8 +765,6 @@ void PalmRejection::findNextPoint()
                 int Dx = mX - pointToAnalyze[position][i]->getX();
                 int Dy = mY - pointToAnalyze[position][i]->getY();
 
-
-
                 //if the new pen point is within the
                 if ( sqrt(Dx * Dx + Dy * Dy) < 2 * MAXIMUM_RADIUS ) //This was 2*MAXIMUM_RADIUS and worked well. testing with different values
                 {
@@ -801,6 +805,7 @@ void PalmRejection::findNextPoint()
     //if the pen was not found in the above loop then set penPresent to false which will initialize a search for a pen at the next event
     if ( found == false )
     {
+        //td::cout << "From found=false" << std::endl;
         interpreter->screenReleaseEvent();
         penPresent = false;
     }

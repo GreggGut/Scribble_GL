@@ -191,7 +191,7 @@ bool PalmRejection::firstTryFindingPenAndPalm()
     else if ( pointToAnalyze[firstSet].size() == 2 && pointToAnalyze[secondSet].size() == 2 && pointToAnalyze[thirdSet].size() == 2 && pointToAnalyze[forthSet].size() == 2 )//( pointToAnalyze[firstSet].size() < 3 && pointToAnalyze[firstSet].size() > 0 && pointToAnalyze[secondSet].size() < 3 && pointToAnalyze[secondSet].size() > 0 && pointToAnalyze[thirdSet].size() < 3 && pointToAnalyze[thirdSet].size() > 0 && pointToAnalyze[forthSet].size() < 3 && pointToAnalyze[forthSet].size() > 0 )
     {
         for ( int i = 0; i < 4; i++ )
-        {
+        { 
             for ( uint j = 0; j < pointToAnalyze[pos[i]].size(); j++ )
             {
                 if ( pointToAnalyze[pos[i]][j] != NULL )

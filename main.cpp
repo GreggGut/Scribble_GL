@@ -113,36 +113,34 @@ int main(int argc, char *argv[])
 
 
     //All the bellow is for testing
-    Sender s("greg", client);
+    Sender* sender = new Sender("greg", client);
     std::string toSend;
     //        s.Login("greg", "pass");
     //        c.write(sendMessage(toSend));
 
-    s.sendGetFilesList();
+    sender->sendGetFilesList();
 
-    s.sendRequestOwnership();
+    sender->sendRequestOwnership();
 
     int pathID = 10;
     int page = 0;
-    s.sendNewPath(pathID, true, 32453, true, page, 1);
+    sender->sendNewPath(pathID, true, 32453, true, page, 1);
 
-    Point m1(0, 0, 100, 100);
-    Point m2(0, 0, 200, 200);
-    Point m3(0, 0, 300, 300);
-    Point m4(0, 0, 400, 600);
+    Point* m1 = new Point(0, 0, 100, 100);
+    Point* m2 = new Point(0, 0, 200, 200);
+    Point* m3 = new Point(0, 0, 300, 300);
+    Point* m4 = new Point(0, 0, 400, 600);
 
-    std::vector<Point> mPoints;
-    mPoints.push_back(m1);
-    mPoints.push_back(m2);
-    mPoints.push_back(m3);
-    mPoints.push_back(m4);
-    s.sendAddPoints(mPoints);
+    sender->sendPoints(m1);
+    sender->sendPoints(m2);
+    sender->sendPoints(m3);
+    sender->sendPoints(m4);
     //s.sendAddPoints(mPoints);
-    s.sendEndPath();
+    sender->sendEndPath();
     //s.sendUndo(2);
-    s.sendGetFilesList();
-    s.sendDeletePath(page, pathID);
-    s.sendReleaseOwnership();
+    sender->sendGetFilesList();
+    sender->sendDeletePath(page, pathID);
+    sender->sendReleaseOwnership();
     //Testing until here....
 
     glutMainLoop();
@@ -153,6 +151,8 @@ int main(int argc, char *argv[])
     //We need to find a way to stop the dataInput thread...
     //and then getInput.join();
     //getInput.join();
+    delete sender;
+    delete client;
 
     return 0;
 }

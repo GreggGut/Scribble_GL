@@ -56,7 +56,7 @@ public:
     void sendNewPath(int pathID, bool mode, int color, bool active, int page, int width);
 
     //AddPoints - username - requestID - pathID - numberOfPoints - Points
-    void sendAddPoints(std::vector<Point> points);
+    void sendPoints(Point* point);//std::vector<Point> points);
 
     //EndPath
     void sendEndPath();
@@ -93,7 +93,7 @@ public:
     static const std::string separatorPoints; // = "#";
 
 private:
-    std::string GetPoints(std::vector<Point> points);
+    std::string GetPoints(Point* point);//std::vector<Point> points);
 
     std::string NumberToString(int Number);
     std::string BoolToString(bool boolean);

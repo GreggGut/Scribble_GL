@@ -113,7 +113,7 @@ void Sender::sendGetFilesList()
  */
 void Sender::sendDownloadFile(std::string filename)
 {
-    std::cout<<"NOTHING DONE HERE.... in sendDownloadFile"<<std::endl;
+    std::cout << "NOTHING DONE HERE.... in sendDownloadFile" << std::endl;
 }
 
 /** newPath - username - requestID++ - pathID - mode - color - active - page
@@ -156,28 +156,34 @@ void Sender::sendNewPath(int pathID, bool mode, int color, bool active, int page
  *
  * @param Points
  */
-void Sender::sendAddPoints(std::vector<Point> points)
+void Sender::sendPoints(Point* point)//std::vector<Point> points)
 {
     //Creating the add points request
     std::string toSend = separator;
     toSend += NumberToString(ADD_POINTS);
     toSend += separator;
 
-    toSend += GetPoints(points);
+    toSend += GetPoints(point);
 
     client->sendMessage(toSend);
 }
 
-std::string Sender::GetPoints(std::vector<Point> points)
+std::string Sender::GetPoints(Point* point)//std::vector<Point> points)
 {
     std::stringstream s;
-    for ( int i = 0; i < points.size(); i++ )
-    {
-        s << points.at(i).getX();
-        s << separatorPoints;
-        s << points.at(i).getY();
-        s << separatorPoints;
-    }
+    //    for ( int i = 0; i < points.size(); i++ )
+    //    {
+    //        s << points.at(i).getX();
+    //        s << separatorPoints;
+    //        s << points.at(i).getY();
+    //        s << separatorPoints;
+    //    }
+
+    s << point->getX();
+    s << separatorPoints;
+    s << point->getY();
+    s << separatorPoints;
+
     std::string toReturn = s.str();
     toReturn.erase(toReturn.size() - 1);
     return toReturn;

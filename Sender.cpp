@@ -229,7 +229,7 @@ void Sender::sendUndo(int page)
 //    return toSend;
 //}
 
-/** Delete - username - requestID++ - page - pathID
+/** Delete - page - pathID
  *
  * @param page
  * @param PathID

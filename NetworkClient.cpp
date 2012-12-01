@@ -207,6 +207,7 @@ void NetworkClient::decodeRequest(std::string msg)
             //End current network path
             std::cout << "END_PATH" << std::endl;
             //TODO move the network path to the real collection of paths on the given page
+            scribbleArea->endNetworkPath();
             break;
         }
         case Sender::UNDO:
@@ -214,12 +215,14 @@ void NetworkClient::decodeRequest(std::string msg)
             //Undo last action, this will simply call the UNDO function of the ScribbleArea
             std::cout << "UNDO" << std::endl;
             //TODO call the undo function on the ScribbleArea
+            scribbleArea->undo();
             break;
         }
         case Sender::REDO:
         {
             //TOCONF We should possibly never be here, since undo will completely remove the last action/drawing and if the user calls the redo function we will resend the whole path
             std::cout << "REDO" << std::endl;
+            scribbleArea->redo();
             break;
         }
         case Sender::DELETE_PATH:
@@ -234,6 +237,7 @@ void NetworkClient::decodeRequest(std::string msg)
                         remove
                         break
              */
+            //TODO call the delete function of the scribble area...
             break;
         }
         case Sender::LOGIN:

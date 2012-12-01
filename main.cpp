@@ -107,58 +107,47 @@ int main(int argc, char *argv[])
     tcp::resolver::iterator iterator = resolver.resolve(query);
 
     //NetworkClient
-    NetworkClient client(io_service, iterator, painter->getScribbleArea());
+    NetworkClient* client = new NetworkClient(io_service, iterator, painter->getScribbleArea());
 
     boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service));
 
 
     //All the bellow is for testing
-    Sender s("greg");
+    Sender s("greg", client);
     std::string toSend;
-    //        toSend = s.Login("greg", "pass");
+    //        s.Login("greg", "pass");
     //        c.write(sendMessage(toSend));
 
-    toSend = s.GetFilesList();
-    client.sendMessage(toSend);
+    s.sendGetFilesList();
 
-    toSend = s.RequestOwnership();
-    client.sendMessage(toSend);
+    s.sendRequestOwnership();
 
     int pathID = 10;
-    int page = 2;
-    toSend = s.NewPath(pathID, true, 32453, true, page, 1);
-    client.sendMessage(toSend);
+    int page = 0;
+    s.sendNewPath(pathID, true, 32453, true, page, 1);
 
-    Point m1(0, 0, 10, 10);
-    Point m2(0, 0, 20, 20);
-    Point m3(0, 0, 30, 30);
-    Point m4(0, 0, 40, 40);
+    Point m1(0, 0, 100, 100);
+    Point m2(0, 0, 200, 200);
+    Point m3(0, 0, 300, 300);
+    Point m4(0, 0, 400, 600);
 
     std::vector<Point> mPoints;
     mPoints.push_back(m1);
     mPoints.push_back(m2);
     mPoints.push_back(m3);
     mPoints.push_back(m4);
-    toSend = s.AddPoints(mPoints);
-    client.sendMessage(toSend);
-    toSend = s.AddPoints(mPoints);
-    client.sendMessage(toSend);
-    toSend = s.EndPath();
-    client.sendMessage(toSend);
-    toSend = s.Undo(2);
-    client.sendMessage(toSend);
-    toSend = s.GetFilesList();
-    client.sendMessage(toSend);
-    toSend = s.DeletePath(page, pathID);
-    client.sendMessage(toSend);
-    toSend = s.ReleaseOwnership();
-    client.sendMessage(toSend);
+    s.sendAddPoints(mPoints);
+    //s.sendAddPoints(mPoints);
+    s.sendEndPath();
+    //s.sendUndo(2);
+    s.sendGetFilesList();
+    s.sendDeletePath(page, pathID);
+    s.sendReleaseOwnership();
     //Testing until here....
-
 
     glutMainLoop();
 
-    client.close();
+    client->close();
     t.join();
 
     //We need to find a way to stop the dataInput thread...

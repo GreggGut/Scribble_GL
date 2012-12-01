@@ -22,11 +22,12 @@
 #include <sstream>
 #include <vector>
 #include "Point.h"
+#include "NetworkClient.h"
 
 class Sender
 {
 public:
-    Sender(std::string username);
+    Sender(std::string username, NetworkClient* client);
     //    Sender(const Sender& orig);
     virtual ~Sender();
 
@@ -34,40 +35,40 @@ public:
     static std::string getSeparatorPoints();
 
     //login - username - requestID - password - port
-    std::string Login( std::string password);
+    void sendLogin( std::string password);
 
     //logout - username - requestID
-    std::string Logout();
+    void sendLogout();
 
     //requestOwnership - username - requestID
-    std::string RequestOwnership();
+    void sendRequestOwnership();
 
     //releaseOwnership - username - requestID
-    std::string ReleaseOwnership();
+    void sendReleaseOwnership();
 
     //getFileList - username - requestID
-    std::string GetFilesList();
+    void sendGetFilesList();
 
     //TOCONFIRM Do we Need this?
-    std::string DownloadFile(std::string filename);
+    void sendDownloadFile(std::string filename);
 
     //newPath - username - requestID - pathID - mode - color - active - page
-    std::string NewPath(int pathID, bool mode, int color, bool active, int page, int width);
+    void sendNewPath(int pathID, bool mode, int color, bool active, int page, int width);
 
     //AddPoints - username - requestID - pathID - numberOfPoints - Points
-    std::string AddPoints(std::vector<Point> points);
+    void sendAddPoints(std::vector<Point> points);
 
     //EndPath
-    std::string EndPath();
+    void sendEndPath();
 
     //Undo - page
-    std::string Undo(int page);
+    void sendUndo(int page);
 
     //Redo - username - requestID - page - pathID
-    std::string Redo(int page, int pathID);
+    void sendRedo(int page, int pathID);
 
     //Delete - username - requestID - page - pathID
-    std::string DeletePath(int page, int PathID);
+    void sendDeletePath(int page, int PathID);
 
 public:
 
@@ -102,6 +103,7 @@ private:
 
     //Need to initialise this in login
     std::string username;
+    NetworkClient* client;
 
 
 

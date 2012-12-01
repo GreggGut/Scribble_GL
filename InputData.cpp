@@ -91,7 +91,9 @@ void InputData::run()
     }
     else
     {
-        exit(CANNOT_OPEN_PORT);
+        std::cout<<"Cannot open input port..."<<std::endl;
+        return;
+        //exit(CANNOT_OPEN_PORT);
         // return; // (int*) - 1;
     }
 

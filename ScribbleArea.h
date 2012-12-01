@@ -45,11 +45,15 @@ public:
     std::vector<std::vector<Path*> > getPathsOnPage();
     int getCurrentPage();
     void setLockForPath(bool lock);
+    void setLockForNetworkPath(bool lock);
     Path* getTempPath();
+    Path* getNetworkPath();
+    int getNetworkPage();
 
     void setNetworkPage(int p);
     void setNetworkPath(Path* p);
     void addNetworkPoint(Point * p);
+    void endNetworkPath();
 
 private:
 

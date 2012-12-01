@@ -17,6 +17,7 @@ ScribbleArea::ScribbleArea()
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
     redoVector.resize(5);
+    networkPathPage = -1;
 }
 
 ScribbleArea::ScribbleArea(int x, int y, int w, int h)
@@ -102,9 +103,33 @@ void ScribbleArea::setLockForPath(bool lock)
     }
 }
 
+void ScribbleArea::setLockForNetworkPath(bool lock)
+{
+
+    if ( lock == 1 )
+    {
+        lockForNetworkPath.lock();
+    }
+
+    else
+    {
+        lockForNetworkPath.unlock();
+    }
+}
+
 Path* ScribbleArea::getTempPath()
 {
     return mTempPath;
+}
+
+Path* ScribbleArea::getNetworkPath()
+{
+    return mNetworkPath;
+}
+
+int ScribbleArea::getNetworkPage()
+{
+    return networkPathPage;
 }
 
 bool ScribbleArea::pointInsideArea(Point * point)
@@ -388,7 +413,7 @@ void ScribbleArea::Draw()
     lockForTempPath.unlock();
 
     lockForNetworkPath.lock();
-    if ( currentPage = networkPathPage )
+    if ( currentPage == networkPathPage && mNetworkPath != NULL )
     {
         glBegin(GL_LINE_STRIP);
         for ( int j = 0; j < mNetworkPath->getPath().size(); ++j )
@@ -407,6 +432,7 @@ void ScribbleArea::Draw()
 void ScribbleArea::setNetworkPage(int p)
 {
     lockForNetworkPath.lock();
+    std::cout << "Setting network page: " << p << std::endl;
     networkPathPage = p;
     lockForNetworkPath.unlock();
 }
@@ -423,4 +449,14 @@ void ScribbleArea::addNetworkPoint(Point * p)
     lockForNetworkPath.lock();
     mNetworkPath->addPoint(p);
     lockForNetworkPath.unlock();
+}
+
+void ScribbleArea::endNetworkPath()
+{
+    pathsLock.lock();
+    lockForNetworkPath.lock();
+    pathsOnPage.at(networkPathPage).push_back(mNetworkPath);
+    mNetworkPath=NULL;
+    lockForNetworkPath.unlock();
+    pathsLock.unlock();
 }

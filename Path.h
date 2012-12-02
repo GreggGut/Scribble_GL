@@ -1,4 +1,4 @@
-/*!  
+/*!
  * File:   Path.h
  * Author: greg
  *
@@ -9,7 +9,7 @@
 #define	PATH_H
 
 #include <vector>
-#include "Point.h" 
+#include "Point.h"
 #include "Color.h"
 #include "defines.h"
 #include "ScreenAreas.h"
@@ -27,6 +27,7 @@ public:
     std::vector<Point*> getPath();
     int getPenWidth();
     Color getPenColor() const;
+    int getPenColorInt();
     int getMode() const;
     void setEraseMode();
     void setWriteMode();

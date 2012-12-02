@@ -114,7 +114,10 @@ int main(int argc, char *argv[])
 
     //All the bellow is for testing
     Sender* sender = new Sender("greg", client);
-    std::string toSend;
+
+    painter->getScribbleArea()->setSender(sender);
+
+    //std::string toSend;
     //        s.Login("greg", "pass");
     //        c.write(sendMessage(toSend));
 

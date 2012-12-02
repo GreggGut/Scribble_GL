@@ -67,6 +67,7 @@ void Painter::DrawPaths()
         glEnd();
     }
 
+    //Path that is being received through the network
     scribbleArea->setLockForNetworkPath(1);
     if ( scribbleArea->getCurrentPage() == scribbleArea->getNetworkPage() && scribbleArea->getNetworkPath() != NULL )
     {

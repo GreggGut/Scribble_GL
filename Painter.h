@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Painter.h
  * Author: scribble
  *
@@ -12,9 +12,10 @@
 #include "ScribbleArea.h"
 #include "Menu.h"
 #include "ScreenInterpreter.h"
+#include "NetworkClient.h"
 
 class Painter {
-   
+
 public:
     Painter();
     Painter(const Painter& orig);
@@ -28,18 +29,18 @@ private:
     {
         WRITE, ERASE, MENU_PRESS, LOAD, SAVE_AS, COLOUR, SIZE_WRITE, SIZE_ERASE
     };
-   
+
     ScreenInterpreter *interpreter;
     ScribbleArea *scribbleArea;
     Menu *menu;
-    
+
     void DrawPaths();
     void DrawMenu();
 };
 
 #endif	/* PAINTER_H */
 
-/* 
+/*
  * File:   Painter.h
  * Author: scribble
  *
@@ -53,22 +54,22 @@ private:
 #include "ScribbleArea.h"
 
 class Painter {
-   
+
 public:
     Painter();
     Painter(const Painter& orig);
     virtual ~Painter();
     void Draw();
     ScribbleArea* getScribbleArea();
-    
+
 private:
     enum modes
     {
         WRITE, ERASE, MENU_PRESS, LOAD, SAVE_AS, COLOUR, SIZE_WRITE, SIZE_ERASE
     };
-   
+
     ScribbleArea *scribbleArea;
-    
+
     void DrawPaths();
     void DrawUI();
 };

@@ -35,7 +35,7 @@ public:
     static std::string getSeparatorPoints();
 
     //login - username - requestID - password - port
-    void sendLogin( std::string password);
+    void sendLogin(std::string password);
 
     //logout - username - requestID
     void sendLogout();
@@ -56,7 +56,7 @@ public:
     void sendNewPath(int pathID, bool mode, int color, bool active, int page, int width);
 
     //AddPoints - username - requestID - pathID - numberOfPoints - Points
-    void sendPoints(Point* point);//std::vector<Point> points);
+    void sendPoints(Point* point); //std::vector<Point> points);
 
     //EndPath
     void sendEndPath();
@@ -69,6 +69,8 @@ public:
 
     //Delete - username - requestID - page - pathID
     void sendDeletePath(int page, int PathID);
+
+    void sendCleanAll(int page);
 
 public:
 
@@ -87,13 +89,14 @@ public:
         UNDO = 9,
         REDO = 10,
         DELETE_PATH = 11,
+        CLEAR_ALL = 12,
     } protocol;
 
     static const std::string separator; // = "&";
     static const std::string separatorPoints; // = "#";
 
 private:
-    std::string GetPoints(Point* point);//std::vector<Point> points);
+    std::string GetPoints(Point* point); //std::vector<Point> points);
 
     std::string NumberToString(int Number);
     std::string BoolToString(bool boolean);

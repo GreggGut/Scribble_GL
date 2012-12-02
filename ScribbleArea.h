@@ -4,6 +4,7 @@
  *
  * Created on October 25, 2012, 2:17 PM
  */
+class Sender;
 
 #ifndef SCRIBBLEAREA_H
 #define	SCRIBBLEAREA_H
@@ -54,6 +55,7 @@ public:
     void setNetworkPath(Path* p);
     void addNetworkPoint(Point * p);
     void endNetworkPath();
+    void setSender(Sender* sender);
 
 private:
 
@@ -96,6 +98,7 @@ private:
     std::vector< std::vector<Path*> > redoVector;
 
     //Used for networking
+    Sender* sender;
     boost::mutex lockForNetworkPath;
     int networkPathPage;
     Path* mNetworkPath;

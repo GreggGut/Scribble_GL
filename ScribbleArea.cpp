@@ -6,8 +6,9 @@
  */
 
 #include "ScribbleArea.h"
+#include "Sender.h"
 
-ScribbleArea::ScribbleArea()
+ScribbleArea::ScribbleArea() : networkPathPage(-1)
 {
 
     penColor = Color();
@@ -17,10 +18,9 @@ ScribbleArea::ScribbleArea()
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
     redoVector.resize(5);
-    networkPathPage = -1;
 }
 
-ScribbleArea::ScribbleArea(int x, int y, int w, int h)
+ScribbleArea::ScribbleArea(int x, int y, int w, int h) : networkPathPage(-1)
 {
 
     xPos = x;
@@ -168,6 +168,8 @@ void ScribbleArea::screenPressEvent(Point* point)
 
         lockForTempPath.lock();
         mTempPath = new Path(point, this->mMode, this->penColor, this->penSize, Paths_IDs[currentPage]++);
+        //TOTEST
+        sender->sendNewPath(mTempPath->getPathID(), mMode, mTempPath->getPenColorInt(), mTempPath->isEnabled(), currentPage, penSize);
         lockForTempPath.unlock();
     }
 
@@ -196,6 +198,7 @@ void ScribbleArea::screenMoveEvent(Point* point)
         pathsLock.lock();
         lockForTempPath.lock();
         mTempPath->addPoint(point);
+        sender->sendPoints(point);
         lockForTempPath.unlock();
         pathsLock.unlock();
     }
@@ -222,11 +225,17 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/)
 
         if ( mTempPath->getPointsCount() < 3 )
         {
+            //TOCONF is this how we want to do this part? send end of path and then delete it?
+            //TOTEST
+            sender->sendEndPath();
+            sender->sendDeletePath(currentPage, mTempPath->getPathID());
             delete mTempPath;
         }
         else
         {
             pathsOnPage.at(currentPage).push_back(mTempPath);
+            //TOTEST
+            sender->sendEndPath();
         }
 
         mTempPath = NULL;
@@ -269,9 +278,9 @@ void ScribbleArea::undo()
                 break;
             }
         }
-
-        //updatePageContent();
     }
+    //TOTEST
+    sender->sendUndo(currentPage);
     pathsLock.unlock();
 }
 
@@ -298,7 +307,8 @@ void ScribbleArea::redo()
         pathsOnPage.at(currentPage).push_back(redoVector.at(currentPage).back());
         redoVector.at(currentPage).pop_back();
 
-        //updatePageContent();
+        //TOCONF For now I think we should resend the redone path to the server so that the server has the path in memory
+        //TODO implement the network redo
     }
     pathsLock.unlock();
 }
@@ -331,6 +341,8 @@ void ScribbleArea::clearAll()
     cleanPathsOnCurentPageVector();
 
     Paths_IDs[currentPage] = 0;
+    //TOTEST
+    sender->sendCleanAll(currentPage);
 
     //updatePDF();
     //lockForImage.lock();
@@ -456,7 +468,12 @@ void ScribbleArea::endNetworkPath()
     pathsLock.lock();
     lockForNetworkPath.lock();
     pathsOnPage.at(networkPathPage).push_back(mNetworkPath);
-    mNetworkPath=NULL;
+    mNetworkPath = NULL;
     lockForNetworkPath.unlock();
     pathsLock.unlock();
+}
+
+void ScribbleArea::setSender(Sender* sender)
+{
+    this->sender = sender;
 }

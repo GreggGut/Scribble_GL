@@ -37,7 +37,7 @@ Path::Path(Point* point, int mode, Color color, int width, int id, bool fin/*, b
     area->set(point->getColumn(), point->getRow());
 }
 
-Path::Path(int mode, Color color, int width, int ID, bool active) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(ID), active(active),final(false), totalLength(0)
+Path::Path(int mode, Color color, int width, int ID, bool active) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(ID), active(active), final(false), totalLength(0)
 {
     mX = 0;
     mY = 0;
@@ -68,7 +68,7 @@ Path::Path(const Path& orig) : WriteEraseMode(orig.WriteEraseMode), myPenWidth(o
  */
 Path::~Path()
 {
-    for (uint i = 0; i < mPointsVector.size(); i++)
+    for ( uint i = 0; i < mPointsVector.size(); i++ )
     {
         delete mPointsVector[i];
     }
@@ -87,10 +87,10 @@ Path::~Path()
 void Path::addPoint(Point* point)
 {
     //std::cout << " from addPOint: " << point->getX() << " " << point->getY() << std::endl;
-//    int dX = /*mX*/0 - point->getX();
-//    int dY = /*mY*/0 - point->getY();
-//    totalLength += sqrt(dX * dX + dY * dY);
-//    area->set(point->getColumn(), point->getRow());
+    //    int dX = /*mX*/0 - point->getX();
+    //    int dY = /*mY*/0 - point->getY();
+    //    totalLength += sqrt(dX * dX + dY * dY);
+    //    area->set(point->getColumn(), point->getRow());
     mPointsVector.push_back(point);
 }
 
@@ -123,6 +123,15 @@ int Path::getPenWidth()
 Color Path::getPenColor() const
 {
     return myPenColor;
+}
+
+int Path::getPenColorInt()
+{
+    int rgb = myPenColor.getRed();
+    rgb = ( rgb << 8 ) + myPenColor.getGreen();
+    rgb = ( rgb << 8 ) + myPenColor.getBlue();
+
+    return rgb;
 }
 
 /** Get path mode
@@ -225,7 +234,7 @@ inline int Path::sqrt(const int x)
         float x;
     } u;
     u.x = x;
-    u.i = (1 << 29) + (u.i >> 1) - (1 << 22);
+    u.i = ( 1 << 29 ) + ( u.i >> 1 ) - ( 1 << 22 );
     return u.x;
 }
 

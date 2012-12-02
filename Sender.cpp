@@ -278,6 +278,17 @@ void Sender::sendDeletePath(int page, int pathID)
     client->sendMessage(toSend);
 }
 
+void Sender::sendCleanAll(int page)
+{
+    std::string toSend = separator;
+    toSend += NumberToString(CLEAR_ALL);
+    toSend += separator;
+
+    toSend += NumberToString(page);
+
+    client->sendMessage(toSend);
+}
+
 /**
  * Number to String
  * @param Number What we want to transform to string

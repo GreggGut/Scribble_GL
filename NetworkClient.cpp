@@ -273,6 +273,11 @@ void NetworkClient::decodeRequest(std::string msg)
             std::cout << "DOWNLOAD_FILE" << std::endl;
             break;
         }
+        case Sender::CLEAR_ALL:
+        {
+            scribbleArea->clearAll();
+            break;
+        }
         default:
             std::cout << "Should not be here" << std::endl;
 

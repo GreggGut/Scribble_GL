@@ -18,25 +18,35 @@ Sender::~Sender()
 {
 }
 
+/**
+ * Get the separator between the info in a sent message
+ *
+ * @return Message separator
+ */
 std::string Sender::getSeparator()
 {
     return separator;
 }
 
+/**
+ * Get the separator used between points
+ *
+ * @return Point separator
+ */
 std::string Sender::getSeparatorPoints()
 {
     return separatorPoints;
 }
 
-/**login - username - requestID++ - password
+/**
+ * Send login request
  *
- * @param username
- * @param password
- * @param myListeningPort
+ * @param password User password
+ *
+ * Info sent: login - username - password
  */
 void Sender::sendLogin(std::string password)
 {
-    //creating what needs to be send to the server for a login request
     std::string toSend = separator;
     toSend += NumberToString(LOGIN);
     toSend += separator;
@@ -45,31 +55,30 @@ void Sender::sendLogin(std::string password)
     toSend += separator;
 
     toSend += password;
-    //toSend += separator;
-
-    client->sendMessage(toSend);
-}
-
-/** logout - username - requestID++
- *
- */
-void Sender::sendLogout()
-{
-    //creating logout request
-    std::string toSend = separator;
-    toSend += NumberToString(LOGOUT);
-
-    //toSend += separator;
 
     client->sendMessage(toSend);
 }
 
 /**
- * requestOwnership - username - requestID++
+ * Send logout request
+ *
+ * Info sent: logout
+ */
+void Sender::sendLogout()
+{
+    std::string toSend = separator;
+    toSend += NumberToString(LOGOUT);
+
+    client->sendMessage(toSend);
+}
+
+/**
+ * Send Ownership request
+ *
+ * Info sent: requestOwnership - username
  */
 void Sender::sendRequestOwnership()
 {
-    //creating Ownership request
     std::string toSend = separator;
     toSend += NumberToString(REQUEST_OWNERSHIP);
 
@@ -80,11 +89,12 @@ void Sender::sendRequestOwnership()
 }
 
 /**
- * releaseOwnership - username - requestID++
+ * Send Release ownership request
+ *
+ * Info sent: releaseOwnership - username
  */
 void Sender::sendReleaseOwnership()
 {
-    //creating Ownership release request
     std::string toSend = separator;
     toSend += NumberToString(RELEASE_OWNERSHIP);
 
@@ -95,14 +105,14 @@ void Sender::sendReleaseOwnership()
 }
 
 /**
- * getFileList - username - requestID++
+ * Send Get file list request
+ *
+ * Info sent: GetFileList
  */
 void Sender::sendGetFilesList()
 {
-    //creating get files list request
     std::string toSend = separator;
     toSend += NumberToString(GET_FILES_LIST);
-    //toSend += separator;
 
     client->sendMessage(toSend);
 }
@@ -116,17 +126,20 @@ void Sender::sendDownloadFile(std::string filename)
     std::cout << "NOTHING DONE HERE.... in sendDownloadFile" << std::endl;
 }
 
-/** newPath - username - requestID++ - pathID - mode - color - active - page
+/**
+ * Send a new path request
  *
- * @param pathID
- * @param mode
- * @param color
- * @param active
- * @param page
+ * @param pathID Path ID
+ * @param mode Path mode
+ * @param color Path color
+ * @param active Path state
+ * @param page Page on which the path has been drawn
+ * @param width Path width
+ *
+ * Info sent: newPath - pathID - mode - color - active - page - width
  */
 void Sender::sendNewPath(int pathID, bool mode, int color, bool active, int page, int width)
 {
-    //creating New Path request
     std::string toSend = separator;
     toSend += NumberToString(NEW_PATH);
     toSend += separator;
@@ -147,18 +160,18 @@ void Sender::sendNewPath(int pathID, bool mode, int color, bool active, int page
     toSend += separator;
 
     toSend += NumberToString(width);
-    //toSend += separator;
 
     client->sendMessage(toSend);
 }
 
-/** AddPoints - Points
+/**
+ * Send a new point request
+ * @param point
  *
- * @param Points
+ * Info sent: AddPoints - Points...
  */
 void Sender::sendPoints(Point* point)//std::vector<Point> points)
 {
-    //Creating the add points request
     std::string toSend = separator;
     toSend += NumberToString(ADD_POINTS);
     toSend += separator;
@@ -168,6 +181,12 @@ void Sender::sendPoints(Point* point)//std::vector<Point> points)
     client->sendMessage(toSend);
 }
 
+/**
+ * Transform a point to a string
+ *
+ * @param point The point to the transformed to a string
+ * @return A string representing a point
+ */
 std::string Sender::GetPoints(Point* point)//std::vector<Point> points)
 {
     std::stringstream s;
@@ -189,23 +208,27 @@ std::string Sender::GetPoints(Point* point)//std::vector<Point> points)
     return toReturn;
 }
 
-/** EndPath
+/** Send en End of Path request
  *
  * @param pathID
+ *
+ * Info sent: EndPath
  */
 void Sender::sendEndPath()
 {
-    //Creating the end path request
     std::string toSend = separator;
     toSend += NumberToString(END_PATH);
 
     client->sendMessage(toSend);
 }
 
-/** Undo - page - pathID
+/**
+ * Send an undo request
  *
  * @param page
  * @param pathID
+ *
+ * Info sent: Undo - page - pathID
  */
 void Sender::sendUndo(int page)
 {
@@ -214,7 +237,6 @@ void Sender::sendUndo(int page)
     toSend += separator;
 
     toSend += NumberToString(page);
-    //toSend += separator;
 
     client->sendMessage(toSend);
 }
@@ -235,10 +257,12 @@ void Sender::sendUndo(int page)
 //    return toSend;
 //}
 
-/** Delete - page - pathID
- *
+/**
+ * Send a delete Path request
  * @param page
  * @param PathID
+ *
+ * Info sent: Delete - page - pathID
  */
 void Sender::sendDeletePath(int page, int pathID)
 {
@@ -250,11 +274,15 @@ void Sender::sendDeletePath(int page, int pathID)
     toSend += separator;
 
     toSend += NumberToString(pathID);
-    //toSend += separator;
 
     client->sendMessage(toSend);
 }
 
+/**
+ * Number to String
+ * @param Number What we want to transform to string
+ * @return A string corresponding to the input number
+ */
 std::string Sender::NumberToString(int Number)
 {
     std::ostringstream ss;
@@ -262,6 +290,11 @@ std::string Sender::NumberToString(int Number)
     return ss.str();
 }
 
+/**
+ * Converting from boolean to a string
+ * @param boolean
+ * @return 1 if true, 0 if false
+ */
 std::string Sender::BoolToString(bool boolean)
 {
     if ( boolean )

@@ -22,7 +22,7 @@ Point::Point(int column_, int row_, int x_, int y_)
 {
     //x(WIDTH-x-15), y(y-21), column(Column), row(Row
     
-    x = WIDTH-x_-15;
+    x = WIDTH-x_-15; 
     y = y_-15;
     column = column_;
     row = row_;
@@ -33,6 +33,11 @@ Point::Point(int column_, int row_, int x_, int y_)
     //std::cout<<"Added point: "<<this->x()<<" "<<this->y()<<std::endl;
 }
 
+/**
+ * Point constructor used when received a point through network
+ * @param x_ X coordinate
+ * @param y_ Y coordinate
+ */
 Point::Point(int x_, int y_)
 {
     x = x_;

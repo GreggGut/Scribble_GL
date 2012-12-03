@@ -33,6 +33,14 @@ Point::Point(int column_, int row_, int x_, int y_)
     //std::cout<<"Added point: "<<this->x()<<" "<<this->y()<<std::endl;
 }
 
+Point::Point(int x_, int y_)
+{
+    x = x_;
+    y = y_;
+    column = 0;
+    row = 0;
+}
+
 /*! Copy constructor
  * \param orig A reference to the original point that needs to be copied
  * 

@@ -33,11 +33,10 @@ void NetworkClient::close()
 
 void NetworkClient::handle_connect(const boost::system::error_code& error, tcp::resolver::iterator endpoint_iterator)
 {
-    if ( !error )
+    if (!error)
     {
         boost::asio::async_read(socket_, boost::asio::buffer(read_msg_.data(), RequestMessage::header_length), boost::bind(&NetworkClient::handle_read_header, this, boost::asio::placeholders::error));
-    }
-    else if ( endpoint_iterator != tcp::resolver::iterator() )
+    } else if (endpoint_iterator != tcp::resolver::iterator())
     {
         std::cout << "Fail connecting to server... Try again later" << std::endl;
         socket_.close();
@@ -48,11 +47,10 @@ void NetworkClient::handle_connect(const boost::system::error_code& error, tcp::
 
 void NetworkClient::handle_read_header(const boost::system::error_code& error)
 {
-    if ( !error && read_msg_.decode_header() )
+    if (!error && read_msg_.decode_header())
     {
         boost::asio::async_read(socket_, boost::asio::buffer(read_msg_.body(), read_msg_.body_length()), boost::bind(&NetworkClient::handle_read_body, this, boost::asio::placeholders::error));
-    }
-    else
+    } else
     {
         do_close();
     }
@@ -60,14 +58,13 @@ void NetworkClient::handle_read_header(const boost::system::error_code& error)
 
 void NetworkClient::handle_read_body(const boost::system::error_code& error)
 {
-    if ( !error )
+    if (!error)
     {
         //std::cout.write(read_msg_.body(), read_msg_.body_length());
         std::string msg(read_msg_.body(), read_msg_.body_length());
         decodeRequest(msg);
         boost::asio::async_read(socket_, boost::asio::buffer(read_msg_.data(), RequestMessage::header_length), boost::bind(&NetworkClient::handle_read_header, this, boost::asio::placeholders::error));
-    }
-    else
+    } else
     {
         do_close();
     }
@@ -77,7 +74,7 @@ void NetworkClient::do_write(RequestMessage msg)
 {
     bool write_in_progress = !write_msgs_.empty();
     write_msgs_.push_back(msg);
-    if ( !write_in_progress )
+    if (!write_in_progress)
     {
         boost::asio::async_write(socket_, boost::asio::buffer(write_msgs_.front().data(), write_msgs_.front().length()), boost::bind(&NetworkClient::handle_write, this, boost::asio::placeholders::error));
     }
@@ -85,15 +82,14 @@ void NetworkClient::do_write(RequestMessage msg)
 
 void NetworkClient::handle_write(const boost::system::error_code& error)
 {
-    if ( !error )
+    if (!error)
     {
         write_msgs_.pop_front();
-        if ( !write_msgs_.empty() )
+        if (!write_msgs_.empty())
         {
             boost::asio::async_write(socket_, boost::asio::buffer(write_msgs_.front().data(), write_msgs_.front().length()), boost::bind(&NetworkClient::handle_write, this, boost::asio::placeholders::error));
         }
-    }
-    else
+    } else
     {
         do_close();
     }
@@ -116,7 +112,7 @@ void NetworkClient::decodeRequest(std::string msg)
     boost::split(info, received, boost::is_any_of(Sender::separator));
     int choice = atoi(info[0].c_str());
     std::cout << "Choice: " << choice << std::endl;
-    switch ( choice )
+    switch (choice)
     {
         case Sender::REQUEST_OWNERSHIP:
         {
@@ -137,15 +133,15 @@ void NetworkClient::decodeRequest(std::string msg)
             //Create new path
             std::cout << "NEW_PATH" << std::endl;
             int pathID = atoi(info[1].c_str());
-            bool mode = ( info[2] == "1" ) ? true : false;
+            bool mode = (info[2] == "1") ? true : false;
             int colorInt = atoi(info[3].c_str());
-            bool active = ( info[4] == "1" ) ? true : false;
+            bool active = (info[4] == "1") ? true : false;
             int page = atoi(info[5].c_str());
             int width = atoi(info[6].c_str());
 
-            int colorR = ( ( colorInt >> 16 ) & 0xFF );
-            int colorG = ( ( colorInt >> 8 ) & 0xFF );
-            int colorB = ( ( colorInt ) & 0xFF );
+            int colorR = ((colorInt >> 16) & 0xFF);
+            int colorG = ((colorInt >> 8) & 0xFF);
+            int colorB = ((colorInt) & 0xFF);
 
             Color color(colorR, colorG, colorB);
             Path* path = new Path(mode, color, width, pathID, active);
@@ -163,13 +159,13 @@ void NetworkClient::decodeRequest(std::string msg)
             std::vector<std::string> p;
             boost::split(p, info[1], boost::is_any_of(Sender::separatorPoints));
 
-            for ( int i = 0; i < p.size(); )
+            for (int i = 0; i < p.size();)
             {
                 int x = atoi(p[i++].c_str());
                 int y = atoi(p[i++].c_str());
 
                 //TODO We need to create a new constructor for point that will simply take the values given and record them, without adjusting anthing
-                Point* point = new Point(0, 0, x, y);
+                Point* point = new Point(x, y);
                 scribbleArea->addNetworkPoint(point);
                 //TODO add the created point to the working network path
             }
@@ -234,7 +230,7 @@ void NetworkClient::decodeRequest(std::string msg)
             boost::split(files, info[1], boost::is_any_of(Sender::separatorPoints));
 
             std::cout << "Number of files: " << files.size() << std::endl;
-            for ( int i = 0; i < files.size(); i++ )
+            for (int i = 0; i < files.size(); i++)
             {
                 std::cout << files[i] << std::endl;
             }

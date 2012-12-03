@@ -167,6 +167,7 @@ void NetworkClient::decodeRequest(std::string msg)
                 //TODO We need to create a new constructor for point that will simply take the values given and record them, without adjusting anthing
                 Point* point = new Point(x, y);
                 scribbleArea->addNetworkPoint(point);
+                
                 //TODO add the created point to the working network path
             }
             break;

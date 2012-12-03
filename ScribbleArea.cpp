@@ -45,6 +45,10 @@ ScribbleArea::~ScribbleArea()
 {
 
     delete mTempPath;
+    if ( mNetworkPath != NULL )
+    {
+        delete mNetworkPath;
+    }
 }
 
 Color ScribbleArea::getPenColor()
@@ -198,6 +202,7 @@ void ScribbleArea::screenMoveEvent(Point* point)
         pathsLock.lock();
         lockForTempPath.lock();
         mTempPath->addPoint(point);
+        //TOTEST
         sender->sendPoints(point);
         lockForTempPath.unlock();
         pathsLock.unlock();
@@ -469,6 +474,8 @@ void ScribbleArea::endNetworkPath()
     lockForNetworkPath.lock();
     pathsOnPage.at(networkPathPage).push_back(mNetworkPath);
     mNetworkPath = NULL;
+    //TOCONF This could be done more efficiently by sending the page number only on page changes and not with each new path, undo, redo, delete... and so on
+    networkPathPage = -1;
     lockForNetworkPath.unlock();
     pathsLock.unlock();
 }

@@ -20,32 +20,6 @@ socket_(io_service), scribbleArea(scribbleArea)
     socket_.async_connect(endpoint, boost::bind(&NetworkClient::handle_connect, this, boost::asio::placeholders::error, ++endpoint_iterator));
 }
 
-//NetworkClient::NetworkClient(const NetworkClient& org)
-//{
-//
-//    io_service_ = org.io_service_;
-//    socket_ = org.socket_;
-//    read_msg_ = org.read_msg_;
-//    write_msgs_ = org.write_msgs_;
-//}
-
-//NetworkClient& NetworkClient::operator=( const NetworkClient &org )
-//{
-//    // check for self-assignment by comparing the address of the
-//    // implicit object and the parameter
-//    if ( this == &org )
-//        return *this;
-//
-//    // do the copy
-//    io_service_ = org.io_service_;
-//    socket_ = org.socket_;
-//    read_msg_ = org.read_msg_;
-//    write_msgs_ = org.write_msgs_;
-//
-//    // return the existing object
-//    return *this;
-//}
-
 void NetworkClient::write(const RequestMessage& msg)
 {
     //RequestMessage encodeMessage(std::string line)
@@ -88,7 +62,6 @@ void NetworkClient::handle_read_body(const boost::system::error_code& error)
 {
     if ( !error )
     {
-        //TODO this is where we will analyze what we have received
         //std::cout.write(read_msg_.body(), read_msg_.body_length());
         std::string msg(read_msg_.body(), read_msg_.body_length());
         decodeRequest(msg);
@@ -148,14 +121,14 @@ void NetworkClient::decodeRequest(std::string msg)
         case Sender::REQUEST_OWNERSHIP:
         {
             //We have received a message with who is the current owner
-            //TODO one I integrate this with the scribbleArea then we can set the flag that i, or some other scribble, becomes the owner
+            //TODO once I integrate this with the scribbleArea then we can set the flag that i, or some other scribble, becomes the owner
             std::cout << "REQUEST_OWNERSHIP" << std::endl;
             break;
         }
         case Sender::RELEASE_OWNERSHIP:
         {
             //File ownership is available
-            //TODO one integrated with the ScribbleArea reset the ownership flag
+            //TODO once integrated with the ScribbleArea reset the ownership flag
             std::cout << "RELEASE_OWNERSHIP" << std::endl;
             break;
         }
@@ -294,6 +267,4 @@ void NetworkClient::sendMessage(std::string line)
     msg.encode_header();
 
     write(msg);
-    //return msg;
-
 }

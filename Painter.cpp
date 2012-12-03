@@ -56,11 +56,11 @@ void Painter::DrawPaths()
     scribbleArea->setLockForPath(1);
     glColor3f(scribbleArea->getPenColor().getRed(), scribbleArea->getPenColor().getGreen(), scribbleArea->getPenColor().getBlue());
 
-    for ( int i = 0; i < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).size(); ++i )
+    for (int i = 0; i < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).size(); ++i)
     {
 
         glBegin(GL_LINE_STRIP);
-        for ( int j = 0; j < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().size(); ++j )
+        for (int j = 0; j < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().size(); ++j)
         {
 
             glVertex3f(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getX(), scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getY(), 0.0f);
@@ -69,12 +69,30 @@ void Painter::DrawPaths()
     }
     scribbleArea->setLockForPath(0);
 
+    if (scribbleArea->getTempPath() != NULL)
+    {
+        scribbleArea->setLockForTempPath(1);
+
+        glBegin(GL_LINE_STRIP);
+        for (int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j)
+        {
+
+            glVertex3f(scribbleArea->getTempPath()->getPath().at(j)->getX(), scribbleArea->getTempPath()->getPath().at(j)->getY(), 0.0f);
+        }
+
+        glEnd();
+
+        scribbleArea->setLockForTempPath(0);
+    }
+
     //Path that is being received through the network
     scribbleArea->setLockForNetworkPath(1);
-    if ( scribbleArea->getCurrentPage() == scribbleArea->getNetworkPage() && scribbleArea->getNetworkPath() != NULL )
+
+    if (scribbleArea->getCurrentPage() == scribbleArea->getNetworkPage() && scribbleArea->getNetworkPath() != NULL)
     {
+        glColor3f(scribbleArea->getNetworkPath()->getPenColor().getRed(), scribbleArea->getNetworkPath()->getPenColor().getGreen(), scribbleArea->getNetworkPath()->getPenColor().getBlue());
         glBegin(GL_LINE_STRIP);
-        for ( int j = 0; j < scribbleArea->getNetworkPath()->getPath().size(); ++j )
+        for (int j = 0; j < scribbleArea->getNetworkPath()->getPath().size(); ++j)
         {
 
             glVertex3f(scribbleArea->getNetworkPath()->getPath().at(j)->getX(), scribbleArea->getNetworkPath()->getPath().at(j)->getY(), 0.0f);
@@ -84,28 +102,12 @@ void Painter::DrawPaths()
     }
     scribbleArea->setLockForNetworkPath(0);
 
-    if ( scribbleArea->getTempPath() == NULL )
-        return;
-
-    scribbleArea->setLockForTempPath(1);
-
-    glBegin(GL_LINE_STRIP);
-    for ( int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j )
-    {
-
-        glVertex3f(scribbleArea->getTempPath()->getPath().at(j)->getX(), scribbleArea->getTempPath()->getPath().at(j)->getY(), 0.0f);
-    }
-
-    glEnd();
-
-    scribbleArea->setLockForTempPath(0);
-
 }
 
 void Painter::DrawMenu()
 {
 
-    switch ( scribbleArea->getMode() )
+    switch (scribbleArea->getMode())
     {
         case WRITE:
 

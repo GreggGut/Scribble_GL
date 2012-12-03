@@ -42,7 +42,7 @@ void resize(int width, int height)
 
 void key(unsigned char key, int x, int y)
 {
-    switch ( key )
+    switch (key)
     {
         case 27:
             exit(0);
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
     sender->sendDeletePath(page, pathID);
     sender->sendReleaseOwnership();
     //Testing until here....
-
+    std::cout << "Testing..." << std::endl;
     glutMainLoop();
 
     client->close();

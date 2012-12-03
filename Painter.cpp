@@ -53,6 +53,7 @@ void Painter::Draw()
 void Painter::DrawPaths()
 {
 
+    scribbleArea->setLockForPath(1);
     glColor3f(scribbleArea->getPenColor().getRed(), scribbleArea->getPenColor().getGreen(), scribbleArea->getPenColor().getBlue());
 
     for ( int i = 0; i < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).size(); ++i )
@@ -66,6 +67,7 @@ void Painter::DrawPaths()
         }
         glEnd();
     }
+    scribbleArea->setLockForPath(0);
 
     //Path that is being received through the network
     scribbleArea->setLockForNetworkPath(1);
@@ -85,7 +87,7 @@ void Painter::DrawPaths()
     if ( scribbleArea->getTempPath() == NULL )
         return;
 
-    scribbleArea->setLockForPath(1);
+    scribbleArea->setLockForTempPath(1);
 
     glBegin(GL_LINE_STRIP);
     for ( int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j )
@@ -96,7 +98,7 @@ void Painter::DrawPaths()
 
     glEnd();
 
-    scribbleArea->setLockForPath(0);
+    scribbleArea->setLockForTempPath(0);
 
 }
 

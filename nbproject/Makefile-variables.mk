@@ -9,8 +9,8 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=GNU-Linux-x86
 CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux-x86
-CND_ARTIFACT_NAME_Debug=scribble_gl
-CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/scribble_gl
+CND_ARTIFACT_NAME_Debug=scribble_gl_
+CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux-x86/scribble_gl_
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux-x86/package
 CND_PACKAGE_NAME_Debug=scribblegl.tar
 CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux-x86/package/scribblegl.tar

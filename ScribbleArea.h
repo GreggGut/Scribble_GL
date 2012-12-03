@@ -45,8 +45,9 @@ public:
     int getMode();
     std::vector<std::vector<Path*> > getPathsOnPage();
     int getCurrentPage();
-    void setLockForPath(bool lock);
+    void setLockForTempPath(bool lock);
     void setLockForNetworkPath(bool lock);
+    void setLockForPath(bool lock);
     Path* getTempPath();
     Path* getNetworkPath();
     int getNetworkPage();

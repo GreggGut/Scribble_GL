@@ -93,7 +93,7 @@ int ScribbleArea::getCurrentPage()
     return currentPage;
 }
 
-void ScribbleArea::setLockForPath(bool lock)
+void ScribbleArea::setLockForTempPath(bool lock)
 {
 
     if ( lock == 1 )
@@ -104,6 +104,20 @@ void ScribbleArea::setLockForPath(bool lock)
     else
     {
         lockForTempPath.unlock();
+    }
+}
+
+void ScribbleArea::setLockForPath(bool lock)
+{
+
+    if ( lock == 1 )
+    {
+        pathsLock.lock();
+    }
+
+    else
+    {
+        pathsLock.unlock();
     }
 }
 

@@ -20,6 +20,7 @@ public:
     float getRed();
     float getGreen();
     float getBlue();
+    void setColor(int r, int g, int b);
     
 private:
     float red;

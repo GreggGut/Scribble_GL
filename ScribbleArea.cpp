@@ -1,14 +1,13 @@
-/*
+/* 
  * File:   ScribbleArea.cpp
  * Author: scribble
- *
+ * 
  * Created on October 25, 2012, 2:17 PM
  */
 
 #include "ScribbleArea.h"
-#include "Sender.h"
 
-ScribbleArea::ScribbleArea() : networkPathPage(-1)
+ScribbleArea::ScribbleArea()
 {
 
     penColor = Color();
@@ -18,16 +17,34 @@ ScribbleArea::ScribbleArea() : networkPathPage(-1)
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
     redoVector.resize(5);
+    
+    mRequests = new Vector_Request();
+    requestsMutex = new boost::mutex();
+
+    //TODO server address and port should be variables that the user can change if needed
+    std::string add = "127.0.0.1";
+    mySender = new Sender(add, 21223);
+
+    //TODO User will have to enter this (username and password)
+    username = "greg";
+    password = "pass";
+    
+    //Vector_Request* mRequests, boost::mutex * requestsMutex, std::string username);
+    receiver = new Receiver(mRequests, requestsMutex, "greg");
+    boost::thread(&ScribbleArea::NetworkRequestsAnalyzer, this);
+
+    mySender->Login(username, password, receiver->GetMListeningPort());
+    boost::thread(&ScribbleArea::SendTests, this);
 }
 
-ScribbleArea::ScribbleArea(int x, int y, int w, int h) : networkPathPage(-1)
+ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_)
 {
 
-    xPos = x;
-    yPos = y;
-    width = w;
-    height = h;
-
+    x = x_;
+    y = y_;
+    width = w_;
+    height = h_;
+    
     penColor = Color();
     penSize = 1.0;
     currentPage = 0;
@@ -35,6 +52,24 @@ ScribbleArea::ScribbleArea(int x, int y, int w, int h) : networkPathPage(-1)
     pathsOnPage.resize(5);
     Paths_IDs.resize(5);
     redoVector.resize(5);
+    
+    mRequests = new Vector_Request();
+    requestsMutex = new boost::mutex();
+
+    //TODO server address and port should be variables that the user can change if needed
+    std::string add = "127.0.0.1";
+    mySender = new Sender(add, 21223);
+
+    //TODO User will have to enter this (username and password)
+    username = "greg";
+    password = "pass";
+    
+    //Vector_Request* mRequests, boost::mutex * requestsMutex, std::string username);
+    receiver = new Receiver(mRequests, requestsMutex, "greg");
+    boost::thread(&ScribbleArea::NetworkRequestsAnalyzer, this);
+
+    mySender->Login(username, password, receiver->GetMListeningPort());
+    boost::thread(&ScribbleArea::SendTests, this);
 }
 
 ScribbleArea::ScribbleArea(const ScribbleArea& orig)
@@ -45,10 +80,6 @@ ScribbleArea::~ScribbleArea()
 {
 
     delete mTempPath;
-    if ( mNetworkPath != NULL )
-    {
-        delete mNetworkPath;
-    }
 }
 
 Color ScribbleArea::getPenColor()
@@ -77,91 +108,44 @@ void ScribbleArea::setPenWidth(int newWidth)
     penSize = newWidth;
 }
 
-int ScribbleArea::getMode()
-{
-
-    return mMode;
+int ScribbleArea::getMode(){
+    
+   return mMode; 
 }
 
-std::vector<std::vector<Path*> > ScribbleArea::getPathsOnPage()
-{
-    return pathsOnPage;
-}
-
-int ScribbleArea::getCurrentPage()
-{
+ 
+ std::vector<std::vector<Path*> > ScribbleArea::getPathsOnPage(){
+     return pathsOnPage;
+ }
+ 
+int ScribbleArea::getCurrentPage(){
     return currentPage;
 }
 
-void ScribbleArea::setLockForTempPath(bool lock)
-{
-
-    if ( lock == 1 )
-    {
+void ScribbleArea::setLockForPath(bool lock){
+    
+    if (lock == 1) {
         lockForTempPath.lock();
     }
-
-    else
-    {
-        lockForTempPath.unlock();
+        
+    else {
+         lockForTempPath.unlock();
     }
 }
 
-void ScribbleArea::setLockForPath(bool lock)
-{
-
-    if ( lock == 1 )
-    {
-        pathsLock.lock();
-    }
-
-    else
-    {
-        pathsLock.unlock();
-    }
+Path* ScribbleArea::getTempPath(){
+ return mTempPath;   
 }
 
-void ScribbleArea::setLockForNetworkPath(bool lock)
-{
-
-    if ( lock == 1 )
-    {
-        lockForNetworkPath.lock();
-    }
-
-    else
-    {
-        lockForNetworkPath.unlock();
-    }
-}
-
-Path* ScribbleArea::getTempPath()
-{
-    return mTempPath;
-}
-
-Path* ScribbleArea::getNetworkPath()
-{
-    return mNetworkPath;
-}
-
-int ScribbleArea::getNetworkPage()
-{
-    return networkPathPage;
-}
-
-bool ScribbleArea::pointInsideArea(Point * point)
-{
-
+bool ScribbleArea::pointInsideArea(Point * point){
+ 
     //point has to be inside frame. could be changed but overlaps may occur
-    if ( ( point->getX() > xPos ) && ( point->getX() < width + xPos ) && ( point->getY() > yPos ) && ( point->getY() < height + yPos ) )
-    {
+    if((point->getX() > x) && (point->getX() < width+x) && (point->getY() > y) && (point->getY() < height+y)){
         return true;
     }
-
+    
     return false;
 }
-
 /*! Screen Press Event
  *
  * \param *point A pointer to a Point object
@@ -186,8 +170,6 @@ void ScribbleArea::screenPressEvent(Point* point)
 
         lockForTempPath.lock();
         mTempPath = new Path(point, this->mMode, this->penColor, this->penSize, Paths_IDs[currentPage]++);
-        //TOTEST
-        sender->sendNewPath(mTempPath->getPathID(), mMode, mTempPath->getPenColorInt(), mTempPath->isEnabled(), currentPage, penSize);
         lockForTempPath.unlock();
     }
 
@@ -216,8 +198,6 @@ void ScribbleArea::screenMoveEvent(Point* point)
         pathsLock.lock();
         lockForTempPath.lock();
         mTempPath->addPoint(point);
-        //TOTEST
-        sender->sendPoints(point);
         lockForTempPath.unlock();
         pathsLock.unlock();
     }
@@ -244,29 +224,26 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/)
 
         if ( mTempPath->getPointsCount() < 3 )
         {
-            //TOCONF is this how we want to do this part? send end of path and then delete it?
-            //TOTEST
-            sender->sendEndPath();
-            sender->sendDeletePath(currentPage, mTempPath->getPathID());
             delete mTempPath;
         }
         else
         {
             pathsOnPage.at(currentPage).push_back(mTempPath);
-            //TOTEST
-            sender->sendEndPath();
         }
 
         mTempPath = NULL;
 
         lockForTempPath.unlock();
         pathsLock.unlock();
+
     }
+
     else
     {
 
     }
 }
+
 
 /*! Undo
  *
@@ -275,20 +252,20 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/)
 void ScribbleArea::undo()
 {
     pathsLock.lock();
-    if ( !pathsOnPage.at(currentPage).empty() )
+    if (!pathsOnPage.at(currentPage).empty())
     {
-        for ( int i = ( int ) pathsOnPage.at(currentPage).size() - 1; i >= 0; i-- )
+        for (int i = (int) pathsOnPage.at(currentPage).size() - 1; i >= 0; i--)
         {
-            if ( pathsOnPage.at(currentPage).at(i) != NULL )
+            if (pathsOnPage.at(currentPage).at(i) != NULL)
             {
                 redoVector.at(currentPage).push_back(pathsOnPage.at(currentPage).at(i));
 
                 int id = pathsOnPage.at(currentPage).at(i)->getPathID();
                 pathsOnPage.at(currentPage).at(i) = NULL; //pop_back();
 
-                for ( int j = i - 1; j >= 0; j-- )
+                for (int j = i - 1; j >= 0; j--)
                 {
-                    if ( pathsOnPage.at(currentPage).at(j) != NULL && id == pathsOnPage.at(currentPage).at(j)->getPathID() )
+                    if (pathsOnPage.at(currentPage).at(j) != NULL && id == pathsOnPage.at(currentPage).at(j)->getPathID())
                     {
                         pathsOnPage.at(currentPage).at(j)->enablePath();
                         break;
@@ -297,9 +274,9 @@ void ScribbleArea::undo()
                 break;
             }
         }
+
+        //updatePageContent();
     }
-    //TOTEST
-    sender->sendUndo(currentPage);
     pathsLock.unlock();
 }
 
@@ -310,12 +287,12 @@ void ScribbleArea::undo()
 void ScribbleArea::redo()
 {
     pathsLock.lock();
-    if ( !redoVector.at(currentPage).empty() )
+    if (!redoVector.at(currentPage).empty())
     {
         int id = redoVector.at(currentPage).back()->getPathID();
-        for ( int i = pathsOnPage.at(currentPage).size() - 1; i >= 0; i-- )
+        for (int i = pathsOnPage.at(currentPage).size() - 1; i >= 0; i--)
         {
-            if ( pathsOnPage.at(currentPage).at(i) != NULL && id == pathsOnPage.at(currentPage).at(i)->getPathID() )
+            if (pathsOnPage.at(currentPage).at(i) != NULL && id == pathsOnPage.at(currentPage).at(i)->getPathID())
             {
                 //std::cout << "Redone Path " << id << std::endl;
                 pathsOnPage.at(currentPage).at(i)->disablePath();
@@ -326,8 +303,7 @@ void ScribbleArea::redo()
         pathsOnPage.at(currentPage).push_back(redoVector.at(currentPage).back());
         redoVector.at(currentPage).pop_back();
 
-        //TOCONF For now I think we should resend the redone path to the server so that the server has the path in memory
-        //TODO implement the network redo
+        //updatePageContent();
     }
     pathsLock.unlock();
 }
@@ -360,8 +336,6 @@ void ScribbleArea::clearAll()
     cleanPathsOnCurentPageVector();
 
     Paths_IDs[currentPage] = 0;
-    //TOTEST
-    sender->sendCleanAll(currentPage);
 
     //updatePDF();
     //lockForImage.lock();
@@ -378,12 +352,12 @@ void ScribbleArea::clearAll()
  */
 void ScribbleArea::cleanRedoVector()
 {
-    int redoVecSize = ( int ) redoVector.at(currentPage).size();
+    int redoVecSize = (int) redoVector.at(currentPage).size();
 
     //For each Path in redoVector, find if the same path ID is present on the current page of PathsOnPage
     //If present then clear the points vector and then delete the Path object
     //Otherwise delete delete Path without cleaning it which will delete all Point objects
-    for ( int i = 0; i < redoVecSize; i++ )
+    for (int i = 0; i < redoVecSize; i++)
     {
         delete redoVector.at(currentPage).at(i);
         redoVector.at(currentPage).at(i) = NULL;
@@ -401,7 +375,7 @@ void ScribbleArea::cleanPathsOnCurentPageVector()
     pathsLock.lock();
     int vectorSize = pathsOnPage.at(currentPage).size();
 
-    for ( int i = 0; i < vectorSize; i++ )
+    for (int i = 0; i < vectorSize; i++)
     {
         delete pathsOnPage.at(currentPage).at(i);
         pathsOnPage.at(currentPage).at(i) = NULL;
@@ -428,73 +402,68 @@ void ScribbleArea::Draw()
         }
         glEnd();
     }
-
+   
+    if (mTempPath == NULL)
+        return;
+    
     lockForTempPath.lock();
-    if ( mTempPath != NULL )
-    {
-        glBegin(GL_LINE_STRIP);
-        for ( int j = 0; j < mTempPath->getPath().size(); ++j )
-        {
-
-            glVertex3f(mTempPath->getPath().at(j)->getX(), mTempPath->getPath().at(j)->getY(), 0.0f);
+   
+    glBegin (GL_LINE_STRIP);
+        for (int j = 0; j < mTempPath->getPath().size(); ++j){
+            
+             glVertex3f(mTempPath->getPath().at(j)->getX(),mTempPath->getPath().at(j)->getY(), 0.0f);
         }
-
-        glEnd();
-    }
+    
+    glEnd();    
+   
     lockForTempPath.unlock();
 
-    lockForNetworkPath.lock();
-    if ( currentPage == networkPathPage && mNetworkPath != NULL )
+}
+
+/**
+ * This function check and executes all the requests that have been received from the server
+ */
+void ScribbleArea::NetworkRequestsAnalyzer()
+{
+    while ( checkMyRequests || mRequests->size() != 0 )
     {
-        glBegin(GL_LINE_STRIP);
-        for ( int j = 0; j < mNetworkPath->getPath().size(); ++j )
+        //sort the mRequests by requestID
+        for ( uint i = 0; i < mRequests->size(); i++ )
         {
 
-            glVertex3f(mNetworkPath->getPath().at(j)->getX(), mNetworkPath->getPath().at(j)->getY(), 0.0f);
         }
+        //if the first request in the queue has the nextRequestID then execute it
+        //increase nextRequestID
+        //repeat the 2 above steps until either all requests are met or the nextRequestID does not match the ID of the next request in the queue
 
-        glEnd();
+        //Repeat the requests each 200 milliseconds
+        boost::this_thread::sleep(boost::posix_time::milliseconds(200));
+
     }
-    lockForNetworkPath.unlock();
-
-
 }
 
-void ScribbleArea::setNetworkPage(int p)
+void ScribbleArea::SendTests()
 {
-    lockForNetworkPath.lock();
-    std::cout << "Setting network page: " << p << std::endl;
-    networkPathPage = p;
-    lockForNetworkPath.unlock();
-}
+    boost::this_thread::sleep(boost::posix_time::milliseconds(500));
+    mySender->GetFilesList();
+    //boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+    mySender->RequestOwnership();
 
-void ScribbleArea::setNetworkPath(Path* p)
-{
-    lockForNetworkPath.lock();
-    mNetworkPath = p;
-    lockForNetworkPath.unlock();
-}
+    Point m1(0, 0, 10, 10);
+    Point m2(0, 0, 20, 20);
+    Point m3(0, 0, 30, 30);
+    Point m4(0, 0, 40, 40);
 
-void ScribbleArea::addNetworkPoint(Point * p)
-{
-    lockForNetworkPath.lock();
-    mNetworkPath->addPoint(p);
-    lockForNetworkPath.unlock();
-}
+    std::vector<Point> mPoints;
+    mPoints.push_back(m1);
+    mPoints.push_back(m2);
+    mPoints.push_back(m3);
+    mPoints.push_back(m4);
 
-void ScribbleArea::endNetworkPath()
-{
-    pathsLock.lock();
-    lockForNetworkPath.lock();
-    pathsOnPage.at(networkPathPage).push_back(mNetworkPath);
-    mNetworkPath = NULL;
-    //TOCONF This could be done more efficiently by sending the page number only on page changes and not with each new path, undo, redo, delete... and so on
-    networkPathPage = -1;
-    lockForNetworkPath.unlock();
-    pathsLock.unlock();
-}
+    mySender->NewPath(3, true, 34567, true, 0, 1);
+    mySender->AddPoints(3, 4, mPoints);
+    mySender->EndPath(3);
+    mySender->Logout();
 
-void ScribbleArea::setSender(Sender* sender)
-{
-    this->sender = sender;
+    std::cout << "Scribble area end of SendTests function" << std::endl;
 }

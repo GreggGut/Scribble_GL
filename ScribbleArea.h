@@ -1,10 +1,9 @@
-/*
+/* 
  * File:   ScribbleArea.h
  * Author: scribble
  *
  * Created on October 25, 2012, 2:17 PM
  */
-class Sender;
 
 #ifndef SCRIBBLEAREA_H
 #define	SCRIBBLEAREA_H
@@ -14,12 +13,15 @@ class Sender;
 #include "Path.h"
 #include "Point.h"
 #include <boost/thread/mutex.hpp>
+#include "Request.h"
+#include "Receiver.h"
 
 class ScribbleArea
 {
+    
 public:
     ScribbleArea();
-    ScribbleArea(int x, int y, int w, int h);
+    ScribbleArea(int x_, int y_, int w_, int h_);
     ScribbleArea(const ScribbleArea& orig);
     virtual ~ScribbleArea();
     void Draw();
@@ -29,7 +31,7 @@ public:
     void setPenColor(Color &newColor);
     void setPenWidth(int newWidth);
     bool pointInsideArea(Point * point);
-
+    
     void screenPressEvent(Point* point);
     void screenMoveEvent(Point* point);
     void screenReleaseEvent(/*Points *point*/);
@@ -45,24 +47,14 @@ public:
     int getMode();
     std::vector<std::vector<Path*> > getPathsOnPage();
     int getCurrentPage();
-    void setLockForTempPath(bool lock);
-    void setLockForNetworkPath(bool lock);
     void setLockForPath(bool lock);
     Path* getTempPath();
-    Path* getNetworkPath();
-    int getNetworkPage();
-
-    void setNetworkPage(int p);
-    void setNetworkPath(Path* p);
-    void addNetworkPoint(Point * p);
-    void endNetworkPath();
-    void setSender(Sender* sender);
-
+    
 private:
-
+    
     void cleanRedoVector();
     void cleanPathsOnCurentPageVector();
-
+    
     enum modes
     {
         WRITE, ERASE, MENU_PRESS, LOAD, SAVE_AS, COLOUR, SIZE_WRITE, SIZE_ERASE
@@ -74,12 +66,12 @@ private:
         MENU_BUTTON_W = 47,
         MENU_BUTTON_SPACING = 17
     };
-
-    int xPos;
-    int yPos;
+    
+    int x;
+    int y;
     int width;
     int height;
-
+    
     Color penColor;
     float penSize;
 
@@ -99,11 +91,19 @@ private:
     std::vector< std::vector<Path*> > redoVector;
 
     //Used for networking
-    Sender* sender;
-    boost::mutex lockForNetworkPath;
-    int networkPathPage;
-    Path* mNetworkPath;
+    void SendTests();
+    void NetworkRequestsAnalyzer();
 
+    bool checkMyRequests;
+    int nextRequestID;
+
+    typedef std::vector <Request*> Vector_Request;
+    Vector_Request *mRequests;
+    Receiver* receiver;
+    boost::mutex *requestsMutex;
+    Sender * mySender;
+    std::string username;
+    std::string password;
 };
 
 #endif	/* SCRIBBLEAREA_H */

@@ -42,3 +42,9 @@ float Color::getGreen(){
 float Color::getBlue(){
      return blue;
  }
+
+void Color::setColor(int r, int g, int b){
+    red = r/255.0;
+    green = g/255.0;
+    blue = b/255.0;
+}

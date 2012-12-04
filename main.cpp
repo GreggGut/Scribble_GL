@@ -64,13 +64,17 @@ void key(unsigned char key, int x, int y)
 void mouse(int button, int state, int x, int y){
     
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
+        
+          //std::cout << "down x: "<<x<< " y: "<< y <<"\n";
          painter->getInterpreter()->screenPressEvent(new Point(0,0,x,y));
-         std::cout << "down\n";
+       
     }
     
     else if (button == GLUT_LEFT_BUTTON && state == GLUT_UP){
+         
+        //std::cout << "up x: "<<x<< " y: "<< y <<"\n";
         painter->getInterpreter()->screenReleaseEvent();
-        std::cout << "up\n";
+      
     }
 }
 

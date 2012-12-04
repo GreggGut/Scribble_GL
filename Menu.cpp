@@ -18,9 +18,11 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
     
     buttonArray = new std::vector<Button *>;
     
-    Button *chooseColor = new Button(10,10,50,50);
+    Button *btn1 = new Button(10,10,50,50);
+    Button *btn2 = new Button(70,10,50,50);
     
-    buttonArray->push_back(chooseColor);
+    buttonArray->push_back(btn1);
+    buttonArray->push_back(btn2);
 }
 
 Menu::Menu(const Menu& orig) {
@@ -72,14 +74,28 @@ void Menu::screenPressEvent(Point* point)
         return;
     }
     
-    for(int i = 0; i < buttonArray->size(); ++i){\
+    #warning 
+    //problems here since clicking anywhere else will cause error
+   
+    for(int i = 0; i < buttonArray->size(); ++i){
         
         if (buttonArray->at(i)->pointInsideArea(point) == 1){
-            buttonArray->at(i)->setSelected();
-            break;
+            
+            if (buttonArray->at(i)->getSelected() != 1){
+                buttonArray->at(i)->setSelected();
+            }
+            
+            else {
+                //already selected
+            }
+            //break;
         }
         
         else {
+            if(buttonArray->at(i)->getSelected() == 1){
+                buttonArray->at(i)->setSelected();
+            }
+            
             continue;
         }
     }
@@ -122,14 +138,5 @@ void Menu::screenMoveEvent(Point* point)
  */
 void Menu::screenReleaseEvent(/*Points *point*/)
 {
-    for(int i = 0; i < buttonArray->size(); ++i){\
-        
-        if (buttonArray->at(i)->getSelected() == 1){
-            buttonArray->at(i)->setSelected();
-        }
-        
-        else {
-            continue;
-        }
-    }
+    
 }

@@ -28,7 +28,7 @@ ScreenInterpreter::~ScreenInterpreter() {
 //TO TEST: Make sure that drawing and pressing button works
 void ScreenInterpreter::screenPressEvent(Point* point){
    //state 1
-    std::cout << "press event\n";
+    //std::cout << "press event\n";
     bool pointInMenu = menu->pointInsideArea(point);
     bool pointInScribble = scribbleArea->pointInsideArea(point);
     
@@ -56,22 +56,22 @@ void ScreenInterpreter::screenPressEvent(Point* point){
 
 void ScreenInterpreter::screenMoveEvent(Point* point){
    //state 2
-    std::cout << "move event\n";
+    //std::cout << "move event\n";
     bool pointInMenu = menu->pointInsideArea(point);
     bool pointInScribble = scribbleArea->pointInsideArea(point);
     
     if (pointInMenu == true && pointInScribble == true){
         //do screen event for both
         scribbleState = 2;
-        menuState = 2;
+       // menuState = 2;
         scribbleArea->screenMoveEvent(point);
-        menu->screenMoveEvent(point);
+        //menu->screenMoveEvent(point);
     }
     
     else if (pointInMenu == true && pointInScribble == false){
         //only menu action
-        menuState = 2;
-        menu->screenMoveEvent(point);
+       // menuState = 2;
+       // menu->screenMoveEvent(point);
     }
     
     else {
@@ -84,14 +84,14 @@ void ScreenInterpreter::screenMoveEvent(Point* point){
 void ScreenInterpreter::screenReleaseEvent(){
    //state 0
     
-    std::cout << "end event\n";
+    //std::cout << "end event\n";
     if (scribbleState != 1){
         scribbleState = 0;
         scribbleArea->screenReleaseEvent();
     }
     
-    if (menuState != 1){
+    if (menuState == 1){
         menuState = 0;
-        menu->screenReleaseEvent();
+        //menu->screenReleaseEvent();
     }
 }

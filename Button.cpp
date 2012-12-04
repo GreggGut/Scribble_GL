@@ -17,9 +17,9 @@ Button::Button(int x_, int y_, int w_, int h_){
     width = w_;
     height = h_;
    
-    selected = 1;
-    fillColor = new Color(50,20,100);
-    strokeColor = new Color(50,20,100);
+    selected = 0;
+    fillColor = new Color(100,20,20);
+    strokeColor = new Color(100,30,30);
 }
 
 Button::Button(const Button& orig) {

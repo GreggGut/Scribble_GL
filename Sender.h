@@ -52,6 +52,8 @@ public:
     //TOCONFIRM Do we Need this?
     void sendDownloadFile(std::string filename);
 
+    void sendUpdateFileContent();
+
     //newPath - username - requestID - pathID - mode - color - active - page
     void sendNewPath(int pathID, bool mode, int color, bool active, int page, int width);
 
@@ -90,6 +92,7 @@ public:
         REDO = 10,
         DELETE_PATH = 11,
         CLEAR_ALL = 12,
+        UPDATE_FILE_CONTENT = 13,
     } protocol;
 
     static const std::string separator; // = "&";

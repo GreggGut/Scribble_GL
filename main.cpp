@@ -122,6 +122,7 @@ int main(int argc, char *argv[])
     //        c.write(sendMessage(toSend));
 
     sender->sendGetFilesList();
+    sender->sendUpdateFileContent();
 
     sender->sendRequestOwnership();
 

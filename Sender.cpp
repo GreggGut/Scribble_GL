@@ -123,9 +123,19 @@ void Sender::sendGetFilesList()
  */
 void Sender::sendDownloadFile(std::string filename)
 {
-    std::cout << "NOTHING DONE HERE.... in sendDownloadFile" << std::endl;
     std::string toSend = separator;
     toSend += NumberToString(DOWNLOAD_FILE);
+
+    toSend += separator;
+    toSend += filename;
+
+    client->sendMessage(toSend);
+}
+
+void Sender::sendUpdateFileContent()
+{
+    std::string toSend = separator;
+    toSend += NumberToString(UPDATE_FILE_CONTENT);
 
     client->sendMessage(toSend);
 }

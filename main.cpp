@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     tcp::resolver resolver(io_service);
 
     std::cout << "Connecting..." << std::endl;
-    tcp::resolver::query query("MHO.encs.concordia.ca", "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
+    tcp::resolver::query query("localhost", "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
     tcp::resolver::iterator iterator = resolver.resolve(query);
 
     //NetworkClient
@@ -140,12 +140,14 @@ int main(int argc, char *argv[])
     sender->sendPoints(m4);
     //s.sendAddPoints(mPoints);
     sender->sendEndPath();
-    //s.sendUndo(2);
-    sender->sendGetFilesList();
-    sender->sendDeletePath(page, pathID);
-    sender->sendReleaseOwnership();
-    //Testing until here....
-    std::cout << "Testing..." << std::endl;
+//
+    sender->sendDownloadFile("hello");
+//    //s.sendUndo(2);
+//    //    sender->sendGetFilesList();
+//    //    sender->sendDeletePath(page, pathID);
+//    //    sender->sendReleaseOwnership();
+//    //Testing until here....
+//    std::cout << "Testing..." << std::endl;
     glutMainLoop();
 
     client->close();

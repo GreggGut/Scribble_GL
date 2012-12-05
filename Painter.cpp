@@ -69,10 +69,9 @@ void Painter::DrawPaths()
     }
     scribbleArea->setLockForPath(0);
 
+    scribbleArea->setLockForTempPath(1);
     if (scribbleArea->getTempPath() != NULL)
     {
-        scribbleArea->setLockForTempPath(1);
-
         glBegin(GL_LINE_STRIP);
         for (int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j)
         {
@@ -81,10 +80,8 @@ void Painter::DrawPaths()
         }
 
         glEnd();
-
-        scribbleArea->setLockForTempPath(0);
     }
-
+    scribbleArea->setLockForTempPath(0);
     //Path that is being received through the network
     scribbleArea->setLockForNetworkPath(1);
 

@@ -126,21 +126,21 @@ int main(int argc, char *argv[])
 
     sender->sendRequestOwnership();
 
-    int pathID = 10;
-    int page = 0;
-    sender->sendNewPath(pathID, true, 32453, true, page, 1);
-
-    Point* m1 = new Point(0, 0, 100, 100);
-    Point* m2 = new Point(0, 0, 200, 200);
-    Point* m3 = new Point(0, 0, 300, 300);
-    Point* m4 = new Point(0, 0, 400, 600);
-
-    sender->sendPoints(m1);
-    sender->sendPoints(m2);
-    sender->sendPoints(m3);
-    sender->sendPoints(m4);
-    //s.sendAddPoints(mPoints);
-    sender->sendEndPath();
+//    int pathID = 10;
+//    int page = 0;
+//    sender->sendNewPath(pathID, true, 32453, true, page, 1);
+//
+//    Point* m1 = new Point(0, 0, 100, 100);
+//    Point* m2 = new Point(0, 0, 200, 200);
+//    Point* m3 = new Point(0, 0, 300, 300);
+//    Point* m4 = new Point(0, 0, 400, 600);
+//
+//    sender->sendPoints(m1);
+//    sender->sendPoints(m2);
+//    sender->sendPoints(m3);
+//    sender->sendPoints(m4);
+//    //s.sendAddPoints(mPoints);
+//    sender->sendEndPath();
 //
     sender->sendDownloadFile("hello");
 //    //s.sendUndo(2);

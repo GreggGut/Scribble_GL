@@ -24,8 +24,7 @@
 #include "Point.h"
 #include "NetworkClient.h"
 
-class Sender
-{
+class Sender {
 public:
     Sender(std::string username, NetworkClient* client);
     //    Sender(const Sender& orig);
@@ -76,8 +75,7 @@ public:
 
 public:
 
-    static enum Protocol
-    {
+    static enum Protocol {
         //Client to server
         LOGIN = 0,
         LOGOUT = 1,
@@ -99,6 +97,8 @@ public:
     static const std::string separatorPoints; // = "#";
 
 private:
+
+//    int getPenColorInt(Color c);
     std::string GetPoints(Point* point); //std::vector<Point> points);
 
     std::string NumberToString(int Number);

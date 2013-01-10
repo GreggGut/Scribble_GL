@@ -178,6 +178,15 @@ void Sender::sendNewPath(int pathID, bool mode, int color, bool active, int page
     client->sendMessage(toSend);
 }
 
+int Sender::getPenColorInt(Color myPenColor)
+{
+    int rgb = myPenColor.getRed();
+    rgb = (rgb << 8) + myPenColor.getGreen();
+    rgb = (rgb << 8) + myPenColor.getBlue();
+
+    return rgb;
+}
+
 /**
  * Send a new point request
  * @param point
@@ -255,21 +264,21 @@ void Sender::sendUndo(int page)
     client->sendMessage(toSend);
 }
 
-///** Redo - page - pathID
-// *
-// * @param page
-// * @param pathID
-// */
-//std::string Sender::Redo(int page)
-//{
-//    std::string toSend = separator;
-//    toSend += NumberToString(REDO);
-//    toSend += separator;
-//
-//    toSend += NumberToString(page);
-//
-//    return toSend;
-//}
+/** Redo - page - pathID
+ *
+ * @param page
+ * @param pathID
+ */
+void Sender::sendRedo(int page)
+{
+    std::string toSend = separator;
+    toSend += NumberToString(REDO);
+    toSend += separator;
+
+    toSend += NumberToString(page);
+
+    client->sendMessage(toSend);
+}
 
 /**
  * Send a delete Path request
@@ -322,7 +331,7 @@ std::string Sender::NumberToString(int Number)
  */
 std::string Sender::BoolToString(bool boolean)
 {
-    if ( boolean )
+    if (boolean)
     {
         return "1";
     }

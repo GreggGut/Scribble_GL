@@ -178,15 +178,6 @@ void Sender::sendNewPath(int pathID, bool mode, int color, bool active, int page
     client->sendMessage(toSend);
 }
 
-int Sender::getPenColorInt(Color myPenColor)
-{
-    int rgb = myPenColor.getRed();
-    rgb = (rgb << 8) + myPenColor.getGreen();
-    rgb = (rgb << 8) + myPenColor.getBlue();
-
-    return rgb;
-}
-
 /**
  * Send a new point request
  * @param point

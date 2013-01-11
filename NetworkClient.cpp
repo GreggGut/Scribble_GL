@@ -185,7 +185,6 @@ void NetworkClient::decodeRequest(std::string msg)
             //Undo last action, this will simply call the UNDO function of the ScribbleArea
             std::cout << "UNDO" << std::endl;
             scribbleArea->undo();
-            std::cout << "after UNDO" << std::endl;
             break;
         }
         case Sender::REDO:

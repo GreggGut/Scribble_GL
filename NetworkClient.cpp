@@ -135,16 +135,16 @@ void NetworkClient::decodeRequest(std::string msg)
             int pathID = atoi(info[1].c_str());
             bool mode = (info[2] == "1") ? true : false;
             int colorInt = atoi(info[3].c_str());
-            bool active = (info[4] == "1") ? true : false;
-            int page = atoi(info[5].c_str());
-            int width = atoi(info[6].c_str());
+            //bool active = (info[4] == "1") ? true : false;
+            int page = atoi(info[4].c_str());
+            int width = atoi(info[5].c_str());
 
             int colorR = ((colorInt >> 16) & 0xFF);
             int colorG = ((colorInt >> 8) & 0xFF);
             int colorB = ((colorInt) & 0xFF);
 
             Color color(colorR, colorG, colorB);
-            Path* path = new Path(mode, color, width, pathID, active);
+            Path* path = new Path(mode, color, width, pathID);//, active);
 
             scribbleArea->setNetworkPage(page);
             scribbleArea->setNetworkPath(path);
@@ -167,7 +167,7 @@ void NetworkClient::decodeRequest(std::string msg)
                 //TODO We need to create a new constructor for point that will simply take the values given and record them, without adjusting anthing
                 Point* point = new Point(x, y);
                 scribbleArea->addNetworkPoint(point);
-                
+
                 //TODO add the created point to the working network path
             }
             break;
@@ -184,13 +184,12 @@ void NetworkClient::decodeRequest(std::string msg)
         {
             //Undo last action, this will simply call the UNDO function of the ScribbleArea
             std::cout << "UNDO" << std::endl;
-            //TODO call the undo function on the ScribbleArea
             scribbleArea->undo();
+            std::cout << "after UNDO" << std::endl;
             break;
         }
         case Sender::REDO:
         {
-            //TOCONF We should possibly never be here, since undo will completely remove the last action/drawing and if the user calls the redo function we will resend the whole path
             std::cout << "REDO" << std::endl;
             scribbleArea->redo();
             break;

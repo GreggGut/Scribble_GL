@@ -187,7 +187,7 @@ void ScribbleArea::screenPressEvent(Point* point)
         lockForTempPath.lock();
         mTempPath = new Path(point, this->mMode, this->penColor, this->penSize, Paths_IDs[currentPage]++);
         //TOTEST
-        sender->sendNewPath(mTempPath->getPathID(), mMode, mTempPath->getPenColorInt(), mTempPath->isEnabled(), currentPage, penSize);
+        sender->sendNewPath(mTempPath->getPathID(), mMode, mTempPath->getPenColorInt()/*, mTempPath->isEnabled()*/, currentPage, penSize);
         lockForTempPath.unlock();
     }
 
@@ -298,8 +298,8 @@ void ScribbleArea::undo()
             }
         }
     }
-    //TOTEST
-    sender->sendUndo(currentPage);
+    //TODO This needs to be called only if the undo button was touched and not when received by network
+    //sender->sendUndo(currentPage);
     pathsLock.unlock();
 }
 

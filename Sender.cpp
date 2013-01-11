@@ -152,7 +152,7 @@ void Sender::sendUpdateFileContent()
  *
  * Info sent: newPath - pathID - mode - color - active - page - width
  */
-void Sender::sendNewPath(int pathID, bool mode, int color, bool active, int page, int width)
+void Sender::sendNewPath(int pathID, bool mode, int color/*, bool active*/, int page, int width)
 {
     std::string toSend = separator;
     toSend += NumberToString(NEW_PATH);
@@ -167,8 +167,8 @@ void Sender::sendNewPath(int pathID, bool mode, int color, bool active, int page
     toSend += NumberToString(color);
     toSend += separator;
 
-    toSend += BoolToString(active);
-    toSend += separator;
+    //    toSend += BoolToString(active);
+    //    toSend += separator;
 
     toSend += NumberToString(page);
     toSend += separator;
@@ -322,7 +322,7 @@ std::string Sender::NumberToString(int Number)
  */
 std::string Sender::BoolToString(bool boolean)
 {
-    if (boolean)
+    if ( boolean )
     {
         return "1";
     }

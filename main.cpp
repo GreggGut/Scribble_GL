@@ -42,7 +42,7 @@ void resize(int width, int height)
 
 void key(unsigned char key, int x, int y)
 {
-    switch (key)
+    switch ( key )
     {
         case 27:
             exit(0);
@@ -125,10 +125,10 @@ int main(int argc, char *argv[])
     sender->sendUpdateFileContent();
 
     sender->sendRequestOwnership();
-
+//
 //    int pathID = 10;
 //    int page = 0;
-//    sender->sendNewPath(pathID, true, 32453, true, page, 1);
+//    sender->sendNewPath(pathID, true, 32453, page, 1);
 //
 //    Point* m1 = new Point(0, 0, 100, 100);
 //    Point* m2 = new Point(0, 0, 200, 200);
@@ -139,16 +139,76 @@ int main(int argc, char *argv[])
 //    sender->sendPoints(m2);
 //    sender->sendPoints(m3);
 //    sender->sendPoints(m4);
-//    //s.sendAddPoints(mPoints);
-//    sender->sendEndPath();
 //
+//    pathID = 11;
+//
+//    sender->sendNewPath(pathID, true, 32453, page, 1);
+//
+//    m1 = new Point(0, 0, 10, 100);
+//    m2 = new Point(0, 0, 20, 200);
+//    m3 = new Point(0, 0, 30, 300);
+//    m4 = new Point(0, 0, 40, 600);
+//
+//    sender->sendPoints(m1);
+//    sender->sendPoints(m2);
+//    sender->sendPoints(m3);
+//    sender->sendPoints(m4);
+//
+//    pathID = 12;
+//
+//    sender->sendNewPath(pathID, true, 32453, page, 1);
+//
+//    m1 = new Point(0, 0, 10, 10);
+//    m2 = new Point(0, 0, 20, 20);
+//    m3 = new Point(0, 0, 30, 30);
+//    m4 = new Point(0, 0, 40, 60);
+//
+//    sender->sendPoints(m1);
+//    sender->sendPoints(m2);
+//    sender->sendPoints(m3);
+//    sender->sendPoints(m4);
+//
+//    pathID = 13;
+//
+//    sender->sendNewPath(pathID, true, 32453, page, 1);
+//
+//    m1 = new Point(0, 0, 10, 110);
+//    m2 = new Point(0, 0, 20, 120);
+//    m3 = new Point(0, 0, 30, 130);
+//    m4 = new Point(0, 0, 40, 160);
+//
+//    sender->sendPoints(m1);
+//    sender->sendPoints(m2);
+//    sender->sendPoints(m3);
+//    sender->sendPoints(m4);
+//
+//    pathID = 14;
+//
+//    sender->sendNewPath(pathID, true, 32453, page, 1);
+//
+//    m1 = new Point(0, 0, 110, 10);
+//    m2 = new Point(0, 0, 120, 20);
+//    m3 = new Point(0, 0, 130, 30);
+//    m4 = new Point(0, 0, 140, 60);
+//
+//    sender->sendPoints(m1);
+//    sender->sendPoints(m2);
+//    sender->sendPoints(m3);
+//    sender->sendPoints(m4);
+
+   sender->sendUndo(0);
+
+
+    //s.sendAddPoints(mPoints);
+    sender->sendEndPath();
+    //
     sender->sendDownloadFile("hello");
-//    //s.sendUndo(2);
-//    //    sender->sendGetFilesList();
-//    //    sender->sendDeletePath(page, pathID);
-//    //    sender->sendReleaseOwnership();
-//    //Testing until here....
-//    std::cout << "Testing..." << std::endl;
+    //    //s.sendUndo(2);
+    //    //    sender->sendGetFilesList();
+    //    //    sender->sendDeletePath(page, pathID);
+    //    //    sender->sendReleaseOwnership();
+    //    //Testing until here....
+    //    std::cout << "Testing..." << std::endl;
     glutMainLoop();
 
     client->close();

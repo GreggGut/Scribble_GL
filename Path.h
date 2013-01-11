@@ -20,7 +20,7 @@ class Path
 {
 public:
     Path(Point* point, int mode, Color color, int width, int ID, bool final=false/*, bool active = true*/);
-    Path(int mode, Color color, int width, int ID, bool active);
+    Path(int mode, Color color, int width, int ID);//, bool active);
     Path(const Path& orig);
     virtual ~Path();
     void addPoint(Point* point);

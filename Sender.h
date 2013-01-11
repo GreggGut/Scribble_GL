@@ -54,7 +54,7 @@ public:
     void sendUpdateFileContent();
 
     //newPath - username - requestID - pathID - mode - color - active - page
-    void sendNewPath(int pathID, bool mode, int color, bool active, int page, int width);
+    void sendNewPath(int pathID, bool mode, int color/*, bool active*/, int page, int width);
 
     //AddPoints - username - requestID - pathID - numberOfPoints - Points
     void sendPoints(Point* point); //std::vector<Point> points);
@@ -65,8 +65,8 @@ public:
     //Undo - page
     void sendUndo(int page);
 
-    //Redo - username - requestID - page - pathID
-    void sendRedo(int page, int pathID);
+    //Redo - page
+    void sendRedo(int page);//, int pathID);
 
     //Delete - username - requestID - page - pathID
     void sendDeletePath(int page, int PathID);

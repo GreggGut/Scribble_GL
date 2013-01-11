@@ -37,7 +37,7 @@ Path::Path(Point* point, int mode, Color color, int width, int id, bool fin/*, b
     area->set(point->getColumn(), point->getRow());
 }
 
-Path::Path(int mode, Color color, int width, int ID, bool active) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(ID), active(active), final(false), totalLength(0)
+Path::Path(int mode, Color color, int width, int ID/*, bool active*/) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(ID), active(true), final(false), totalLength(0)
 {
     mX = 0;
     mY = 0;

@@ -284,8 +284,10 @@ void ScribbleArea::undo()
                 redoVector.at(currentPage).push_back(pathsOnPage.at(currentPage).at(i));
 
                 int id = pathsOnPage.at(currentPage).at(i)->getPathID();
-                pathsOnPage.at(currentPage).at(i) = NULL; //pop_back();
+                //pathsOnPage.at(currentPage).at(i) = NULL; //pop_back();
 
+                pathsOnPage.at(currentPage).pop_back();
+                
                 for ( int j = i - 1; j >= 0; j-- )
                 {
                     if ( pathsOnPage.at(currentPage).at(j) != NULL && id == pathsOnPage.at(currentPage).at(j)->getPathID() )

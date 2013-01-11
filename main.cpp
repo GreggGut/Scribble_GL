@@ -196,11 +196,11 @@ int main(int argc, char *argv[])
 //    sender->sendPoints(m3);
 //    sender->sendPoints(m4);
 
-   sender->sendUndo(0);
+   //sender->sendUndo(0);
 
 
     //s.sendAddPoints(mPoints);
-    sender->sendEndPath();
+    //sender->sendEndPath();
     //
     sender->sendDownloadFile("hello");
     //    //s.sendUndo(2);

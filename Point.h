@@ -15,7 +15,7 @@ class Point{
     
 public:
     explicit Point(int column_, int row_, int x_, int y_);
-   
+    explicit Point(int x_, int y_);
     Point(const Point& orig);
     Point();
     virtual ~Point();

@@ -10,13 +10,14 @@
 Button::Button() {
 }
 
-Button::Button(int x_, int y_, int w_, int h_){
+Button::Button(int x_, int y_, int w_, int h_, int mode_, int action_){
     
     x = x_;
     y = y_;
     width = w_;
     height = h_;
-   
+    mode = mode_;
+    action = action_;
     selected = 0;
     fillColor = new Color(100,20,20);
     strokeColor = new Color(100,30,30);
@@ -79,4 +80,13 @@ bool Button::pointInsideArea(Point *point){
     }
     
     return false;
+}
+
+int Button::getMode(){
+    return mode;
+}
+
+int Button::getAction(){
+    
+    return action;
 }

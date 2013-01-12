@@ -21,6 +21,7 @@ public:
     void screenPressEvent(Point* point);
     void screenMoveEvent(Point* point);
     void screenReleaseEvent();
+    ScribbleArea* getScribbleArea();
     
 private:
     ScribbleArea *scribbleArea;

@@ -9,9 +9,11 @@
 
 Painter::Painter() {
 
-    menu = new Menu(0, 0, WIDTH, 50);
-    scribbleArea = new ScribbleArea(0, 50, WIDTH, HEIGHT - 50);
 
+    scribbleArea = new ScribbleArea(0, 50, WIDTH, HEIGHT - 50);
+    menu = new Menu(0, 0, WIDTH, 50);
+    menu->setScribbleArea(scribbleArea);
+    
     interpreter = new ScreenInterpreter(scribbleArea, menu);
 }
 

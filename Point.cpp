@@ -22,11 +22,8 @@ Point::Point(int column_, int row_, int x_, int y_)
 {
     //x(WIDTH-x-15), y(y-21), column(Column), row(Row
     
-    //x = WIDTH-x_-15;
-    //y = y_-15;
-#warning 
-    x = x_;
-    y = y_;
+    x = WIDTH-x_-15;
+    y = y_-15;
     column = column_;
     row = row_;
     
@@ -34,6 +31,13 @@ Point::Point(int column_, int row_, int x_, int y_)
     //For testing purpose
     //printf(" Added point: %x, %x, %x, %x", this->column, this->row, this->x(), this->y());
     //std::cout<<"Added point: "<<this->x()<<" "<<this->y()<<std::endl;
+}
+
+Point::Point(int x_, int y_){
+     x = x_;
+    y = y_;
+    column = 0;
+    row = 0;
 }
 
 /*! Copy constructor

@@ -38,6 +38,7 @@ ScribbleArea::ScribbleArea() {
 
 ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) {
 
+    mMode = WRITE;;
     x = x_;
     y = y_;
     width = w_;
@@ -224,14 +225,25 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
  * This function allows the user to undo the last actions. Presently, there is no limit of now many undo can be performed, meaning the user can press undo until there is nothing present on the screen
  */
 void ScribbleArea::undo() {
+#warning //why was the code so complex for this. should it work like paint or ps?
+
     pathsLock.lock();
     if (!pathsOnPage.at(currentPage).empty()) {
-        for (int i = (int) pathsOnPage.at(currentPage).size() - 1; i >= 0; i--) {
+
+        if (!redoVector.at(currentPage).empty()) {
+            if (pathsOnPage.at(currentPage).back()->getPathID() > redoVector.at(currentPage).back()->getPathID()) {
+                redoVector.at(currentPage).clear();
+            }
+        }
+        redoVector.at(currentPage).push_back(pathsOnPage.at(currentPage).back());
+        pathsOnPage.at(currentPage).pop_back();
+
+        /*for (int i = (int) pathsOnPage.at(currentPage).size() - 1; i >= 0; i--) {
             if (pathsOnPage.at(currentPage).at(i) != NULL) {
                 redoVector.at(currentPage).push_back(pathsOnPage.at(currentPage).at(i));
 
                 int id = pathsOnPage.at(currentPage).at(i)->getPathID();
-                pathsOnPage.at(currentPage).at(i) = NULL; //pop_back();
+                pathsOnPage.at(currentPage).erase(pathsOnPage.at(currentPage).at(i)); //pop_back();
 
                 for (int j = i - 1; j >= 0; j--) {
                     if (pathsOnPage.at(currentPage).at(j) != NULL && id == pathsOnPage.at(currentPage).at(j)->getPathID()) {
@@ -241,7 +253,7 @@ void ScribbleArea::undo() {
                 }
                 break;
             }
-        }
+        }*/
 
         //updatePageContent();
     }
@@ -253,9 +265,10 @@ void ScribbleArea::undo() {
  * This function allows the user to redo the last undone actions. This action is only available if the last action(s) is an undo, otherwise this function will have no effect
  */
 void ScribbleArea::redo() {
+#warning //what is the enable path etc
     pathsLock.lock();
     if (!redoVector.at(currentPage).empty()) {
-        int id = redoVector.at(currentPage).back()->getPathID();
+        /*int id = redoVector.at(currentPage).back()->getPathID();
         for (int i = pathsOnPage.at(currentPage).size() - 1; i >= 0; i--) {
             if (pathsOnPage.at(currentPage).at(i) != NULL && id == pathsOnPage.at(currentPage).at(i)->getPathID()) {
                 //std::cout << "Redone Path " << id << std::endl;
@@ -263,7 +276,7 @@ void ScribbleArea::redo() {
                 break;
             }
         }
-
+         */
         pathsOnPage.at(currentPage).push_back(redoVector.at(currentPage).back());
         redoVector.at(currentPage).pop_back();
 
@@ -416,4 +429,8 @@ void ScribbleArea::SendTests() {
     mySender->Logout();
 
     std::cout << "Scribble area end of SendTests function" << std::endl;
+}
+
+bool ScribbleArea::getScribbling() {
+    return scribbling;
 }

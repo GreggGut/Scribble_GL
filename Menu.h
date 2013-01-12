@@ -10,6 +10,7 @@
 #include "Point.h"
 #include "Button.h"
 #include <vector>
+#include "ScribbleArea.h"
 
 class Menu {
 public:
@@ -26,13 +27,16 @@ public:
     int getY();
     int getWidth();
     int getHeight();
-   
+    void callAction(int action);
+    void setScribbleArea(ScribbleArea *s);
+    
 private:
     int x;
     int y;
     int width;
     int height;
     std::vector <Button *> *buttonArray;
+    ScribbleArea *scribbleArea;
 };
 
 #endif	/* MENU_H */

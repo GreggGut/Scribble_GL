@@ -49,7 +49,7 @@ public:
     int getCurrentPage();
     void setLockForPath(bool lock);
     Path* getTempPath();
-    
+    bool getScribbling();
 private:
     
     void cleanRedoVector();

@@ -16,6 +16,12 @@
 
 #define UNDO_C 0
 #define REDO_C 1
+#define ERASE_C 2
+#define SIZE_C 3
+#define COLOUR_C 4
+#define NEXT_PAGE_C 5
+#define PREVIOUS_PAGE_C 6
+#define CLEAR_ALL_C 7
 
 class Button {
 public:

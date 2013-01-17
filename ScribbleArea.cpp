@@ -225,7 +225,6 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
  * This function allows the user to undo the last actions. Presently, there is no limit of now many undo can be performed, meaning the user can press undo until there is nothing present on the screen
  */
 void ScribbleArea::undo() {
-#warning //why was the code so complex for this. should it work like paint or ps?
 
     pathsLock.lock();
     if (!pathsOnPage.at(currentPage).empty()) {
@@ -238,23 +237,6 @@ void ScribbleArea::undo() {
         redoVector.at(currentPage).push_back(pathsOnPage.at(currentPage).back());
         pathsOnPage.at(currentPage).pop_back();
 
-        /*for (int i = (int) pathsOnPage.at(currentPage).size() - 1; i >= 0; i--) {
-            if (pathsOnPage.at(currentPage).at(i) != NULL) {
-                redoVector.at(currentPage).push_back(pathsOnPage.at(currentPage).at(i));
-
-                int id = pathsOnPage.at(currentPage).at(i)->getPathID();
-                pathsOnPage.at(currentPage).erase(pathsOnPage.at(currentPage).at(i)); //pop_back();
-
-                for (int j = i - 1; j >= 0; j--) {
-                    if (pathsOnPage.at(currentPage).at(j) != NULL && id == pathsOnPage.at(currentPage).at(j)->getPathID()) {
-                        pathsOnPage.at(currentPage).at(j)->enablePath();
-                        break;
-                    }
-                }
-                break;
-            }
-        }*/
-
         //updatePageContent();
     }
     pathsLock.unlock();
@@ -265,24 +247,33 @@ void ScribbleArea::undo() {
  * This function allows the user to redo the last undone actions. This action is only available if the last action(s) is an undo, otherwise this function will have no effect
  */
 void ScribbleArea::redo() {
-#warning //what is the enable path etc
+
     pathsLock.lock();
     if (!redoVector.at(currentPage).empty()) {
-        /*int id = redoVector.at(currentPage).back()->getPathID();
-        for (int i = pathsOnPage.at(currentPage).size() - 1; i >= 0; i--) {
-            if (pathsOnPage.at(currentPage).at(i) != NULL && id == pathsOnPage.at(currentPage).at(i)->getPathID()) {
-                //std::cout << "Redone Path " << id << std::endl;
-                pathsOnPage.at(currentPage).at(i)->disablePath();
-                break;
-            }
-        }
-         */
+    
         pathsOnPage.at(currentPage).push_back(redoVector.at(currentPage).back());
         redoVector.at(currentPage).pop_back();
 
         //updatePageContent();
     }
     pathsLock.unlock();
+}
+
+/*! Clear all
+ *
+ * This function clears the current page from all writing. This action <b>cannot</b> be undone.
+ */
+void ScribbleArea::clearAll() {
+
+     pathsLock.lock();
+    if (!pathsOnPage.at(currentPage).empty()) {
+
+        //redoVector.at(currentPage).insert(redoVector.at(currentPage).end(), pathsOnPage.at(currentPage).begin(), pathsOnPage.at(currentPage).end());
+        pathsOnPage.at(currentPage).clear();
+
+        //updatePageContent();
+    }
+    pathsLock.unlock();   
 }
 
 /*! Set write mode
@@ -301,63 +292,13 @@ void ScribbleArea::erase() {
     mMode = ERASE;
 }
 
-/*! Clear all
- *
- * This function clears the current page from all writing. This action <b>cannot</b> be undone.
- */
-void ScribbleArea::clearAll() {
-    cleanRedoVector();
-    cleanPathsOnCurentPageVector();
-
-    Paths_IDs[currentPage] = 0;
-
-    //updatePDF();
-    //lockForImage.lock();
-    //image = imageCopy.copy();
-    //lockForImage.unlock();
-    //updatePageContent();
-
-}
-
-/*! Clean Redo Vector (Delete all objects)
- *
- * This function iterates through the Redo vector, compares all paths to the paths in PathOnPages vector while deleting only the points that are only present in the Redo vector.
- * Otherwise the vector of points is cleared and then the Path object deleted
- */
-void ScribbleArea::cleanRedoVector() {
-    int redoVecSize = (int) redoVector.at(currentPage).size();
-
-    //For each Path in redoVector, find if the same path ID is present on the current page of PathsOnPage
-    //If present then clear the points vector and then delete the Path object
-    //Otherwise delete delete Path without cleaning it which will delete all Point objects
-    for (int i = 0; i < redoVecSize; i++) {
-        delete redoVector.at(currentPage).at(i);
-        redoVector.at(currentPage).at(i) = NULL;
-    }
-
-    redoVector.at(currentPage).clear();
-}
-
-/*! Clean PathOnPageVector (Delete all objects)
- *
- * This functions cleans all the path object present in the vector. Since the Point objects are shared it makes sure that it is deleted only once
- */
-void ScribbleArea::cleanPathsOnCurentPageVector() {
-    pathsLock.lock();
-    int vectorSize = pathsOnPage.at(currentPage).size();
-
-    for (int i = 0; i < vectorSize; i++) {
-        delete pathsOnPage.at(currentPage).at(i);
-        pathsOnPage.at(currentPage).at(i) = NULL;
-    }
-
-    pathsOnPage.at(currentPage).clear();
-    pathsLock.unlock();
-
-    //delete[] deleted;
-}
 
 void ScribbleArea::Draw() {
+    
+#warning //trying to improve performance
+    
+    glClear(GL_COLOR_BUFFER_BIT);
+    
     glColor3f(penColor.getRed(), penColor.getGreen(), penColor.getBlue());
 
     for (int i = 0; i < pathsOnPage.at(currentPage).size(); ++i) {
@@ -368,6 +309,7 @@ void ScribbleArea::Draw() {
             glVertex3f(pathsOnPage.at(currentPage).at(i)->getPath().at(j)->getX(), pathsOnPage.at(currentPage).at(i)->getPath().at(j)->getY(), 0.0f);
         }
         glEnd();
+        glFlush();
     }
 
     if (mTempPath == NULL)
@@ -382,9 +324,9 @@ void ScribbleArea::Draw() {
     }
 
     glEnd();
+    glFlush();
 
     lockForTempPath.unlock();
-
 }
 
 /**

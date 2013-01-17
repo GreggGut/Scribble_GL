@@ -8,6 +8,9 @@
 #include "Menu.h"
 #include "ScribbleArea.h"
 
+#define BTN_WIDTH 40
+#define BTN_HEIGHT 40
+
 Menu::Menu() {
 }
 
@@ -19,11 +22,47 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
 
     buttonArray = new std::vector<Button *>;
 
-    Button *btn1 = new Button(5, 5, 40, 40, MOMENTARY, UNDO_C);
-    Button *btn2 = new Button(50, 5, 40, 40, MOMENTARY, REDO_C);
-
-    buttonArray->push_back(btn1);
-    buttonArray->push_back(btn2);
+    for (int i = 0; i<5; ++i){
+        
+        int type;
+        int action;
+        
+        switch(i){
+            case 0:
+                type = MOMENTARY;
+                action = UNDO_C;
+                break;
+            case 1:
+                type = MOMENTARY;
+                action = REDO_C;
+                break;
+            case 2:
+                type = MOMENTARY;
+                action = CLEAR_ALL_C;
+                break;
+            case 3:
+                type = TOGGLE;
+                action = ERASE_C;
+                break;
+            case 4:
+                type = PICKER;
+                action = SIZE_C;
+                break;
+            case 5:
+                type = PICKER;
+                action = COLOUR_C;
+                break;
+            default:
+                type = MOMENTARY;
+                action = NULL;
+                break;  
+        }
+        
+         Button *btn = new Button(5 + (BTN_WIDTH + 5)*i, 5, 40, 40, type, action);
+         buttonArray->push_back(btn);
+         
+    }
+    
 }
 
 Menu::Menu(const Menu& orig) {
@@ -158,6 +197,8 @@ void Menu::callAction(int action){
         case REDO_C:
             scribbleArea->redo();
             break;
+        case CLEAR_ALL_C:
+            scribbleArea->clearAll();
         default:
             break;
     }

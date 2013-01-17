@@ -52,9 +52,6 @@ public:
     bool getScribbling();
 private:
     
-    void cleanRedoVector();
-    void cleanPathsOnCurentPageVector();
-    
     enum modes
     {
         WRITE, ERASE, MENU_PRESS, LOAD, SAVE_AS, COLOUR, SIZE_WRITE, SIZE_ERASE
@@ -87,7 +84,8 @@ private:
     boost::mutex lockForTempPath;
 
     int currentPage;
-    std::vector<std::vector<Path*> > pathsOnPage;
+    std::vector< std::vector<Path*> > pathsOnPage;
+    
     std::vector< std::vector<Path*> > redoVector;
 
     //Used for networking

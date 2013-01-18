@@ -63,6 +63,8 @@ public:
     void addNetworkPoint(Point * p);
     void endNetworkPath();
     void setSender(Sender* sender);
+    
+    Sender* getSender();
 private:
     
     int x;

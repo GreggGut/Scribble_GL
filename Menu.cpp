@@ -7,6 +7,7 @@
 
 #include "Menu.h"
 #include "ScribbleArea.h"
+#include "Sender.h"
 
 #define BTN_WIDTH 40
 #define BTN_HEIGHT 40
@@ -185,12 +186,15 @@ void Menu::callAction(int action) {
     switch (action) {
         case UNDO_C:
             scribbleArea->undo();
+            scribbleArea->getSender()->sendUndo(scribbleArea->getCurrentPage());
             break;
         case REDO_C:
             scribbleArea->redo();
+            scribbleArea->getSender()->sendRedo(scribbleArea->getCurrentPage());
             break;
         case CLEAR_ALL_C:
             scribbleArea->clearAll();
+            scribbleArea->getSender()->sendCleanAll(scribbleArea->getCurrentPage());
             break;
         case ERASE_C:
             scribbleArea->setMode(ERASE);

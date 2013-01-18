@@ -361,3 +361,8 @@ void ScribbleArea::setSender(Sender* sender)
 {
     this->sender = sender;
 }
+
+Sender* ScribbleArea::getSender()
+{
+    return sender;
+}

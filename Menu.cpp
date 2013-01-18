@@ -22,12 +22,12 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
 
     buttonArray = new std::vector<Button *>;
 
-    for (int i = 0; i<5; ++i){
-        
+    for (int i = 0; i < 6; ++i) {
+
         int type;
         int action;
-        
-        switch(i){
+
+        switch (i) {
             case 0:
                 type = MOMENTARY;
                 action = UNDO_C;
@@ -45,24 +45,28 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
                 action = ERASE_C;
                 break;
             case 4:
+                type = TOGGLE;
+                action = WRITE_C;
+                break;
+            case 5:
                 type = PICKER;
                 action = SIZE_C;
                 break;
-            case 5:
+            case 6:
                 type = PICKER;
                 action = COLOUR_C;
                 break;
             default:
                 type = MOMENTARY;
                 action = NULL;
-                break;  
+                break;
         }
-        
-         Button *btn = new Button(5 + (BTN_WIDTH + 5)*i, 5, 40, 40, type, action);
-         buttonArray->push_back(btn);
-         
+
+        Button *btn = new Button(5 + (BTN_WIDTH + 5) * i, 5, 40, 40, type, action);
+        buttonArray->push_back(btn);
+
     }
-    
+
 }
 
 Menu::Menu(const Menu& orig) {
@@ -125,19 +129,8 @@ void Menu::screenPressEvent(Point* point) {
                     callAction(buttonArray->at(i)->getAction());
                     break;
                 case TOGGLE:
-                    break;
-                case PICKER:
-                    break;
-                default:
-                    break;
-            }
-            
-        }
-        else {
-            switch (buttonArray->at(i)->getMode()) {
-                case MOMENTARY:
-                    break;
-                case TOGGLE:
+#warning //add toggling fucntionality
+                     callAction(buttonArray->at(i)->getAction());
                     break;
                 case PICKER:
                     break;
@@ -145,8 +138,7 @@ void Menu::screenPressEvent(Point* point) {
                     break;
             }
 
-            continue;
-        }
+        } 
     }
 
     delete point;
@@ -188,9 +180,9 @@ void Menu::screenReleaseEvent(/*Points *point*/) {
 
 }
 
-void Menu::callAction(int action){
-    
-    switch (action){
+void Menu::callAction(int action) {
+
+    switch (action) {
         case UNDO_C:
             scribbleArea->undo();
             break;
@@ -199,12 +191,18 @@ void Menu::callAction(int action){
             break;
         case CLEAR_ALL_C:
             scribbleArea->clearAll();
+            break;
+        case ERASE_C:
+            scribbleArea->setMode(ERASE);
+            break;
+            case WRITE_C:
+            scribbleArea->setMode(WRITE);
         default:
             break;
     }
-    
+
 }
 
-void Menu::setScribbleArea(ScribbleArea *s){
-        scribbleArea = s;   
+void Menu::setScribbleArea(ScribbleArea *s) {
+    scribbleArea = s;
 }

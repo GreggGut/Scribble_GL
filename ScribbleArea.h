@@ -16,6 +16,9 @@
 #include "Request.h"
 #include "Receiver.h"
 
+#define WRITE 0
+#define ERASE 1
+
 class ScribbleArea
 {
     
@@ -24,7 +27,6 @@ public:
     ScribbleArea(int x_, int y_, int w_, int h_);
     ScribbleArea(const ScribbleArea& orig);
     virtual ~ScribbleArea();
-    void Draw();
 
     Color getPenColor();
     float getPenSize();
@@ -45,24 +47,13 @@ public:
     void clearAll();
 
     int getMode();
+    void setMode(int mode);
     std::vector<std::vector<Path*> > getPathsOnPage();
     int getCurrentPage();
     void setLockForPath(bool lock);
     Path* getTempPath();
     bool getScribbling();
 private:
-    
-    enum modes
-    {
-        WRITE, ERASE, MENU_PRESS, LOAD, SAVE_AS, COLOUR, SIZE_WRITE, SIZE_ERASE
-    };
-
-    enum
-    {
-        MENU_BUTTON_H = 40,
-        MENU_BUTTON_W = 47,
-        MENU_BUTTON_SPACING = 17
-    };
     
     int x;
     int y;

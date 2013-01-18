@@ -24,10 +24,6 @@ public:
     Menu *getMenu();
     ScreenInterpreter *getInterpreter();
 private:
-    enum modes
-    {
-        WRITE, ERASE, MENU_PRESS, LOAD, SAVE_AS, COLOUR, SIZE_WRITE, SIZE_ERASE
-    };
    
     ScreenInterpreter *interpreter;
     ScribbleArea *scribbleArea;

@@ -3,6 +3,7 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f2" displayName="Header Files" projectFiles="true">
       <itemPath>AddPointsToPathRequest.h</itemPath>
+      <itemPath>Alert.h</itemPath>
       <itemPath>Button.h</itemPath>
       <itemPath>Color.h</itemPath>
       <itemPath>DeletePathRequest.h</itemPath>
@@ -34,6 +35,7 @@
     </logicalFolder>
     <logicalFolder name="f1" displayName="Source Files" projectFiles="true">
       <itemPath>AddPointsToPathRequest.cpp</itemPath>
+      <itemPath>Alert.cpp</itemPath>
       <itemPath>Button.cpp</itemPath>
       <itemPath>Color.cpp</itemPath>
       <itemPath>DeletePathRequest.cpp</itemPath>

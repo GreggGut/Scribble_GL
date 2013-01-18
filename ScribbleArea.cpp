@@ -38,7 +38,7 @@ ScribbleArea::ScribbleArea() {
 
 ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) {
 
-    mMode = WRITE;;
+    mMode = WRITE;
     x = x_;
     y = y_;
     width = w_;
@@ -105,6 +105,11 @@ void ScribbleArea::setPenWidth(int newWidth) {
 int ScribbleArea::getMode() {
 
     return mMode;
+}
+
+void ScribbleArea::setMode(int mode) {
+
+    mMode = mode;
 }
 
 std::vector<std::vector<Path*> > ScribbleArea::getPathsOnPage() {
@@ -290,43 +295,6 @@ void ScribbleArea::write() {
  */
 void ScribbleArea::erase() {
     mMode = ERASE;
-}
-
-
-void ScribbleArea::Draw() {
-    
-#warning //trying to improve performance
-    
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    glColor3f(penColor.getRed(), penColor.getGreen(), penColor.getBlue());
-
-    for (int i = 0; i < pathsOnPage.at(currentPage).size(); ++i) {
-
-        glBegin(GL_LINE_STRIP);
-        for (int j = 0; j < pathsOnPage.at(currentPage).at(i)->getPath().size(); ++j) {
-
-            glVertex3f(pathsOnPage.at(currentPage).at(i)->getPath().at(j)->getX(), pathsOnPage.at(currentPage).at(i)->getPath().at(j)->getY(), 0.0f);
-        }
-        glEnd();
-        glFlush();
-    }
-
-    if (mTempPath == NULL)
-        return;
-
-    lockForTempPath.lock();
-
-    glBegin(GL_LINE_STRIP);
-    for (int j = 0; j < mTempPath->getPath().size(); ++j) {
-
-        glVertex3f(mTempPath->getPath().at(j)->getX(), mTempPath->getPath().at(j)->getY(), 0.0f);
-    }
-
-    glEnd();
-    glFlush();
-
-    lockForTempPath.unlock();
 }
 
 /**

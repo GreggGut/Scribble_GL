@@ -92,6 +92,7 @@ void display() {
     painter->Draw();
 
     glutSwapBuffers();
+    glFlush();
 }
 
 int main(int argc, char *argv[]) {

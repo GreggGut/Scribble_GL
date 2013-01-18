@@ -36,6 +36,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/EndCurrentPathRequest.o \
+	${OBJECTDIR}/Alert.o \
 	${OBJECTDIR}/OwnershipRequest.o \
 	${OBJECTDIR}/InputData.o \
 	${OBJECTDIR}/Point.o \
@@ -91,6 +92,11 @@ ${OBJECTDIR}/EndCurrentPathRequest.o: EndCurrentPathRequest.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/EndCurrentPathRequest.o EndCurrentPathRequest.cpp
+
+${OBJECTDIR}/Alert.o: Alert.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Alert.o Alert.cpp
 
 ${OBJECTDIR}/OwnershipRequest.o: OwnershipRequest.cpp 
 	${MKDIR} -p ${OBJECTDIR}

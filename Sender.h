@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   Sender.h
  * Author: scribble
  *
@@ -17,15 +17,16 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <netdb.h> 
+#include <netdb.h>
 #include <iostream>
 #include <sstream>
 #include <vector>
 #include "Point.h"
+#include "NetworkClient.h"
 
 class Sender {
 public:
-    Sender(std::string, int);
+    Sender(std::string username, NetworkClient* client);
     //    Sender(const Sender& orig);
     virtual ~Sender();
 
@@ -33,78 +34,49 @@ public:
     static std::string getSeparatorPoints();
 
     //login - username - requestID - password - port
-    void Login(std::string username, std::string password, int myListeningPort);
+    void sendLogin(std::string password);
 
     //logout - username - requestID
-    void Logout();
+    void sendLogout();
 
     //requestOwnership - username - requestID
-    void RequestOwnership();
+    void sendRequestOwnership();
 
     //releaseOwnership - username - requestID
-    void ReleaseOwnership();
+    void sendReleaseOwnership();
 
     //getFileList - username - requestID
-    void GetFilesList();
+    void sendGetFilesList();
 
     //TOCONFIRM Do we Need this?
-    void DownloadFile(std::string filename);
+    void sendDownloadFile(std::string filename);
 
     void sendUpdateFileContent();
 
     //newPath - username - requestID - pathID - mode - color - active - page
-<<<<<<< HEAD
     void sendNewPath(int pathID, bool mode, int color/*, bool active*/, int page, int width);
-=======
-    void NewPath(int pathID, bool mode, int color, bool active, int page, int width);
->>>>>>> origin/Interface
 
     //AddPoints - username - requestID - pathID - numberOfPoints - Points
-    void AddPoints(int pathID, int numberOfPoints, std::vector<Point> points);
+    void sendPoints(Point* point); //std::vector<Point> points);
 
-    //EndPath - username - requestID - pathID
-    void EndPath(int pathID);
+    //EndPath
+    void sendEndPath();
 
-    //Undo - username - requestID - page - pathID
-    void Undo(int page, int pathID);
+    //Undo - page
+    void sendUndo(int page);
 
-<<<<<<< HEAD
     //Redo - page
     void sendRedo(int page);//, int pathID);
-=======
-    //Redo - username - requestID - page - pathID
-    void Redo(int page, int pathID);
->>>>>>> origin/Interface
 
-    //Delete - username - requestID - page - pathID 
-    void DeletePath(int page, int PathID);
+    //Delete - username - requestID - page - pathID
+    void sendDeletePath(int page, int PathID);
 
-private:
-    static const std::string separator; // = "&";
-    static const std::string separatorPoints; // = "#";
+    void sendCleanAll(int page);
 
-    void SendMessage(std::string toSend);
-    std::string GetPoints(std::vector<Point> points);
+public:
 
-    std::string NumberToString(int Number);
-    std::string BoolToString(bool boolean);
-
-    int requestID;
-
-<<<<<<< HEAD
     static enum Protocol {
         //Client to server
-=======
-
-    std::string serverName;
-    int portno;
-
-    //Need to initialise this in login
-    std::string username;
-
-    enum Protocol
-    {
->>>>>>> origin/Interface
         LOGIN = 0,
         LOGOUT = 1,
         REQUEST_OWNERSHIP = 2,
@@ -116,7 +88,6 @@ private:
         END_PATH = 8,
         UNDO = 9,
         REDO = 10,
-<<<<<<< HEAD
         DELETE_PATH = 11,
         CLEAR_ALL = 12,
         UPDATE_FILE_CONTENT = 13,
@@ -141,10 +112,6 @@ private:
     NetworkClient* client;
 
 
-=======
-        DELETE_PATH = 11
-    };
->>>>>>> origin/Interface
 
 };
 

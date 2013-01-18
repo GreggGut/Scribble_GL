@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Sender.cpp
  * Author: scribble
- * 
+ *
  * Created on October 30, 2012, 7:55 PM
  */
 
@@ -10,175 +10,119 @@
 const std::string Sender::separator = "&";
 const std::string Sender::separatorPoints = "#";
 
-Sender::Sender(std::string serverName, int port) : /*separator("&"), separatorPoints("#"),*/ portno(port), requestID(0)
+Sender::Sender(std::string username, NetworkClient* client) : username(username), client(client)
 {
-    this->serverName = serverName;
 }
 
 Sender::~Sender()
 {
 }
 
-void Sender::SendMessage(std::string toSend)
-{
-
-    int sockfd, n;
-    struct sockaddr_in serv_addr;
-    struct hostent *server;
-
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    server = gethostbyname(serverName.c_str());
-    if ( server == NULL )
-    {
-        fprintf(stderr, "ERROR, no such host\n");
-        exit(0);
-    }
-    bzero(( char * ) &serv_addr, sizeof (serv_addr ));
-    serv_addr.sin_family = AF_INET;
-    bcopy(( char * ) server->h_addr,
-            ( char * ) &serv_addr.sin_addr.s_addr,
-            server->h_length);
-    serv_addr.sin_port = htons(portno);
-    if ( connect(sockfd, ( struct sockaddr * ) &serv_addr, sizeof (serv_addr )) < 0 )
-    {
-        std::cout << "The server is unavailable, try again later" << std::endl;
-        close(sockfd);
-        return;
-    }
-
-    n = write(sockfd, toSend.c_str(), toSend.length());
-
-    if ( n < 0 )
-    {
-        std::cout << "ERROR writing to socket" << std::endl;
-    }
-    close(sockfd);
-}
-
+/**
+ * Get the separator between the info in a sent message
+ *
+ * @return Message separator
+ */
 std::string Sender::getSeparator()
 {
     return separator;
 }
 
+/**
+ * Get the separator used between points
+ *
+ * @return Point separator
+ */
 std::string Sender::getSeparatorPoints()
 {
     return separatorPoints;
 }
 
-/**login - username - requestID++ - password - port
- * 
- * @param username
- * @param password
- * @param myListeningPort
+/**
+ * Send login request
+ *
+ * @param password User password
+ *
+ * Info sent: login - username - password
  */
-void Sender::Login(std::string username, std::string password, int myListeningPort)
+void Sender::sendLogin(std::string password)
 {
-    //Saving username since it will be use with all requests
-    this->username = username;
-
-    //creating what needs to be send to the server for a login request
-    std::string toSend = NumberToString(LOGIN);
+    std::string toSend = separator;
+    toSend += NumberToString(LOGIN);
     toSend += separator;
 
     toSend += username;
-    toSend += separator;
-
-    toSend += NumberToString(requestID++);
     toSend += separator;
 
     toSend += password;
-    toSend += separator;
 
-    toSend += NumberToString(myListeningPort);
-    toSend += separator;
-
-    //Sending login request
-    SendMessage(toSend);
-}
-
-/** logout - username - requestID++
- * 
- */
-void Sender::Logout()
-{
-    //creating logout request
-    std::string toSend = NumberToString(LOGOUT);
-    toSend += separator;
-
-    toSend += username;
-    toSend += separator;
-
-    toSend += NumberToString(requestID++);
-    toSend += separator;
-
-    //Sending logout request
-    SendMessage(toSend);
+    client->sendMessage(toSend);
 }
 
 /**
- * requestOwnership - username - requestID++
+ * Send logout request
+ *
+ * Info sent: logout
  */
-void Sender::RequestOwnership()
+void Sender::sendLogout()
 {
-    //creating Ownership request
-    std::string toSend = NumberToString(REQUEST_OWNERSHIP);
-    toSend += separator;
+    std::string toSend = separator;
+    toSend += NumberToString(LOGOUT);
 
-    toSend += username;
-    toSend += separator;
-
-    toSend += NumberToString(requestID++);
-    toSend += separator;
-
-    //Sending logout request
-    SendMessage(toSend);
+    client->sendMessage(toSend);
 }
 
 /**
- * releaseOwnership - username - requestID++
+ * Send Ownership request
+ *
+ * Info sent: requestOwnership - username
  */
-void Sender::ReleaseOwnership()
+void Sender::sendRequestOwnership()
 {
-    //creating Ownership release request
-    std::string toSend = NumberToString(RELEASE_OWNERSHIP);
-    toSend += separator;
+    std::string toSend = separator;
+    toSend += NumberToString(REQUEST_OWNERSHIP);
 
+    toSend += separator;
     toSend += username;
-    toSend += separator;
 
-    toSend += NumberToString(requestID++);
-    toSend += separator;
-
-    //Sending logout request
-    SendMessage(toSend);
+    client->sendMessage(toSend);
 }
 
 /**
- * getFileList - username - requestID++
+ * Send Release ownership request
+ *
+ * Info sent: releaseOwnership - username
  */
-void Sender::GetFilesList()
+void Sender::sendReleaseOwnership()
 {
-    //creating get files list request
-    std::string toSend = NumberToString(GET_FILES_LIST);
-    toSend += separator;
+    std::string toSend = separator;
+    toSend += NumberToString(RELEASE_OWNERSHIP);
 
+    toSend += separator;
     toSend += username;
-    toSend += separator;
 
-    toSend += NumberToString(requestID++);
-    toSend += separator;
+    client->sendMessage(toSend);
+}
 
-    //Sending logout request
-    SendMessage(toSend);
+/**
+ * Send Get file list request
+ *
+ * Info sent: GetFileList
+ */
+void Sender::sendGetFilesList()
+{
+    std::string toSend = separator;
+    toSend += NumberToString(GET_FILES_LIST);
+
+    client->sendMessage(toSend);
 }
 
 /**TOCONFIRM Do we Need this?
- * 
+ *
  * @param filename
  */
-void Sender::DownloadFile(std::string filename)
+void Sender::sendDownloadFile(std::string filename)
 {
-<<<<<<< HEAD
     std::string toSend = separator;
     toSend += NumberToString(DOWNLOAD_FILE);
 
@@ -194,33 +138,24 @@ void Sender::sendUpdateFileContent()
     toSend += NumberToString(UPDATE_FILE_CONTENT);
 
     client->sendMessage(toSend);
-=======
-
->>>>>>> origin/Interface
 }
 
-/** newPath - username - requestID++ - pathID - mode - color - active - page
- * 
- * @param pathID
- * @param mode
- * @param color
- * @param active
- * @param page
+/**
+ * Send a new path request
+ *
+ * @param pathID Path ID
+ * @param mode Path mode
+ * @param color Path color
+ * @param active Path state
+ * @param page Page on which the path has been drawn
+ * @param width Path width
+ *
+ * Info sent: newPath - pathID - mode - color - active - page - width
  */
-<<<<<<< HEAD
 void Sender::sendNewPath(int pathID, bool mode, int color/*, bool active*/, int page, int width)
-=======
-void Sender::NewPath(int pathID, bool mode, int color, bool active, int page, int width)
->>>>>>> origin/Interface
 {
-    //creating New Path request
-    std::string toSend = NumberToString(NEW_PATH);
-    toSend += separator;
-
-    toSend += username;
-    toSend += separator;
-
-    toSend += NumberToString(requestID++);
+    std::string toSend = separator;
+    toSend += NumberToString(NEW_PATH);
     toSend += separator;
 
     toSend += NumberToString(pathID);
@@ -237,105 +172,89 @@ void Sender::NewPath(int pathID, bool mode, int color, bool active, int page, in
 
     toSend += NumberToString(page);
     toSend += separator;
-    
+
     toSend += NumberToString(width);
-    toSend += separator;
 
-    //std::cout << "NewPath: " << toSend << std::endl;
-    //Sending logout request
-    SendMessage(toSend);
+    client->sendMessage(toSend);
 }
 
-/** AddPoints - username - requestID++ - pathID - numberOfPoints - Points
- * 
- * @param pathID
- * @param numberOfPoints
- * @param Points
+/**
+ * Send a new point request
+ * @param point
+ *
+ * Info sent: AddPoints - Points...
  */
-void Sender::AddPoints(int pathID, int numberOfPoints, std::vector<Point> points)
+void Sender::sendPoints(Point* point)//std::vector<Point> points)
 {
-    //Creating the add points request
-    std::string toSend = NumberToString(ADD_POINTS);
+    std::string toSend = separator;
+    toSend += NumberToString(ADD_POINTS);
     toSend += separator;
 
-    toSend += username;
-    toSend += separator;
+    toSend += GetPoints(point);
 
-    toSend += NumberToString(requestID++);
-    toSend += separator;
-
-    toSend += NumberToString(pathID);
-    toSend += separator;
-
-    toSend += NumberToString(numberOfPoints);
-    toSend += separator;
-
-    toSend += GetPoints(points);
-    toSend += separator;
-
-    //Seding the Add Points request
-    SendMessage(toSend);
+    client->sendMessage(toSend);
 }
 
-std::string Sender::GetPoints(std::vector<Point> points)
+/**
+ * Transform a point to a string
+ *
+ * @param point The point to the transformed to a string
+ * @return A string representing a point
+ */
+std::string Sender::GetPoints(Point* point)//std::vector<Point> points)
 {
     std::stringstream s;
-    for ( int i = 0; i < points.size(); i++ )
-    {
-        s << points.at(i).getX();
-        s << separatorPoints;
-        s << points.at(i).getY();
-        s << separatorPoints;
-    }
-    return s.str();
+    //    for ( int i = 0; i < points.size(); i++ )
+    //    {
+    //        s << points.at(i).getX();
+    //        s << separatorPoints;
+    //        s << points.at(i).getY();
+    //        s << separatorPoints;
+    //    }
+
+    s << point->getX();
+    s << separatorPoints;
+    s << point->getY();
+    s << separatorPoints;
+
+    std::string toReturn = s.str();
+    toReturn.erase(toReturn.size() - 1);
+    return toReturn;
 }
 
-/** EndPath - username - requestID++ - pathID
- * 
+/** Send en End of Path request
+ *
  * @param pathID
+ *
+ * Info sent: EndPath
  */
-void Sender::EndPath(int pathID)
+void Sender::sendEndPath()
 {
-    //Creating the end path request
-    std::string toSend = NumberToString(END_PATH);
-    toSend += separator;
+    std::string toSend = separator;
+    toSend += NumberToString(END_PATH);
 
-    toSend += username;
-    toSend += separator;
-
-    toSend += NumberToString(requestID++);
-    toSend += separator;
-
-    toSend += NumberToString(pathID);
-    toSend += separator;
-
-    //Sending end path request
-    SendMessage(toSend);
+    client->sendMessage(toSend);
 }
 
-/** Undo - username - requestID++ - page - pathID
- * 
+/**
+ * Send an undo request
+ *
  * @param page
  * @param pathID
+ *
+ * Info sent: Undo - page - pathID
  */
-void Sender::Undo(int page, int pathID)
+void Sender::sendUndo(int page)
 {
-    std::string toSend = NumberToString(UNDO);
-    toSend += separator;
-
-    toSend += username;
-    toSend += separator;
-
-    toSend += NumberToString(requestID++);
+    std::string toSend = separator;
+    toSend += NumberToString(UNDO);
     toSend += separator;
 
     toSend += NumberToString(page);
-    toSend += separator;
 
-    toSend += NumberToString(pathID);
-    toSend += separator;
+    client->sendMessage(toSend);
+}
 
-<<<<<<< HEAD
 /** Redo - page - pathID
  *
  * @param page
@@ -350,64 +269,45 @@ void Sender::sendRedo(int page)
     toSend += NumberToString(page);
 
     client->sendMessage(toSend);
-=======
-    //Sending the Undo request
-    SendMessage(toSend);
->>>>>>> origin/Interface
 }
 
-/** Redo - username - requestID++ - page - pathID
- * 
- * @param page
- * @param pathID
- */
-void Sender::Redo(int page, int pathID)
-{
-    std::string toSend = NumberToString(REDO);
-    toSend += separator;
-
-    toSend += username;
-    toSend += separator;
-
-    toSend += NumberToString(requestID++);
-    toSend += separator;
-
-    toSend += NumberToString(page);
-    toSend += separator;
-
-    toSend += NumberToString(pathID);
-    toSend += separator;
-
-    //Sending the Redo request
-    SendMessage(toSend);
-}
-
-/** Delete - username - requestID++ - page - pathID 
- * 
+/**
+ * Send a delete Path request
  * @param page
  * @param PathID
+ *
+ * Info sent: Delete - page - pathID
  */
-void Sender::DeletePath(int page, int pathID)
+void Sender::sendDeletePath(int page, int pathID)
 {
-    std::string toSend = NumberToString(DELETE_PATH);
-    toSend += separator;
-
-    toSend += username;
-    toSend += separator;
-
-    toSend += NumberToString(requestID++);
+    std::string toSend = separator;
+    toSend += NumberToString(DELETE_PATH);
     toSend += separator;
 
     toSend += NumberToString(page);
     toSend += separator;
 
     toSend += NumberToString(pathID);
-    toSend += separator;
 
-    //Sending the Delete path request
-    SendMessage(toSend);
+    client->sendMessage(toSend);
 }
 
+void Sender::sendCleanAll(int page)
+{
+    std::string toSend = separator;
+    toSend += NumberToString(CLEAR_ALL);
+    toSend += separator;
+
+    toSend += NumberToString(page);
+
+    client->sendMessage(toSend);
+}
+
+/**
+ * Number to String
+ * @param Number What we want to transform to string
+ * @return A string corresponding to the input number
+ */
 std::string Sender::NumberToString(int Number)
 {
     std::ostringstream ss;
@@ -415,6 +315,11 @@ std::string Sender::NumberToString(int Number)
     return ss.str();
 }
 
+/**
+ * Converting from boolean to a string
+ * @param boolean
+ * @return 1 if true, 0 if false
+ */
 std::string Sender::BoolToString(bool boolean)
 {
     if ( boolean )

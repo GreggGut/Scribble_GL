@@ -37,11 +37,8 @@ Path::Path(Point* point, int mode, Color color, int width, int id, bool fin/*, b
     area->set(point->getColumn(), point->getRow());
 }
 
-<<<<<<< HEAD
 Path::Path(int mode, Color color, int width, int ID/*, bool active*/) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(ID), active(true), final(false), totalLength(0)
-=======
-Path::Path(int mode, Color color, int width, int ID, bool active) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(ID), active(active),final(false), totalLength(0)
->>>>>>> origin/Interface
+
 {
     mX = 0;
     mY = 0;
@@ -127,6 +124,15 @@ int Path::getPenWidth()
 Color Path::getPenColor() const
 {
     return myPenColor;
+}
+
+int Path::getPenColorInt()
+{
+    int rgb = myPenColor.getRed();
+    rgb = ( rgb << 8 ) + myPenColor.getGreen();
+    rgb = ( rgb << 8 ) + myPenColor.getBlue();
+
+    return rgb;
 }
 
 /** Get path mode

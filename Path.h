@@ -27,6 +27,7 @@ public:
     std::vector<Point*> getPath();
     int getPenWidth();
     Color getPenColor() const;
+     int getPenColorInt();
     int getMode() const;
     void setEraseMode();
     void setWriteMode();

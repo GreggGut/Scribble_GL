@@ -7,95 +7,107 @@
 
 #include "Painter.h"
 
-Painter::Painter() {
+Painter::Painter()
+{
 
 
     scribbleArea = new ScribbleArea(0, 50, WIDTH, HEIGHT - 50);
     menu = new Menu(0, 0, WIDTH, 50);
     menu->setScribbleArea(scribbleArea);
-    
+
     interpreter = new ScreenInterpreter(scribbleArea, menu);
 }
 
-Painter::Painter(const Painter& orig) {
+Painter::Painter(const Painter& orig)
+{
 
 }
 
-Painter::~Painter() {
+Painter::~Painter()
+{
     delete scribbleArea;
     delete menu;
 }
 
-ScribbleArea* Painter::getScribbleArea() {
+ScribbleArea* Painter::getScribbleArea()
+{
     return scribbleArea;
 }
 
-Menu* Painter::getMenu() {
+Menu* Painter::getMenu()
+{
     return menu;
 }
 
-ScreenInterpreter* Painter::getInterpreter() {
+ScreenInterpreter* Painter::getInterpreter()
+{
     return interpreter;
 }
 
-void Painter::Draw() {
+void Painter::Draw()
+{
 
     DrawPaths();
     DrawMenu();
 
 }
 
-void Painter::DrawPaths() {
+void Painter::DrawPaths()
+{
 
+    scribbleArea->setLockForPath(1);
     glColor3f(scribbleArea->getPenColor().getRed(), scribbleArea->getPenColor().getGreen(), scribbleArea->getPenColor().getBlue());
 
-    for (int i = 0; i < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).size(); ++i) {
+    for (int i = 0; i < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).size(); ++i)
+    {
 
         glBegin(GL_LINE_STRIP);
-        for (int j = 0; j < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().size(); ++j) {
+        for (int j = 0; j < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().size(); ++j)
+        {
 
             glVertex3f(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getX(), scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getY(), 0.0f);
         }
         glEnd();
     }
+    scribbleArea->setLockForPath(0);
 
-<<<<<<< HEAD
     scribbleArea->setLockForTempPath(1);
     if (scribbleArea->getTempPath() != NULL)
     {
         glBegin(GL_LINE_STRIP);
         for (int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j)
         {
-=======
-    if (scribbleArea->getTempPath() == NULL)
-        return;
 
-    scribbleArea->setLockForPath(1);
->>>>>>> origin/Interface
+            glVertex3f(scribbleArea->getTempPath()->getPath().at(j)->getX(), scribbleArea->getTempPath()->getPath().at(j)->getY(), 0.0f);
+        }
 
-    glBegin(GL_LINE_STRIP);
-    for (int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j) {
-
-<<<<<<< HEAD
         glEnd();
     }
     scribbleArea->setLockForTempPath(0);
     //Path that is being received through the network
     scribbleArea->setLockForNetworkPath(1);
-=======
-        glVertex3f(scribbleArea->getTempPath()->getPath().at(j)->getX(), scribbleArea->getTempPath()->getPath().at(j)->getY(), 0.0f);
+
+    if (scribbleArea->getCurrentPage() == scribbleArea->getNetworkPage() && scribbleArea->getNetworkPath() != NULL)
+    {
+        glColor3f(scribbleArea->getNetworkPath()->getPenColor().getRed(), scribbleArea->getNetworkPath()->getPenColor().getGreen(), scribbleArea->getNetworkPath()->getPenColor().getBlue());
+        glBegin(GL_LINE_STRIP);
+        for (int j = 0; j < scribbleArea->getNetworkPath()->getPath().size(); ++j)
+        {
+
+            glVertex3f(scribbleArea->getNetworkPath()->getPath().at(j)->getX(), scribbleArea->getNetworkPath()->getPath().at(j)->getY(), 0.0f);
+        }
+
+        glEnd();
     }
-
-    glEnd();
->>>>>>> origin/Interface
-
-    scribbleArea->setLockForPath(0);
+    scribbleArea->setLockForNetworkPath(0);
 
 }
 
-void Painter::DrawMenu() {
+void Painter::DrawMenu()
+{
 
-    for (int i = 0; i < menu->getButtonArray()->size(); ++i) {
+    for (int i = 0; i < menu->getButtonArray()->size(); ++i)
+    {
 
         glColor3f(menu->getButtonArray()->at(i)->getFillColor()->getRed(), menu->getButtonArray()->at(i)->getFillColor()->getGreen(), menu->getButtonArray()->at(i)->getFillColor()->getBlue());
 
@@ -109,5 +121,5 @@ void Painter::DrawMenu() {
         glEnd();
 
     }
- 
+
 }

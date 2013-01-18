@@ -4,6 +4,8 @@
  *
  * Created on October 25, 2012, 2:17 PM
  */
+class Sender;
+
 
 #ifndef SCRIBBLEAREA_H
 #define	SCRIBBLEAREA_H
@@ -13,8 +15,6 @@
 #include "Path.h"
 #include "Point.h"
 #include <boost/thread/mutex.hpp>
-#include "Request.h"
-#include "Receiver.h"
 
 #define WRITE 0
 #define ERASE 1
@@ -50,9 +50,19 @@ public:
     void setMode(int mode);
     std::vector<std::vector<Path*> > getPathsOnPage();
     int getCurrentPage();
+        void setLockForTempPath(bool lock);
+    void setLockForNetworkPath(bool lock);
     void setLockForPath(bool lock);
     Path* getTempPath();
     bool getScribbling();
+    Path* getNetworkPath();
+    int getNetworkPage();
+
+    void setNetworkPage(int p);
+    void setNetworkPath(Path* p);
+    void addNetworkPoint(Point * p);
+    void endNetworkPath();
+    void setSender(Sender* sender);
 private:
     
     int x;
@@ -80,19 +90,10 @@ private:
     std::vector< std::vector<Path*> > redoVector;
 
     //Used for networking
-    void SendTests();
-    void NetworkRequestsAnalyzer();
-
-    bool checkMyRequests;
-    int nextRequestID;
-
-    typedef std::vector <Request*> Vector_Request;
-    Vector_Request *mRequests;
-    Receiver* receiver;
-    boost::mutex *requestsMutex;
-    Sender * mySender;
-    std::string username;
-    std::string password;
+    Sender* sender;
+    boost::mutex lockForNetworkPath;
+    int networkPathPage;
+    Path* mNetworkPath;
 };
 
 #endif	/* SCRIBBLEAREA_H */

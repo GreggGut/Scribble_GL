@@ -40,15 +40,8 @@ void resize(int width, int height) {
     glLoadIdentity();
 }
 
-<<<<<<< HEAD
-void key(unsigned char key, int x, int y)
-{
-    switch ( key )
-    {
-=======
 void key(unsigned char key, int x, int y) {
     switch (key) {
->>>>>>> origin/Interface
         case 27:
             exit(0);
             break;
@@ -109,7 +102,6 @@ int main(int argc, char *argv[]) {
     painter = new Painter();
     inputData = new InputData(painter->getInterpreter());
 
-<<<<<<< HEAD
     boost::thread getInput(&InputData::run, inputData);
 
     boost::asio::io_service io_service;
@@ -222,10 +214,8 @@ int main(int argc, char *argv[]) {
     //    //    sender->sendReleaseOwnership();
     //    //Testing until here....
     //    std::cout << "Testing..." << std::endl;
-=======
-    //boost::thread getInput(&InputData::run,inputData);
 
->>>>>>> origin/Interface
+
     glutMainLoop();
 
     return 0;

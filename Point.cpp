@@ -21,26 +21,20 @@
 Point::Point(int column_, int row_, int x_, int y_)
 {
     //x(WIDTH-x-15), y(y-21), column(Column), row(Row
-
-    x = WIDTH - x_ - 15;
-    y = y_ - 15;
+    
+    x = WIDTH-x_-15;
+    y = y_-15;
     column = column_;
     row = row_;
-
-    //    /WIDTH-QPoint::y()-10;
+    
+//    /WIDTH-QPoint::y()-10;
     //For testing purpose
     //printf(" Added point: %x, %x, %x, %x", this->column, this->row, this->x(), this->y());
     //std::cout<<"Added point: "<<this->x()<<" "<<this->y()<<std::endl;
 }
 
-/**
- * Point constructor used when received a point through network
- * @param x_ X coordinate
- * @param y_ Y coordinate
- */
-Point::Point(int x_, int y_)
-{
-    x = x_;
+Point::Point(int x_, int y_){
+     x = x_;
     y = y_;
     column = 0;
     row = 0;
@@ -51,7 +45,7 @@ Point::Point(int x_, int y_)
  * 
  * This is a copy constructor. It takes an Point object and creates an exact copy of it
  */
-Point::Point(const Point& orig) : x(orig.x), y(orig.y), column(orig.column), row(orig.row) //orig.x(), orig.y()
+Point::Point(const Point& orig) : x(orig.x), y(orig.y), column(orig.column), row(orig.row)   //orig.x(), orig.y()
 {
 
 }
@@ -60,7 +54,7 @@ Point::Point(const Point& orig) : x(orig.x), y(orig.y), column(orig.column), row
  * 
  * This constructor is needed because ??????????????????????????
  */
-Point::Point() : x(0), y(0), column(0), row(0)
+Point::Point() : x(0), y(0),column(0), row(0)
 {
 
 }
@@ -93,23 +87,19 @@ int Point::getRow() const
     return row;
 }
 
-int Point::getX()
-{
+int Point::getX() {
     return x;
 }
 
-int Point::getY()
-{
+int Point::getY(){
     return y;
 }
 
-void Point::setX(int x_)
-{
+void Point::setX(int x_) {
     x = x_;
 }
 
-void Point::setY(int y_)
-{
+void Point::setY(int y_){
     y = y_;
 }
 
@@ -117,6 +107,6 @@ void Point::adjustForSaving()
 {
     //819, 1092
     //768, 1024
-    x = ((x - 33)*819 / WIDTH);
-    y = ((y - 33)*1092 / HEIGHT);
+    x = ((x-33)*819/WIDTH);
+    y = ((y-33)*1092/HEIGHT);
 }

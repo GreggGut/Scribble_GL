@@ -1,4 +1,4 @@
-/*
+/* 
  * File:   main.h
  * Author: scribble
  *
@@ -14,14 +14,6 @@
 #include "Painter.h"
 #include "InputData.h"
 #include <boost/thread.hpp>
-#include <boost/bind.hpp>
-#include <boost/asio.hpp>
-//#include "NetworkConnection.h"
-
-#include <cstdlib>
-#include "RequestMessage.h"
-#include "Sender.h"
-#include "NetworkClient.h"
 
 Painter *painter;
 InputData *inputData;
@@ -31,6 +23,8 @@ void glInit (int argc, char** argv);
 void resize(int width, int height);
 
 void key(unsigned char key, int x, int y);
+
+void mouse(int button, int state, int x, int y);
 
 void idle(void);
 

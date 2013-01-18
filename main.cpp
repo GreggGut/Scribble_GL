@@ -1,4 +1,4 @@
-/*
+/* 
  * File:   main.cpp
  * Author: scribble
  *
@@ -6,9 +6,9 @@
  */
 
 #include "main.h"
+#include "Point.h"
 
-void glInit(int argc, char** argv)
-{
+void glInit(int argc, char** argv) {
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -24,11 +24,11 @@ void glInit(int argc, char** argv)
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
     glutKeyboardFunc(key);
+    glutMouseFunc(mouse);
     glutIdleFunc(idle);
 }
 
-void resize(int width, int height)
-{
+void resize(int width, int height) {
     glViewport(0, 0, width, height);
 
     glMatrixMode(GL_PROJECTION);
@@ -40,10 +40,15 @@ void resize(int width, int height)
     glLoadIdentity();
 }
 
+<<<<<<< HEAD
 void key(unsigned char key, int x, int y)
 {
     switch ( key )
     {
+=======
+void key(unsigned char key, int x, int y) {
+    switch (key) {
+>>>>>>> origin/Interface
         case 27:
             exit(0);
             break;
@@ -60,13 +65,33 @@ void key(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
-void idle()
-{
+void mouse(int button, int state, int x, int y) {
+
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        //std::cout << "down x: "<<x<< " y: "<< y <<"\n";
+
+        if (painter->getInterpreter()->getScribbleArea()->getScribbling() == true) {
+            painter->getInterpreter()->screenMoveEvent(new Point(x, y));
+        }
+        
+        else {
+            painter->getInterpreter()->screenPressEvent(new Point(x, y));
+        }
+    }
+   
+    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
+        //std::cout << "up x: "<<x<< " y: "<< y <<"\n";
+        painter->getInterpreter()->screenReleaseEvent();
+        
+    }
     glutPostRedisplay();
 }
 
-void display()
-{
+void idle() {
+    glutPostRedisplay();
+}
+
+void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
@@ -74,29 +99,17 @@ void display()
     painter->Draw();
 
     glutSwapBuffers();
+    glFlush();
 }
 
-RequestMessage encodeMessage(std::string line)
-{
-    //We need to add an end of line to the message
-    line += '\n';
-    RequestMessage msg;
-    msg.body_length(std::strlen(line.c_str()));
-    std::memcpy(msg.body(), line.c_str(), msg.body_length());
-    msg.encode_header();
-
-    return msg;
-
-}
-
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 
     glInit(argc, argv);
 
     painter = new Painter();
     inputData = new InputData(painter->getInterpreter());
 
+<<<<<<< HEAD
     boost::thread getInput(&InputData::run, inputData);
 
     boost::asio::io_service io_service;
@@ -209,16 +222,11 @@ int main(int argc, char *argv[])
     //    //    sender->sendReleaseOwnership();
     //    //Testing until here....
     //    std::cout << "Testing..." << std::endl;
+=======
+    //boost::thread getInput(&InputData::run,inputData);
+
+>>>>>>> origin/Interface
     glutMainLoop();
-
-    client->close();
-    t.join();
-
-    //We need to find a way to stop the dataInput thread...
-    //and then getInput.join();
-    //getInput.join();
-    delete sender;
-    delete client;
 
     return 0;
 }

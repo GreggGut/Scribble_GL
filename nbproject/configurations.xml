@@ -2,38 +2,64 @@
 <configurationDescriptor version="84">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f2" displayName="Header Files" projectFiles="true">
+      <itemPath>AddPointsToPathRequest.h</itemPath>
+      <itemPath>Alert.h</itemPath>
+      <itemPath>Button.h</itemPath>
       <itemPath>Color.h</itemPath>
+      <itemPath>DeletePathRequest.h</itemPath>
+      <itemPath>EndCurrentPathRequest.h</itemPath>
+      <itemPath>FileListAvailableRequest.h</itemPath>
       <itemPath>InputData.h</itemPath>
+      <itemPath>LoginRequest.h</itemPath>
+      <itemPath>LogoutRequest.h</itemPath>
       <itemPath>Menu.h</itemPath>
-      <itemPath>NetworkClient.h</itemPath>
+      <itemPath>NewPathRequest.h</itemPath>
+      <itemPath>OwnershipRequest.h</itemPath>
       <itemPath>Painter.h</itemPath>
       <itemPath>PalmRejection.h</itemPath>
       <itemPath>Path.h</itemPath>
       <itemPath>Point.h</itemPath>
-      <itemPath>RequestMessage.h</itemPath>
+      <itemPath>Receiver.h</itemPath>
+      <itemPath>RedoRequest.h</itemPath>
+      <itemPath>ReleaseOwnershipRequest.h</itemPath>
+      <itemPath>Request.h</itemPath>
       <itemPath>ScreenAreas.h</itemPath>
       <itemPath>ScreenInterpreter.h</itemPath>
       <itemPath>ScribbleArea.h</itemPath>
       <itemPath>Sender.h</itemPath>
+      <itemPath>UndoRequest.h</itemPath>
       <itemPath>defines.h</itemPath>
       <itemPath>main.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f3" displayName="Resource Files" projectFiles="true">
     </logicalFolder>
     <logicalFolder name="f1" displayName="Source Files" projectFiles="true">
+      <itemPath>AddPointsToPathRequest.cpp</itemPath>
+      <itemPath>Alert.cpp</itemPath>
+      <itemPath>Button.cpp</itemPath>
       <itemPath>Color.cpp</itemPath>
+      <itemPath>DeletePathRequest.cpp</itemPath>
+      <itemPath>EndCurrentPathRequest.cpp</itemPath>
+      <itemPath>FileListAvailableRequest.cpp</itemPath>
       <itemPath>InputData.cpp</itemPath>
+      <itemPath>LoginRequest.cpp</itemPath>
+      <itemPath>LogoutRequest.cpp</itemPath>
       <itemPath>Menu.cpp</itemPath>
-      <itemPath>NetworkClient.cpp</itemPath>
+      <itemPath>NewPathRequest.cpp</itemPath>
+      <itemPath>OwnershipRequest.cpp</itemPath>
       <itemPath>Painter.cpp</itemPath>
       <itemPath>PalmRejection.cpp</itemPath>
       <itemPath>Path.cpp</itemPath>
       <itemPath>Point.cpp</itemPath>
-      <itemPath>RequestMessage.cpp</itemPath>
+      <itemPath>Receiver.cpp</itemPath>
+      <itemPath>RedoRequest.cpp</itemPath>
+      <itemPath>ReleaseOwnershipRequest.cpp</itemPath>
+      <itemPath>Request.cpp</itemPath>
       <itemPath>ScreenAreas.cpp</itemPath>
       <itemPath>ScreenInterpreter.cpp</itemPath>
       <itemPath>ScribbleArea.cpp</itemPath>
       <itemPath>Sender.cpp</itemPath>
+      <itemPath>UndoRequest.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -59,28 +85,17 @@
         <compilerSet>default</compilerSet>
       </toolsSet>
       <compileType>
-        <cTool>
-          <incDir>
-            <pElem>.</pElem>
-            <pElem>/usr/local/lib</pElem>
-          </incDir>
-        </cTool>
         <ccTool>
           <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>.</pElem>
-            <pElem>/usr/local/lib</pElem>
           </incDir>
-          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt</commandLine>
+          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt</commandLine>
         </ccTool>
         <linkerTool>
           <linkerAddLib>
             <pElem>/usr/local/lib</pElem>
           </linkerAddLib>
-          <linkerDynSerch>
-            <pElem>.</pElem>
-            <pElem>/usr/local/lib</pElem>
-          </linkerDynSerch>
         </linkerTool>
       </compileType>
     </conf>
@@ -92,16 +107,11 @@
       <compileType>
         <cTool>
           <developmentMode>5</developmentMode>
-          <incDir>
-            <pElem>.</pElem>
-            <pElem>/usr/local/lib</pElem>
-          </incDir>
         </cTool>
         <ccTool>
           <developmentMode>5</developmentMode>
           <incDir>
             <pElem>.</pElem>
-            <pElem>/usr/local/lib</pElem>
           </incDir>
           <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt</commandLine>
         </ccTool>
@@ -112,14 +122,9 @@
           <developmentMode>5</developmentMode>
         </asmTool>
         <linkerTool>
-          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl_working_copy</output>
           <linkerAddLib>
             <pElem>/usr/local/lib</pElem>
           </linkerAddLib>
-          <linkerDynSerch>
-            <pElem>.</pElem>
-            <pElem>/usr/local/lib</pElem>
-          </linkerDynSerch>
         </linkerTool>
       </compileType>
     </conf>

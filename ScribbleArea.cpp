@@ -182,10 +182,12 @@ void ScribbleArea::screenMoveEvent(Point* point) {
         pathsLock.lock();
         lockForTempPath.lock();
         mTempPath->addPoint(point);
+        sender->sendPoints(point);
         lockForTempPath.unlock();
         pathsLock.unlock();
     }//Here we can add more else if to enhance user experience by changing the color of the pressed button.
-    else {
+    else
+    {
         delete point;
         point = NULL;
     }
@@ -195,20 +197,20 @@ void ScribbleArea::screenMoveEvent(Point* point) {
  *
  * This function disables scribbling and informs the ScribbleArea that nothing is touching the screen anymore
  */
-void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
-    if (scribbling == true) {
+void ScribbleArea::screenReleaseEvent(/*Points *point*/)
+{
+    if (scribbling == true)
+    {
         scribbling = false;
 
         pathsLock.lock();
         lockForTempPath.lock();
 
-        if (mTempPath != NULL) {
+        if (mTempPath != NULL)
+        {
 
-            if (mTempPath->getPointsCount() < 3) {
-                delete mTempPath;
-            } else {
-                pathsOnPage.at(currentPage).push_back(mTempPath);
-            }
+            pathsOnPage.at(currentPage).push_back(mTempPath);
+            sender->sendEndPath();
 
             mTempPath = NULL;
         }
@@ -216,7 +218,8 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
         lockForTempPath.unlock();
         pathsLock.unlock();
 
-    } else {
+    } else
+    {
 
     }
 }
@@ -225,14 +228,18 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
  *
  * This function allows the user to undo the last actions. Presently, there is no limit of now many undo can be performed, meaning the user can press undo until there is nothing present on the screen
  */
-void ScribbleArea::undo() {
+void ScribbleArea::undo()
+{
 
     pathsLock.lock();
 
-    if (!pathsOnPage.at(currentPage).empty()) {
+    if (!pathsOnPage.at(currentPage).empty())
+    {
 
-        if (!redoVector.at(currentPage).empty()) {
-            if (pathsOnPage.at(currentPage).back()->getPathID() > redoVector.at(currentPage).back()->getPathID()) {
+        if (!redoVector.at(currentPage).empty())
+        {
+            if (pathsOnPage.at(currentPage).back()->getPathID() > redoVector.at(currentPage).back()->getPathID())
+            {
                 redoVector.at(currentPage).clear();
             }
         }
@@ -249,11 +256,13 @@ void ScribbleArea::undo() {
  *
  * This function allows the user to redo the last undone actions. This action is only available if the last action(s) is an undo, otherwise this function will have no effect
  */
-void ScribbleArea::redo() {
+void ScribbleArea::redo()
+{
 
     pathsLock.lock();
-    if (!redoVector.at(currentPage).empty()) {
-    
+    if (!redoVector.at(currentPage).empty())
+    {
+
         pathsOnPage.at(currentPage).push_back(redoVector.at(currentPage).back());
         redoVector.at(currentPage).pop_back();
 
@@ -266,24 +275,27 @@ void ScribbleArea::redo() {
  *
  * This function clears the current page from all writing. This action <b>cannot</b> be undone.
  */
-void ScribbleArea::clearAll() {
+void ScribbleArea::clearAll()
+{
 
-     pathsLock.lock();
-    if (!pathsOnPage.at(currentPage).empty()) {
+    pathsLock.lock();
+    if (!pathsOnPage.at(currentPage).empty())
+    {
 
         //redoVector.at(currentPage).insert(redoVector.at(currentPage).end(), pathsOnPage.at(currentPage).begin(), pathsOnPage.at(currentPage).end());
         pathsOnPage.at(currentPage).clear();
 
         //updatePageContent();
     }
-    pathsLock.unlock();   
+    pathsLock.unlock();
 }
 
 /*! Set write mode
  *
  * This function set the mode to write, allowing the user to write on top of the PDF
  */
-void ScribbleArea::write() {
+void ScribbleArea::write()
+{
     mMode = WRITE;
 }
 
@@ -291,11 +303,13 @@ void ScribbleArea::write() {
  *
  * This function set the mode to erase, allowing the user to erase anything that has been written on top of the PDF, leaving the PDF intact
  */
-void ScribbleArea::erase() {
+void ScribbleArea::erase()
+{
     mMode = ERASE;
 }
 
-bool ScribbleArea::getScribbling() {
+bool ScribbleArea::getScribbling()
+{
     return scribbling;
 }
 

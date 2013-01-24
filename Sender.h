@@ -24,6 +24,10 @@
 #include "Point.h"
 #include "NetworkClient.h"
 
+#include <cassert>
+#include <fstream>
+#include <arpa/inet.h>
+
 class Sender {
 public:
     Sender(std::string username, NetworkClient* client);

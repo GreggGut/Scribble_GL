@@ -128,8 +128,34 @@ void Sender::sendDownloadFile(std::string filename)
 
     toSend += separator;
     toSend += filename;
-
     client->sendMessage(toSend);
+
+//    int fd = socket(AF_INET, SOCK_STREAM, 0);
+//
+//    struct sockaddr_in sa_dst;
+//    memset(&sa_dst, 0, sizeof(struct sockaddr_in));
+//    sa_dst.sin_family = AF_INET;
+//    sa_dst.sin_port = htons(34567);
+//    sa_dst.sin_addr.s_addr = inet_addr("mho.encs.concordia.ca");
+//
+//    int ret = connect(fd, (struct sockaddr *)&sa_dst, sizeof(struct sockaddr));
+//    //assert(ret != -1);
+//
+//    std::ofstream file;
+//    file.open("received.pdf", std::ios::out | std::ios::binary);
+//    assert(file.is_open());
+//    char buffer[1024];
+//    while (1) {
+//        std::cout << "..";
+//        ssize_t p = read(fd, buffer, sizeof(buffer));
+//        //assert(p != -1);
+//        if (p == 0)
+//            break;
+//        file.write(buffer, p);
+//    }
+//    file.close();
+
+    
 }
 
 void Sender::sendUpdateFileContent()

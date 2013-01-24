@@ -92,7 +92,7 @@ void display() {
     painter->Draw();
 
     glutSwapBuffers();
-    glFlush();
+    //glFlush();
 }
 
 int main(int argc, char *argv[]) {
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
     tcp::resolver resolver(io_service);
 
     std::cout << "Connecting..." << std::endl;
-    tcp::resolver::query query("localhost", "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
+    tcp::resolver::query query("mho.encs.concordia.ca", "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
     tcp::resolver::iterator iterator = resolver.resolve(query);
 
     //NetworkClient

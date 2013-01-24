@@ -88,9 +88,9 @@ int ScribbleArea::getCurrentPage() {
 void ScribbleArea::setLockForPath(bool lock) {
 
     if (lock == 1) {
-        lockForTempPath.lock();
+        pathsLock.lock();
     } else {
-        lockForTempPath.unlock();
+        pathsLock.unlock();
     }
 }
 

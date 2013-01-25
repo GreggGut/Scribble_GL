@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   main.cpp
  * Author: scribble
  *
@@ -66,16 +66,16 @@ void mouse(int button, int state, int x, int y) {
         if (painter->getInterpreter()->getScribbleArea()->getScribbling() == true) {
             painter->getInterpreter()->screenMoveEvent(new Point(x, y));
         }
-        
+
         else {
             painter->getInterpreter()->screenPressEvent(new Point(x, y));
         }
     }
-   
+
     if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
         //std::cout << "up x: "<<x<< " y: "<< y <<"\n";
         painter->getInterpreter()->screenReleaseEvent();
-        
+
     }
     glutPostRedisplay();
 }
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
     tcp::resolver resolver(io_service);
 
     std::cout << "Connecting..." << std::endl;
-    tcp::resolver::query query("mho.encs.concordia.ca", "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
+    tcp::resolver::query query("localhost", "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
     tcp::resolver::iterator iterator = resolver.resolve(query);
 
     //NetworkClient

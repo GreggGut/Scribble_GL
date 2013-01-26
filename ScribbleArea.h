@@ -68,7 +68,7 @@ public:
      * Used for networking Functions
      */
 
-    std::vector<std::string> setFilesOnServer(std::vector<std::string> filesOnServer);
+    void setFilesOnServer(std::vector<std::string> filesOnServer);
 private:
 
     int x;

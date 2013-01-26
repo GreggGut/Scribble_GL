@@ -8,7 +8,8 @@
 #include "main.h"
 #include "Point.h"
 
-void glInit(int argc, char** argv) {
+void glInit(int argc, char** argv)
+{
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -28,7 +29,8 @@ void glInit(int argc, char** argv) {
     glutIdleFunc(idle);
 }
 
-void resize(int width, int height) {
+void resize(int width, int height)
+{
     glViewport(0, 0, width, height);
 
     glMatrixMode(GL_PROJECTION);
@@ -40,8 +42,10 @@ void resize(int width, int height) {
     glLoadIdentity();
 }
 
-void key(unsigned char key, int x, int y) {
-    switch (key) {
+void key(unsigned char key, int x, int y)
+{
+    switch ( key )
+    {
         case 27:
             exit(0);
             break;
@@ -58,21 +62,26 @@ void key(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
-void mouse(int button, int state, int x, int y) {
+void mouse(int button, int state, int x, int y)
+{
 
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+    if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
+    {
         //std::cout << "down x: "<<x<< " y: "<< y <<"\n";
 
-        if (painter->getInterpreter()->getScribbleArea()->getScribbling() == true) {
+        if ( painter->getInterpreter()->getScribbleArea()->getScribbling() == true )
+        {
             painter->getInterpreter()->screenMoveEvent(new Point(x, y));
         }
 
-        else {
+        else
+        {
             painter->getInterpreter()->screenPressEvent(new Point(x, y));
         }
     }
 
-    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
+    if ( button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN )
+    {
         //std::cout << "up x: "<<x<< " y: "<< y <<"\n";
         painter->getInterpreter()->screenReleaseEvent();
 
@@ -80,11 +89,13 @@ void mouse(int button, int state, int x, int y) {
     glutPostRedisplay();
 }
 
-void idle() {
+void idle()
+{
     glutPostRedisplay();
 }
 
-void display() {
+void display()
+{
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
@@ -95,7 +106,8 @@ void display() {
     //glFlush();
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
     glInit(argc, argv);
 
@@ -123,85 +135,85 @@ int main(int argc, char *argv[]) {
     painter->getScribbleArea()->setSender(sender);
 
     //std::string toSend;
-    //        s.Login("greg", "pass");
+    sender->sendLogin("pass");
     //        c.write(sendMessage(toSend));
 
     sender->sendGetFilesList();
     sender->sendUpdateFileContent();
 
     sender->sendRequestOwnership();
-//
-//    int pathID = 10;
-//    int page = 0;
-//    sender->sendNewPath(pathID, true, 32453, page, 1);
-//
-//    Point* m1 = new Point(0, 0, 100, 100);
-//    Point* m2 = new Point(0, 0, 200, 200);
-//    Point* m3 = new Point(0, 0, 300, 300);
-//    Point* m4 = new Point(0, 0, 400, 600);
-//
-//    sender->sendPoints(m1);
-//    sender->sendPoints(m2);
-//    sender->sendPoints(m3);
-//    sender->sendPoints(m4);
-//
-//    pathID = 11;
-//
-//    sender->sendNewPath(pathID, true, 32453, page, 1);
-//
-//    m1 = new Point(0, 0, 10, 100);
-//    m2 = new Point(0, 0, 20, 200);
-//    m3 = new Point(0, 0, 30, 300);
-//    m4 = new Point(0, 0, 40, 600);
-//
-//    sender->sendPoints(m1);
-//    sender->sendPoints(m2);
-//    sender->sendPoints(m3);
-//    sender->sendPoints(m4);
-//
-//    pathID = 12;
-//
-//    sender->sendNewPath(pathID, true, 32453, page, 1);
-//
-//    m1 = new Point(0, 0, 10, 10);
-//    m2 = new Point(0, 0, 20, 20);
-//    m3 = new Point(0, 0, 30, 30);
-//    m4 = new Point(0, 0, 40, 60);
-//
-//    sender->sendPoints(m1);
-//    sender->sendPoints(m2);
-//    sender->sendPoints(m3);
-//    sender->sendPoints(m4);
-//
-//    pathID = 13;
-//
-//    sender->sendNewPath(pathID, true, 32453, page, 1);
-//
-//    m1 = new Point(0, 0, 10, 110);
-//    m2 = new Point(0, 0, 20, 120);
-//    m3 = new Point(0, 0, 30, 130);
-//    m4 = new Point(0, 0, 40, 160);
-//
-//    sender->sendPoints(m1);
-//    sender->sendPoints(m2);
-//    sender->sendPoints(m3);
-//    sender->sendPoints(m4);
-//
-//    pathID = 14;
-//
-//    sender->sendNewPath(pathID, true, 32453, page, 1);
-//
-//    m1 = new Point(0, 0, 110, 10);
-//    m2 = new Point(0, 0, 120, 20);
-//    m3 = new Point(0, 0, 130, 30);
-//    m4 = new Point(0, 0, 140, 60);
-//
-//    sender->sendPoints(m1);
-//    sender->sendPoints(m2);
-//    sender->sendPoints(m3);
-//    sender->sendPoints(m4);
+    //
+    //    int pathID = 10;
+    //    int page = 0;
+    //    sender->sendNewPath(pathID, true, 32453, page, 1);
+    //
+    //    Point* m1 = new Point(0, 0, 100, 100);
+    //    Point* m2 = new Point(0, 0, 200, 200);
+    //    Point* m3 = new Point(0, 0, 300, 300);
+    //    Point* m4 = new Point(0, 0, 400, 600);
+    //
+    //    sender->sendPoints(m1);
+    //    sender->sendPoints(m2);
+    //    sender->sendPoints(m3);
+    //    sender->sendPoints(m4);
+    //
+    //    pathID = 11;
+    //
+    //    sender->sendNewPath(pathID, true, 32453, page, 1);
+    //
+    //    m1 = new Point(0, 0, 10, 100);
+    //    m2 = new Point(0, 0, 20, 200);
+    //    m3 = new Point(0, 0, 30, 300);
+    //    m4 = new Point(0, 0, 40, 600);
+    //
+    //    sender->sendPoints(m1);
+    //    sender->sendPoints(m2);
+    //    sender->sendPoints(m3);
+    //    sender->sendPoints(m4);
+    //
+    //    pathID = 12;
+    //
+    //    sender->sendNewPath(pathID, true, 32453, page, 1);
+    //
+    //    m1 = new Point(0, 0, 10, 10);
+    //    m2 = new Point(0, 0, 20, 20);
+    //    m3 = new Point(0, 0, 30, 30);
+    //    m4 = new Point(0, 0, 40, 60);
+    //
+    //    sender->sendPoints(m1);
+    //    sender->sendPoints(m2);
+    //    sender->sendPoints(m3);
+    //    sender->sendPoints(m4);
+    //
+    //    pathID = 13;
+    //
+    //    sender->sendNewPath(pathID, true, 32453, page, 1);
+    //
+    //    m1 = new Point(0, 0, 10, 110);
+    //    m2 = new Point(0, 0, 20, 120);
+    //    m3 = new Point(0, 0, 30, 130);
+    //    m4 = new Point(0, 0, 40, 160);
+    //
+    //    sender->sendPoints(m1);
+    //    sender->sendPoints(m2);
+    //    sender->sendPoints(m3);
+    //    sender->sendPoints(m4);
+    //
+    //    pathID = 14;
+    //
+    //    sender->sendNewPath(pathID, true, 32453, page, 1);
+    //
+    //    m1 = new Point(0, 0, 110, 10);
+    //    m2 = new Point(0, 0, 120, 20);
+    //    m3 = new Point(0, 0, 130, 30);
+    //    m4 = new Point(0, 0, 140, 60);
+    //
+    //    sender->sendPoints(m1);
+    //    sender->sendPoints(m2);
+    //    sender->sendPoints(m3);
+    //    sender->sendPoints(m4);
 
-   //sender->sendUndo(0);
+    //sender->sendUndo(0);
 
 
     //s.sendAddPoints(mPoints);

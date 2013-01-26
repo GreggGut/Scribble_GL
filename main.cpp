@@ -139,6 +139,7 @@ int main(int argc, char *argv[])
     //        c.write(sendMessage(toSend));
 
     sender->sendGetFilesList();
+    sender->sendDownloadFile("0.pdf");
     sender->sendUpdateFileContent();
 
     sender->sendRequestOwnership();
@@ -219,7 +220,7 @@ int main(int argc, char *argv[])
     //s.sendAddPoints(mPoints);
     //sender->sendEndPath();
     //
-    sender->sendDownloadFile("hello");
+
     //    //s.sendUndo(2);
     //    //    sender->sendGetFilesList();
     //    //    sender->sendDeletePath(page, pathID);

@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   ScribbleArea.cpp
  * Author: scribble
- * 
+ *
  * Created on October 25, 2012, 2:17 PM
  */
 
@@ -365,4 +365,9 @@ void ScribbleArea::setSender(Sender* sender)
 Sender* ScribbleArea::getSender()
 {
     return sender;
+}
+
+void ScribbleArea::setFilesOnServer(std::vector<std::string> filesOnServer)
+{
+    this->filesOnServer=filesOnServer;
 }

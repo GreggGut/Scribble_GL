@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   ScribbleArea.h
  * Author: scribble
  *
@@ -21,7 +21,6 @@ class Sender;
 
 class ScribbleArea
 {
-    
 public:
     ScribbleArea();
     ScribbleArea(int x_, int y_, int w_, int h_);
@@ -33,7 +32,7 @@ public:
     void setPenColor(Color &newColor);
     void setPenWidth(int newWidth);
     bool pointInsideArea(Point * point);
-    
+
     void screenPressEvent(Point* point);
     void screenMoveEvent(Point* point);
     void screenReleaseEvent(/*Points *point*/);
@@ -50,7 +49,7 @@ public:
     void setMode(int mode);
     std::vector<std::vector<Path*> > getPathsOnPage();
     int getCurrentPage();
-        void setLockForTempPath(bool lock);
+    void setLockForTempPath(bool lock);
     void setLockForNetworkPath(bool lock);
     void setLockForPath(bool lock);
     Path* getTempPath();
@@ -63,15 +62,20 @@ public:
     void addNetworkPoint(Point * p);
     void endNetworkPath();
     void setSender(Sender* sender);
-    
+
     Sender* getSender();
+    /*
+     * Used for networking Functions
+     */
+
+    std::vector<std::string> setFilesOnServer(std::vector<std::string> filesOnServer);
 private:
-    
+
     int x;
     int y;
     int width;
     int height;
-    
+
     Color penColor;
     float penSize;
 
@@ -88,14 +92,18 @@ private:
 
     int currentPage;
     std::vector< std::vector<Path*> > pathsOnPage;
-    
+
     std::vector< std::vector<Path*> > redoVector;
 
-    //Used for networking
+
+    /*
+     * Used for networking Variables
+     */
     Sender* sender;
     boost::mutex lockForNetworkPath;
     int networkPathPage;
     Path* mNetworkPath;
+    std::vector<std::string> filesOnServer;
 };
 
 #endif	/* SCRIBBLEAREA_H */

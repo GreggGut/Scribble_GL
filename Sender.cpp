@@ -122,8 +122,8 @@ void Sender::sendGetFilesList()
  * @param filename
  */
 void Sender::sendDownloadFile(std::string filename)
-{
-    /*
+{   
+    /* 
      * Initializing the network connection
      */
     int newsockfd;
@@ -200,7 +200,8 @@ void Sender::sendDownloadFile(std::string filename)
     }
     printf("Ok received from server!\n");
     fclose(fr);
-
+    close(newsockfd);
+    close(sockfd);
 }
 
 void Sender::sendUpdateFileContent()

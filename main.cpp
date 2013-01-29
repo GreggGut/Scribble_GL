@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
 
     boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service));
 
-    /*
+    
     //All the bellow is for testing
     Sender* sender = new Sender("greg", client);
 
@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
     sender->sendUpdateFileContent();
 
     sender->sendRequestOwnership();
-     */
+    
 
     //
     //    int pathID = 10;

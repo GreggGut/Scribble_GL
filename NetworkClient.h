@@ -34,6 +34,8 @@ public:
 
     void close();
     void sendMessage(std::string line);
+    
+    tcp::socket& getSocket();
 
 private:
     void write(const RequestMessage& msg);

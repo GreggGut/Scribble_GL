@@ -6,6 +6,7 @@
       <itemPath>Button.h</itemPath>
       <itemPath>Color.h</itemPath>
       <itemPath>Document.h</itemPath>
+      <itemPath>FileRequestMessage.h</itemPath>
       <itemPath>InputData.h</itemPath>
       <itemPath>Menu.h</itemPath>
       <itemPath>NetworkClient.h</itemPath>
@@ -28,6 +29,7 @@
       <itemPath>Button.cpp</itemPath>
       <itemPath>Color.cpp</itemPath>
       <itemPath>Document.cpp</itemPath>
+      <itemPath>FileRequestMessage.cpp</itemPath>
       <itemPath>InputData.cpp</itemPath>
       <itemPath>Menu.cpp</itemPath>
       <itemPath>NetworkClient.cpp</itemPath>

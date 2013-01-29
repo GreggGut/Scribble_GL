@@ -55,6 +55,8 @@ public:
     //TOCONFIRM Do we Need this?
     void sendDownloadFile(std::string filename);
 
+    void download(std::string filename);
+
     void sendUpdateFileContent();
 
     //newPath - username - requestID - pathID - mode - color - active - page
@@ -70,7 +72,7 @@ public:
     void sendUndo(int page);
 
     //Redo - page
-    void sendRedo(int page);//, int pathID);
+    void sendRedo(int page); //, int pathID);
 
     //Delete - username - requestID - page - pathID
     void sendDeletePath(int page, int PathID);
@@ -95,6 +97,7 @@ public:
         DELETE_PATH = 11,
         CLEAR_ALL = 12,
         UPDATE_FILE_CONTENT = 13,
+        DOWNLOAD_FILE_DONE = 14,
     } protocol;
 
     static const std::string separator; // = "&";
@@ -102,7 +105,7 @@ public:
 
 private:
 
-//    int getPenColorInt(Color c);
+    //    int getPenColorInt(Color c);
     std::string GetPoints(Point* point); //std::vector<Point> points);
 
     std::string NumberToString(int Number);
@@ -114,8 +117,6 @@ private:
     //Need to initialise this in login
     std::string username;
     NetworkClient* client;
-
-
 
 };
 

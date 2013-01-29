@@ -99,6 +99,12 @@ void NetworkClient::handle_write(const boost::system::error_code& error)
     }
 }
 
+tcp::socket& NetworkClient::getSocket()
+{
+    return socket_;
+}
+
+
 void NetworkClient::do_close()
 {
     std::cout << "Socket closed" << std::endl;
@@ -109,7 +115,7 @@ void NetworkClient::decodeRequest(std::string msg)
 {
     //Removing the leading & and the lagging \n
     std::string received(msg, 1, msg.size() - 2);
-    std::cout << "Received: " << received << std::endl;
+    //std::cout << "Received: " << received << std::endl;
 
     //Separating the received message
     std::vector<std::string> info;
@@ -254,12 +260,17 @@ void NetworkClient::decodeRequest(std::string msg)
         case Sender::DOWNLOAD_FILE:
         {
             //TOCONF will we use this??? possible use is to let the server know what file we are working on
-            std::cout << "DOWNLOAD_FILE" << std::endl;
+            std::cout << "DOWNLOAD_FILE Got part of the message" << std::endl;
             break;
         }
         case Sender::CLEAR_ALL:
         {
             scribbleArea->clearAll();
+            break;
+        }
+        case Sender::DOWNLOAD_FILE_DONE:
+        {
+            std::cout << "DOWNLOAD_FILE COMPLETED" << std::endl;
             break;
         }
         default:

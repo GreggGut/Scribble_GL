@@ -14,7 +14,7 @@
 #include <pthread.h>
 #include "Point.h"
 #include <errno.h>   /* Error number definitions */
-#include "defines.h"
+//#include "defines.h"
 #include <stdio.h>   /* Standard input/output definitions */
 #include <unistd.h>  /* UNIX standard function definitions */
 #include <queue>

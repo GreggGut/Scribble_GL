@@ -5,6 +5,7 @@
       <itemPath>Alert.h</itemPath>
       <itemPath>Button.h</itemPath>
       <itemPath>Color.h</itemPath>
+      <itemPath>Document.h</itemPath>
       <itemPath>InputData.h</itemPath>
       <itemPath>Menu.h</itemPath>
       <itemPath>NetworkClient.h</itemPath>
@@ -26,6 +27,7 @@
       <itemPath>Alert.cpp</itemPath>
       <itemPath>Button.cpp</itemPath>
       <itemPath>Color.cpp</itemPath>
+      <itemPath>Document.cpp</itemPath>
       <itemPath>InputData.cpp</itemPath>
       <itemPath>Menu.cpp</itemPath>
       <itemPath>NetworkClient.cpp</itemPath>
@@ -68,11 +70,13 @@
           <incDir>
             <pElem>.</pElem>
           </incDir>
-          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt</commandLine>
+          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp</commandLine>
         </ccTool>
         <linkerTool>
+          <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl</output>
           <linkerAddLib>
             <pElem>/usr/local/lib</pElem>
+            <pElem>/usr/local/include/poppler</pElem>
           </linkerAddLib>
         </linkerTool>
       </compileType>
@@ -91,7 +95,7 @@
           <incDir>
             <pElem>.</pElem>
           </incDir>
-          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt</commandLine>
+          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -102,6 +106,7 @@
         <linkerTool>
           <linkerAddLib>
             <pElem>/usr/local/lib</pElem>
+            <pElem>/usr/local/include/poppler</pElem>
           </linkerAddLib>
         </linkerTool>
       </compileType>

@@ -31,6 +31,7 @@ public:
     void setScribbleArea(ScribbleArea *s);
     
 private:
+    bool network;
     int x;
     int y;
     int width;

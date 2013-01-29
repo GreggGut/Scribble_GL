@@ -42,5 +42,6 @@
 #define N_ROW                   7
 #define N_COLUMN                10
 
+#define NETWORK 0
 #endif	/* DEFINES_H */
 

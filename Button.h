@@ -23,6 +23,8 @@
 #define PREVIOUS_PAGE_C 6
 #define CLEAR_ALL_C 7
 #define WRITE_C 8
+#define NEXT_PG_C 9
+#define PREV_PG_C 10
 
 class Button {
 public:

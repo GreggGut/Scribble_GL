@@ -7,8 +7,9 @@
 
 #include "Painter.h"
 
-Painter::Painter()
-{
+using namespace poppler;
+
+Painter::Painter() {
 
 
     scribbleArea = new ScribbleArea(0, 50, WIDTH, HEIGHT - 50);
@@ -18,65 +19,56 @@ Painter::Painter()
     interpreter = new ScreenInterpreter(scribbleArea, menu);
 }
 
-Painter::Painter(const Painter& orig)
-{
+Painter::Painter(const Painter& orig) {
 
 }
 
-Painter::~Painter()
-{
+Painter::~Painter() {
     delete scribbleArea;
     delete menu;
 }
 
-ScribbleArea* Painter::getScribbleArea()
-{
+ScribbleArea* Painter::getScribbleArea() {
     return scribbleArea;
 }
 
-Menu* Painter::getMenu()
-{
+Menu* Painter::getMenu() {
     return menu;
 }
 
-ScreenInterpreter* Painter::getInterpreter()
-{
+ScreenInterpreter* Painter::getInterpreter() {
     return interpreter;
 }
 
-void Painter::Draw()
-{
+void Painter::Draw() {
 
+    DrawPDF();
     DrawPaths();
     DrawMenu();
 
 }
 
-void Painter::DrawPaths()
-{
+void Painter::DrawPaths() {
 
     scribbleArea->setLockForPath(1);
     glColor3f(scribbleArea->getPenColor().getRed(), scribbleArea->getPenColor().getGreen(), scribbleArea->getPenColor().getBlue());
 
-    for (int i = 0; i < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).size(); ++i)
-    {
+    for (int i = 0; i < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).size(); ++i) {
 
         glBegin(GL_LINE_STRIP);
-        for (int j = 0; j < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().size(); ++j)
-        {
+        for (int j = 0; j < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().size(); ++j) {
 
             glVertex3f(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getX(), scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getY(), 0.0f);
         }
         glEnd();
     }
+    
     scribbleArea->setLockForPath(0);
 
     scribbleArea->setLockForTempPath(1);
-    if (scribbleArea->getTempPath() != NULL)
-    {
+    if (scribbleArea->getTempPath() != NULL) {
         glBegin(GL_LINE_STRIP);
-        for (int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j)
-        {
+        for (int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j) {
 
             glVertex3f(scribbleArea->getTempPath()->getPath().at(j)->getX(), scribbleArea->getTempPath()->getPath().at(j)->getY(), 0.0f);
         }
@@ -87,12 +79,10 @@ void Painter::DrawPaths()
     //Path that is being received through the network
     scribbleArea->setLockForNetworkPath(1);
 
-    if (scribbleArea->getCurrentPage() == scribbleArea->getNetworkPage() && scribbleArea->getNetworkPath() != NULL)
-    {
+    if (scribbleArea->getCurrentPage() == scribbleArea->getNetworkPage() && scribbleArea->getNetworkPath() != NULL) {
         glColor3f(scribbleArea->getNetworkPath()->getPenColor().getRed(), scribbleArea->getNetworkPath()->getPenColor().getGreen(), scribbleArea->getNetworkPath()->getPenColor().getBlue());
         glBegin(GL_LINE_STRIP);
-        for (int j = 0; j < scribbleArea->getNetworkPath()->getPath().size(); ++j)
-        {
+        for (int j = 0; j < scribbleArea->getNetworkPath()->getPath().size(); ++j) {
 
             glVertex3f(scribbleArea->getNetworkPath()->getPath().at(j)->getX(), scribbleArea->getNetworkPath()->getPath().at(j)->getY(), 0.0f);
         }
@@ -103,11 +93,9 @@ void Painter::DrawPaths()
 
 }
 
-void Painter::DrawMenu()
-{
+void Painter::DrawMenu() {
 
-    for (int i = 0; i < menu->getButtonArray()->size(); ++i)
-    {
+    for (int i = 0; i < menu->getButtonArray()->size(); ++i) {
 
         glColor3f(menu->getButtonArray()->at(i)->getFillColor()->getRed(), menu->getButtonArray()->at(i)->getFillColor()->getGreen(), menu->getButtonArray()->at(i)->getFillColor()->getBlue());
 
@@ -122,4 +110,15 @@ void Painter::DrawMenu()
 
     }
 
+}
+
+void Painter::DrawPDF() {
+
+#warning //add centering and scaling
+
+    glRasterPos2i(scribbleArea->getDocument()->getX(), scribbleArea->getDocument()->getY());
+    glPixelZoom(1.0, -1.0);
+
+    glDrawPixels(scribbleArea->getDocument()->getImage()->width(), scribbleArea->getDocument()->getImage()->height(), GL_BGRA, GL_UNSIGNED_BYTE, scribbleArea->getDocument()->getImage()->data());
+   // glScalef(1.2,1.2,0);
 }

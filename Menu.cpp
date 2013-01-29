@@ -16,6 +16,8 @@ Menu::Menu() {
 }
 
 Menu::Menu(int x_, int y_, int w_, int h_) {
+
+    network = NETWORK;
     x = x_;
     y = y_;
     width = w_;
@@ -23,7 +25,7 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
 
     buttonArray = new std::vector<Button *>;
 
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 9; ++i) {
 
         int type;
         int action;
@@ -56,6 +58,14 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
             case 6:
                 type = PICKER;
                 action = COLOUR_C;
+                break;
+            case 7:
+                type = MOMENTARY;
+                action = PREV_PG_C;
+                break;
+            case 8:
+                type = MOMENTARY;
+                action = NEXT_PG_C;
                 break;
             default:
                 type = MOMENTARY;
@@ -118,9 +128,6 @@ void Menu::screenPressEvent(Point* point) {
         return;
     }
 
-#warning 
-    //problems here since clicking anywhere else will cause error
-
     for (int i = 0; i < buttonArray->size(); ++i) {
 
         if (buttonArray->at(i)->pointInsideArea(point) == 1) {
@@ -131,7 +138,7 @@ void Menu::screenPressEvent(Point* point) {
                     break;
                 case TOGGLE:
 #warning //add toggling fucntionality
-                     callAction(buttonArray->at(i)->getAction());
+                    callAction(buttonArray->at(i)->getAction());
                     break;
                 case PICKER:
                     break;
@@ -139,7 +146,7 @@ void Menu::screenPressEvent(Point* point) {
                     break;
             }
 
-        } 
+        }
     }
 
     delete point;
@@ -186,21 +193,36 @@ void Menu::callAction(int action) {
     switch (action) {
         case UNDO_C:
             scribbleArea->undo();
-            scribbleArea->getSender()->sendUndo(scribbleArea->getCurrentPage());
+
+            if (network == 1) {
+                scribbleArea->getSender()->sendUndo(scribbleArea->getCurrentPage());
+            }
+
             break;
         case REDO_C:
             scribbleArea->redo();
-            scribbleArea->getSender()->sendRedo(scribbleArea->getCurrentPage());
+            if (network == 1) {
+                scribbleArea->getSender()->sendRedo(scribbleArea->getCurrentPage());
+            }
             break;
         case CLEAR_ALL_C:
             scribbleArea->clearAll();
-            scribbleArea->getSender()->sendCleanAll(scribbleArea->getCurrentPage());
+            if (network == 1) {
+                scribbleArea->getSender()->sendCleanAll(scribbleArea->getCurrentPage());
+            }
             break;
         case ERASE_C:
             scribbleArea->setMode(ERASE);
             break;
-            case WRITE_C:
+        case WRITE_C:
             scribbleArea->setMode(WRITE);
+            break;
+        case PREV_PG_C:
+            scribbleArea->previousPage();
+            break;
+        case NEXT_PG_C:
+            scribbleArea->nextPage();
+            break;
         default:
             break;
     }

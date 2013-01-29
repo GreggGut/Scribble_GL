@@ -9,6 +9,7 @@
 #define	PAINTER_H
 
 #include <GL/glu.h>
+#include <poppler/cpp/poppler-image.h>
 #include "ScribbleArea.h"
 #include "Menu.h"
 #include "ScreenInterpreter.h"
@@ -31,6 +32,7 @@ private:
     
     void DrawPaths();
     void DrawMenu();
+    void DrawPDF();
 };
 
 #endif	/* PAINTER_H */

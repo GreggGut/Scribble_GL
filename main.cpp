@@ -8,8 +8,7 @@
 #include "main.h"
 #include "Point.h"
 
-void glInit(int argc, char** argv)
-{
+void glInit(int argc, char** argv) {
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -26,11 +25,11 @@ void glInit(int argc, char** argv)
     glutDisplayFunc(display);
     glutKeyboardFunc(key);
     glutMouseFunc(mouse);
+    glutMotionFunc(mouseCoords);
     glutIdleFunc(idle);
 }
 
-void resize(int width, int height)
-{
+void resize(int width, int height) {
     glViewport(0, 0, width, height);
 
     glMatrixMode(GL_PROJECTION);
@@ -42,10 +41,8 @@ void resize(int width, int height)
     glLoadIdentity();
 }
 
-void key(unsigned char key, int x, int y)
-{
-    switch ( key )
-    {
+void key(unsigned char key, int x, int y) {
+    switch (key) {
         case 27:
             exit(0);
             break;
@@ -62,26 +59,18 @@ void key(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
-void mouse(int button, int state, int x, int y)
-{
+void mouse(int button, int state, int x, int y) {
 
-    if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
-    {
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
         //std::cout << "down x: "<<x<< " y: "<< y <<"\n";
 
-        if ( painter->getInterpreter()->getScribbleArea()->getScribbling() == true )
-        {
-            painter->getInterpreter()->screenMoveEvent(new Point(x, y));
-        }
-
-        else
-        {
+        if (painter->getInterpreter()->getScribbleArea()->getScribbling() == false) {
             painter->getInterpreter()->screenPressEvent(new Point(x, y));
+
         }
     }
 
-    if ( button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN )
-    {
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
         //std::cout << "up x: "<<x<< " y: "<< y <<"\n";
         painter->getInterpreter()->screenReleaseEvent();
 
@@ -89,13 +78,18 @@ void mouse(int button, int state, int x, int y)
     glutPostRedisplay();
 }
 
-void idle()
-{
+void mouseCoords(int x, int y) {
+
+    if (painter->getInterpreter()->getScribbleArea()->getScribbling() == true) {
+        painter->getInterpreter()->screenMoveEvent(new Point(x, y));
+    }
+}
+
+void idle() {
     glutPostRedisplay();
 }
 
-void display()
-{
+void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
@@ -106,8 +100,7 @@ void display()
     //glFlush();
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 
     glInit(argc, argv);
 
@@ -128,7 +121,7 @@ int main(int argc, char *argv[])
 
     boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service));
 
-
+    /*
     //All the bellow is for testing
     Sender* sender = new Sender("greg", client);
 
@@ -143,6 +136,8 @@ int main(int argc, char *argv[])
     sender->sendUpdateFileContent();
 
     sender->sendRequestOwnership();
+     */
+
     //
     //    int pathID = 10;
     //    int page = 0;

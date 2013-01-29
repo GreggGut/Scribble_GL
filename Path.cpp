@@ -87,7 +87,7 @@ Path::~Path()
  */
 void Path::addPoint(Point* point)
 {
-    std::cout << " from addPOint: " << point->getX() << " " << point->getY() << std::endl;
+    //std::cout << " from addPOint: " << point->getX() << " " << point->getY() << std::endl;
 //    int dX = /*mX*/0 - point->getX();
 //    int dY = /*mY*/0 - point->getY();
 //    totalLength += sqrt(dX * dX + dY * dY);

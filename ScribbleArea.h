@@ -15,6 +15,7 @@ class Sender;
 #include "Path.h"
 #include "Point.h"
 #include <boost/thread/mutex.hpp>
+#include "Document.h"
 
 #define WRITE 0
 #define ERASE 1
@@ -62,15 +63,24 @@ public:
     void addNetworkPoint(Point * p);
     void endNetworkPath();
     void setSender(Sender* sender);
-
+    Document* getDocument();
     Sender* getSender();
+    
+    int getX();
+    int getY();
+    int getWidth();
+    int getHeight();
+    void previousPage();
+    void nextPage();
+    void loadFile(std::string fileName);
     /*
      * Used for networking Functions
      */
 
     void setFilesOnServer(std::vector<std::string> filesOnServer);
 private:
-
+    bool network;
+    
     int x;
     int y;
     int width;
@@ -82,19 +92,21 @@ private:
     int mMode;
     bool scribbling;
 
-    std::vector<int> Paths_IDs;
+    
     Path *mTempPath;
 
     Point lastPoint;
 
     boost::mutex pathsLock;
     boost::mutex lockForTempPath;
+    
+    std::vector<int> Paths_IDs;
 
-    int currentPage;
     std::vector< std::vector<Path*> > pathsOnPage;
 
     std::vector< std::vector<Path*> > redoVector;
-
+    
+    Document *document;
 
     /*
      * Used for networking Variables

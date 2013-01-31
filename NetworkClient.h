@@ -8,7 +8,6 @@
 #ifndef NETWORKCLIENT_H
 #define	NETWORKCLIENT_H
 
-
 #include <deque>
 #include <iostream>
 #include <boost/bind.hpp>

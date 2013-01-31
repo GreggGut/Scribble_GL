@@ -228,7 +228,7 @@ void Sender::sendNewPath(int pathID, bool mode, int color/*, bool active*/, int 
 
     toSend += NumberToString(color);
     toSend += separator;
-    
+
     toSend += NumberToString(page);
     toSend += separator;
 

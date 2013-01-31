@@ -23,7 +23,7 @@ public:
 
     enum
     {
-        max_body_length = 512
+        max_body_length =  512
     };
 
     RequestMessage();

@@ -30,7 +30,7 @@
 
 class Sender {
 public:
-    Sender(std::string username, NetworkClient* client);
+    Sender(std::string username, NetworkClient* client, std::string fileName);
     //    Sender(const Sender& orig);
     virtual ~Sender();
 
@@ -56,8 +56,6 @@ public:
     void sendDownloadFile(std::string filename);
 
     void download(std::string filename);
-
-    void sendUpdateFileContent();
 
     //newPath - username - requestID - pathID - mode - color - active - page
     void sendNewPath(int pathID, bool mode, int color/*, bool active*/, int page, int width);
@@ -107,6 +105,7 @@ private:
 
     //    int getPenColorInt(Color c);
     std::string GetPoints(Point* point); //std::vector<Point> points);
+    void sendUpdateFileContent();
 
     std::string NumberToString(int Number);
     std::string BoolToString(bool boolean);
@@ -117,7 +116,6 @@ private:
     //Need to initialise this in login
     std::string username;
     NetworkClient* client;
-
 };
 
 #endif	/* SENDER_H */

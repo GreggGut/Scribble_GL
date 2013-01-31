@@ -104,7 +104,6 @@ tcp::socket& NetworkClient::getSocket()
     return socket_;
 }
 
-
 void NetworkClient::do_close()
 {
     std::cout << "Socket closed" << std::endl;
@@ -115,7 +114,6 @@ void NetworkClient::decodeRequest(std::string msg)
 {
     //Removing the leading & and the lagging \n
     std::string received(msg, 1, msg.size() - 2);
-    //std::cout << "Received: " << received << std::endl;
 
     //Separating the received message
     std::vector<std::string> info;
@@ -129,14 +127,14 @@ void NetworkClient::decodeRequest(std::string msg)
             //We have received a message with who is the current owner
             //TODO once I integrate this with the scribbleArea then we can set the flag that i, or some other scribble, becomes the owner
             std::cout << "REQUEST_OWNERSHIP" << std::endl;
-//            if(info.size()>1 && info[1]==scribbleArea->"username")
-//            {
-//                OK
-//            }
-//            else
-//            {
-//                I didn't get the ownership
-//            }
+            //            if(info.size()>1 && info[1]==scribbleArea->"username")
+            //            {
+            //                OK
+            //            }
+            //            else
+            //            {
+            //                I didn't get the ownership
+            //            }
             break;
         }
         case Sender::RELEASE_OWNERSHIP:
@@ -224,7 +222,7 @@ void NetworkClient::decodeRequest(std::string msg)
         case Sender::LOGIN:
         {
             //TOCONF NEED to link this with scribble area in order to let the user know login was fine or failed
-            if(info.size()>1 && info[1] =="1")
+            if ( info.size() > 1 && info[1] == "1" )
             {
                 std::cout << "LOGIN FINE!!!!!! NEED TO SET some flag" << std::endl;
             }

@@ -8,7 +8,8 @@
 #include "main.h"
 #include "Point.h"
 
-void glInit(int argc, char** argv) {
+void glInit(int argc, char** argv)
+{
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -29,7 +30,8 @@ void glInit(int argc, char** argv) {
     glutIdleFunc(idle);
 }
 
-void resize(int width, int height) {
+void resize(int width, int height)
+{
     glViewport(0, 0, width, height);
 
     glMatrixMode(GL_PROJECTION);
@@ -41,8 +43,10 @@ void resize(int width, int height) {
     glLoadIdentity();
 }
 
-void key(unsigned char key, int x, int y) {
-    switch (key) {
+void key(unsigned char key, int x, int y)
+{
+    switch ( key )
+    {
         case 27:
             exit(0);
             break;
@@ -59,18 +63,22 @@ void key(unsigned char key, int x, int y) {
     glutPostRedisplay();
 }
 
-void mouse(int button, int state, int x, int y) {
+void mouse(int button, int state, int x, int y)
+{
 
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+    if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
+    {
         //std::cout << "down x: "<<x<< " y: "<< y <<"\n";
 
-        if (painter->getInterpreter()->getScribbleArea()->getScribbling() == false) {
+        if ( painter->getInterpreter()->getScribbleArea()->getScribbling() == false )
+        {
             painter->getInterpreter()->screenPressEvent(new Point(x, y));
 
         }
     }
 
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_UP) {
+    if ( button == GLUT_LEFT_BUTTON && state == GLUT_UP )
+    {
         //std::cout << "up x: "<<x<< " y: "<< y <<"\n";
         painter->getInterpreter()->screenReleaseEvent();
 
@@ -78,18 +86,22 @@ void mouse(int button, int state, int x, int y) {
     glutPostRedisplay();
 }
 
-void mouseCoords(int x, int y) {
+void mouseCoords(int x, int y)
+{
 
-    if (painter->getInterpreter()->getScribbleArea()->getScribbling() == true) {
+    if ( painter->getInterpreter()->getScribbleArea()->getScribbling() == true )
+    {
         painter->getInterpreter()->screenMoveEvent(new Point(x, y));
     }
 }
 
-void idle() {
+void idle()
+{
     glutPostRedisplay();
 }
 
-void display() {
+void display()
+{
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
@@ -100,7 +112,8 @@ void display() {
     //glFlush();
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
     glInit(argc, argv);
 
@@ -109,11 +122,14 @@ int main(int argc, char *argv[]) {
 
     boost::thread getInput(&InputData::run, inputData);
 
+    // This connects to the server
     boost::asio::io_service io_service;
     tcp::resolver resolver(io_service);
 
+    std::string serverName = "localhost";
+
     std::cout << "Connecting..." << std::endl;
-    tcp::resolver::query query("localhost", "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
+    tcp::resolver::query query(serverName.c_str(), "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
     tcp::resolver::iterator iterator = resolver.resolve(query);
 
     //NetworkClient
@@ -121,22 +137,25 @@ int main(int argc, char *argv[]) {
 
     boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service));
 
-    
+
     //All the bellow is for testing
-    Sender* sender = new Sender("greg", client);
+    //TODO pass the port number to the Sender
+    Sender* sender = new Sender("greg", client, serverName);
 
     painter->getScribbleArea()->setSender(sender);
 
     //std::string toSend;
-    sender->sendLogin("pass");
+//    sender->sendLogin("pass");
     //        c.write(sendMessage(toSend));
 
     sender->sendGetFilesList();
     sender->sendDownloadFile("0.pdf");
-    sender->sendUpdateFileContent();
 
-    sender->sendRequestOwnership();
-    
+//    sleep(1000);
+//    std::cout << "Before file update" << std::endl;
+//    std::cout << "After file update" << std::endl;
+//    sender->sendRequestOwnership();
+//    std::cout << "After Ownership" << std::endl;
 
     //
     //    int pathID = 10;

@@ -10,7 +10,7 @@
 const std::string Sender::separator = "&";
 const std::string Sender::separatorPoints = "#";
 
-Sender::Sender(std::string username, NetworkClient* client) : username(username), client(client)
+Sender::Sender(std::string username, NetworkClient* client, std::string serverName) : username(username), client(client), serverName(serverName)
 {
 }
 
@@ -123,8 +123,66 @@ void Sender::sendGetFilesList()
  */
 void Sender::sendDownloadFile(std::string filename)
 {
-        /*
-     * Sending request to server for a file download
+    int sockfd, n;
+    struct sockaddr_in serv_addr;
+    struct hostent *server;
+    int LENGTH = 512;
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    server = gethostbyname(serverName.c_str());
+    if ( server == NULL )
+    {
+        fprintf(stderr, "ERROR, no such host\n");
+        exit(0);
+    }
+    bzero(( char * ) &serv_addr, sizeof (serv_addr ));
+    serv_addr.sin_family = AF_INET;
+    bcopy(( char * ) server->h_addr,
+            ( char * ) &serv_addr.sin_addr.s_addr,
+            server->h_length);
+    //TODO take the port number from the main
+    //The port number is the regular port number +1
+    serv_addr.sin_port = htons(21224); //portno);
+    if ( connect(sockfd, ( struct sockaddr * ) &serv_addr, sizeof (serv_addr )) < 0 )
+    {
+        std::cout << "The server is unavailable, try again later" << std::endl;
+        close(sockfd);
+        return;
+    }
+
+    //Converting filename to bytes and sending name to server
+    signed char filename2[filename.size()];
+
+    filename2[filename.size()] = 0;
+    memcpy(filename2, filename.c_str(), filename.size());
+    write(sockfd, filename2, filename.size());
+
+
+    signed char buffer[LENGTH];
+    bzero(buffer, LENGTH);
+    int fr_block_sz = 0;
+    char* fr_name = ( char* ) filename.c_str();
+    FILE *fr = fopen(fr_name, "w");
+    while ( fr_block_sz = read(sockfd, buffer, LENGTH - 1) )
+    {
+        if ( fr_block_sz < 0 )
+        {
+            break;
+        }
+        int write_sz = fwrite(buffer, sizeof (char ), fr_block_sz, fr);
+        if ( write_sz < fr_block_sz )
+        {
+            printf("File write failed.\n");
+        }
+        bzero(buffer, LENGTH);
+
+    }
+    printf("File received from server!\n");
+    fclose(fr);
+    close(sockfd);
+
+    /*
+     * Sending filename to server to let it know on which file I am working
      */
     std::string toSend = separator;
     toSend += NumberToString(DOWNLOAD_FILE);
@@ -132,85 +190,8 @@ void Sender::sendDownloadFile(std::string filename)
     toSend += separator;
     toSend += filename;
     client->sendMessage(toSend);
-//    /* 
-//     * Initializing the network connection
-//     */
-//    int newsockfd;
-//    int mListeningPort = 34567;
-//    int sockfd;
-//    socklen_t clilen;
-//    int LENGTH = 512;
-//    struct sockaddr_in serv_addr, cli_addr;
-//
-//    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-//    if (sockfd < 0)
-//    {
-//        //TODO Some error message to the user
-//        std::cout << "ERROR opening socket";
-//    }
-//
-//    bzero((char *) &serv_addr, sizeof (serv_addr));
-//    serv_addr.sin_family = AF_INET;
-//    serv_addr.sin_addr.s_addr = INADDR_ANY;
-//    serv_addr.sin_port = htons(mListeningPort);
-//
-//    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof (serv_addr)) < 0)
-//    {
-//        //TODO Some error message to the user
-//        std::cout << "ERROR on binding";
-//    }
-//
-//    listen(sockfd, 5);
-//    clilen = sizeof (cli_addr);
-//    /*
-//     * End of Initialization
-//     */
-//
-//    /*
-//     * Sending request to server for a file download
-//     */
-//    std::string toSend = separator;
-//    toSend += NumberToString(DOWNLOAD_FILE);
-//
-//    toSend += separator;
-//    toSend += filename;
-//    client->sendMessage(toSend);
-//
-//    /*
-//     * Accepting connection and downloading the file
-//     */
-//    newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
-//    if (newsockfd < 0)
-//    {
-//        //TODO Some error message to the user
-//        std::cout << "ERROR on accept";
-//        //TODO what should happen here????
-//    }
-//
-//    signed char buffer[LENGTH];
-//    bzero(buffer, LENGTH);
-//    int fr_block_sz = 0;
-//    char* fr_name = (char*) filename.c_str();
-//    FILE *fr = fopen(fr_name, "w");
-//    while (fr_block_sz = read(newsockfd, buffer, LENGTH - 1))
-//    {
-//        if (fr_block_sz < 0)
-//        {
-//            break;
-//        }
-//        int write_sz = fwrite(buffer, sizeof (char), fr_block_sz, fr);
-//        if (write_sz < fr_block_sz)
-//        {
-//            printf("File write failed.\n");
-//        }
-//        //TOCONF Why is zeroing not working?
-//        bzero(buffer, LENGTH);
-//
-//    }
-//    printf("Ok received from server!\n");
-//    fclose(fr);
-//    close(newsockfd);
-//    close(sockfd);
+
+    sendUpdateFileContent();
 }
 
 void Sender::sendUpdateFileContent()
@@ -247,10 +228,7 @@ void Sender::sendNewPath(int pathID, bool mode, int color/*, bool active*/, int 
 
     toSend += NumberToString(color);
     toSend += separator;
-
-    //    toSend += BoolToString(active);
-    //    toSend += separator;
-
+    
     toSend += NumberToString(page);
     toSend += separator;
 
@@ -403,7 +381,7 @@ std::string Sender::NumberToString(int Number)
  */
 std::string Sender::BoolToString(bool boolean)
 {
-    if (boolean)
+    if ( boolean )
     {
         return "1";
     }

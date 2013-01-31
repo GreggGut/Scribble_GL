@@ -244,12 +244,17 @@ void ScribbleArea::undo() {
 
         if (!redoVector.at(document->getCurrentPage()).empty()) {
             if (pathsOnPage.at(document->getCurrentPage()).back()->getPathID() > redoVector.at(document->getCurrentPage()).back()->getPathID()) {
+                
+                for (uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++){
+                        delete redoVector.at(document->getCurrentPage()).at(i);
+                }
+   
                 redoVector.at(document->getCurrentPage()).clear();
             }
         }
+        
         redoVector.at(document->getCurrentPage()).push_back(pathsOnPage.at(document->getCurrentPage()).back());
         pathsOnPage.at(document->getCurrentPage()).pop_back();
-
         //updatePageContent();
     }
 
@@ -267,7 +272,6 @@ void ScribbleArea::redo() {
 
         pathsOnPage.at(document->getCurrentPage()).push_back(redoVector.at(document->getCurrentPage()).back());
         redoVector.at(document->getCurrentPage()).pop_back();
-
         //updatePageContent();
     }
     pathsLock.unlock();
@@ -282,7 +286,16 @@ void ScribbleArea::clearAll() {
     pathsLock.lock();
     if (!pathsOnPage.at(document->getCurrentPage()).empty()) {
 
-        //redoVector.at(currentPage).insert(redoVector.at(currentPage).end(), pathsOnPage.at(currentPage).begin(), pathsOnPage.at(currentPage).end());
+       for (uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++){
+            delete redoVector.at(document->getCurrentPage()).at(i);
+         
+       }
+       
+       for (uint j = 0; j < pathsOnPage.at(document->getCurrentPage()).size(); j++){
+            delete pathsOnPage.at(document->getCurrentPage()).at(j);
+       
+       }
+       
         pathsOnPage.at(document->getCurrentPage()).clear();
         redoVector.at(document->getCurrentPage()).clear();
         //updatePageContent();

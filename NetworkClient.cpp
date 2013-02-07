@@ -135,7 +135,7 @@ void NetworkClient::decodeRequest(std::string msg)
             }
             else
             {
-                std::cout << "I didn't get the ownership" << std::endl;
+                std::cout << "I didn't get the ownership, somebody else got it" << std::endl;
                 scribbleArea->setOwnershipTaken();
             }
             break;
@@ -143,7 +143,7 @@ void NetworkClient::decodeRequest(std::string msg)
         case Sender::RELEASE_OWNERSHIP:
         {
             //File ownership is available
-            std::cout << "RELEASE_OWNERSHIP" << std::endl;
+            std::cout << "RELEASE_OWNERSHIP, ownership is free fro grabs" << std::endl;
             scribbleArea->setOwnershipFree();
             break;
         }
@@ -154,7 +154,6 @@ void NetworkClient::decodeRequest(std::string msg)
             int pathID = atoi(info[1].c_str());
             bool mode = ( info[2] == "1" ) ? true : false;
             int colorInt = atoi(info[3].c_str());
-            //bool active = (info[4] == "1") ? true : false;
             int page = atoi(info[4].c_str());
             int width = atoi(info[5].c_str());
 
@@ -224,20 +223,21 @@ void NetworkClient::decodeRequest(std::string msg)
         }
         case Sender::LOGIN:
         {
-            //TOCONF NEED to link this with scribble area in order to let the user know login was fine or failed
             if ( info.size() > 1 && info[1] == "1" )
             {
                 std::cout << "LOGIN FINE!!!!!! NEED TO SET some flag" << std::endl;
+                scribbleArea->getSender()->setLogin(true);
             }
             else
             {
                 std::cout << "LOGIN FAILED!!!!!! NEED TO DISPLAY AN ERROR MESSAGE" << std::endl;
+                scribbleArea->getSender()->setLogin(false);
             }
             break;
         }
         case Sender::LOGOUT:
         {
-            //TOCONF not in use for now
+            scribbleArea->getSender()->setLogin(false);
             std::cout << "LOGOUT" << std::endl;
             break;
         }
@@ -289,7 +289,9 @@ void NetworkClient::sendMessage(std::string line)
     std::memcpy(msg.body(), line.c_str(), msg.body_length());
     msg.encode_header();
 
+    std::cout<<"BEFORE"<<std::endl;
     write(msg);
+    std::cout<<"AFTER"<<std::endl;
 }
 
 ScribbleArea* NetworkClient::getScribbleArea()

@@ -10,7 +10,15 @@
 const std::string Sender::separator = "&";
 const std::string Sender::separatorPoints = "#";
 
-Sender::Sender(Painter* painter/*, NetworkClient* client, std::string serverName*/)// : username(username)//, client(client), serverName(serverName)
+Sender::Sender(Painter* painter/*, NetworkClient* client, std::string serverName*/) : loggedIn(false), painter(painter)// : username(username)//, client(client), serverName(serverName)
+{
+}
+
+Sender::~Sender()
+{
+}
+
+bool Sender::connectToServer()
 {
     // This connects to the server
 
@@ -25,17 +33,13 @@ Sender::Sender(Painter* painter/*, NetworkClient* client, std::string serverName
         client = new NetworkClient(io_service, iterator, painter->getScribbleArea());
 
         t = boost::thread(boost::bind(&boost::asio::io_service::run, &io_service));
-        connected = client->isConnected();
+        return client->isConnected();
     }
     catch ( boost::system::system_error x )
     {
         std::cout << "Exception" << std::endl;
-        connected = false;
+        return false;
     }
-}
-
-Sender::~Sender()
-{
 }
 
 /**
@@ -440,4 +444,14 @@ std::string Sender::getUsername()
 std::string Sender::getPassword()
 {
     return password;
+}
+
+bool Sender::isLoggedIn()
+{
+    return loggedIn;
+}
+
+bool Sender::setLogin(bool log)
+{
+    loggedIn = log;
 }

@@ -125,16 +125,17 @@ int main(int argc, char *argv[])
     //All the bellow is for testing
     //TODO pass the port number to the Sender
     Sender* sender = new Sender(painter); //, client, serverName);
-    if ( sender->isConnected() )
+    painter->getScribbleArea()->setSender(sender);
+    if ( sender->connectToServer() )
     {
-        sender->sendLogin("greg","pass");
-        painter->getScribbleArea()->setSender(sender);
+        sender->sendLogin("greg", "pass");
         sender->sendGetFilesList();
 
         //REMOVE The sleep is only due to the fact that we need to receive the file list first and then we can decide which one to download/use
         sleep(1);
         sender->sendDownloadFile(painter->getScribbleArea()->getFilesOnServer().at(3));
         sender->sendRequestOwnership();
+        sender->sendLogout();
         //TODO this is where we can set NETWORK to be true
     }
     else

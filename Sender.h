@@ -86,12 +86,16 @@ public:
     //Delete - username - requestID - page - pathID
     void sendDeletePath(int page, int PathID);
 
+    bool connectToServer();
+
     void sendCleanAll(int page);
 
     bool isConnected();
 
     std::string getUsername();
     std::string getPassword();
+    bool isLoggedIn();
+    bool setLogin(bool);
 public:
 
     static enum Protocol
@@ -102,7 +106,7 @@ public:
         REQUEST_OWNERSHIP = 2,
         RELEASE_OWNERSHIP = 3,
         GET_FILES_LIST = 4,
-        DOWNLOAD_FILE = 5, //TOCONFIRM do we need this?
+        DOWNLOAD_FILE = 5,
         NEW_PATH = 6,
         ADD_POINTS = 7,
         END_PATH = 8,
@@ -129,7 +133,8 @@ private:
     std::string serverName;
     int portno;
 
-    //Need to initialize this in login
+    bool loggedIn;
+    Painter* painter;
     std::string username;
     std::string password;
     NetworkClient* client;

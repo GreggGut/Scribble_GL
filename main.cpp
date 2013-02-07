@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
         sleep(1);
         sender->sendDownloadFile(painter->getScribbleArea()->getFilesOnServer().at(3));
         sender->sendRequestOwnership();
-        sender->sendLogout();
+        //sender->sendLogout();
         //TODO this is where we can set NETWORK to be true
     }
     else

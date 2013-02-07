@@ -12,11 +12,38 @@ const std::string Sender::separatorPoints = "#";
 
 Sender::Sender(Painter* painter/*, NetworkClient* client, std::string serverName*/) : loggedIn(false), painter(painter)// : username(username)//, client(client), serverName(serverName)
 {
-    //TODO need to read from a file which will have all the info about the server address and port
+    setPortNumber();
 }
 
 Sender::~Sender()
 {
+}
+
+/**
+ * Reading the server address and port number from a configuration file
+ */
+void Sender::setPortNumber()
+{
+    std::ifstream mInfoFile;
+    mInfoFile.open("resources//settings.info");
+
+    if ( mInfoFile.is_open() )
+    {
+        try
+        {
+            getline(mInfoFile, serverName);
+            getline(mInfoFile, serverPort);
+        }
+        catch ( std::ios_base::failure x )
+        {
+            serverPort = "21223";
+            serverName = "localhost";
+        }
+    }
+    else
+    {
+
+    }
 }
 
 bool Sender::connectToServer()
@@ -24,11 +51,11 @@ bool Sender::connectToServer()
     // This connects to the server
 
     tcp::resolver resolver(io_service);
-    /*std::string */serverName = "localhost";
+    /*std::string *///serverName = "localhost";
     std::cout << "Connecting..." << std::endl;
     try
     {
-        tcp::resolver::query query(serverName.c_str(), "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
+        tcp::resolver::query query(serverName.c_str(), serverPort.c_str()); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
         tcp::resolver::iterator iterator = resolver.resolve(query);
         //NetworkClient
         client = new NetworkClient(io_service, iterator, painter->getScribbleArea());
@@ -183,7 +210,7 @@ void Sender::sendDownloadFile(std::string filename)
                 server->h_length);
         //TODO take the port number from the main
         //The port number is the regular port number +1
-        serv_addr.sin_port = htons(21224); //portno);
+        serv_addr.sin_port = htons(atoi(serverPort.c_str()) + 1); //portno);
         if ( connect(sockfd, ( struct sockaddr * ) &serv_addr, sizeof (serv_addr )) < 0 )
         {
             std::cout << "The server is unavailable, try again later" << std::endl;

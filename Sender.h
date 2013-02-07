@@ -125,12 +125,14 @@ private:
     //    int getPenColorInt(Color c);
     std::string GetPoints(Point* point); //std::vector<Point> points);
     void sendUpdateFileContent();
+    void setPortNumber();
 
     std::string NumberToString(int Number);
     std::string BoolToString(bool boolean);
 
     std::string serverName;
-    int portno;
+    std::string serverPort;
+  //  int portno;
 
     bool loggedIn;
     Painter* painter;

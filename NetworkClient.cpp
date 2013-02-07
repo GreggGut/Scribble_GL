@@ -289,10 +289,8 @@ void NetworkClient::sendMessage(std::string line)
     msg.body_length(std::strlen(line.c_str()));
     std::memcpy(msg.body(), line.c_str(), msg.body_length());
     msg.encode_header();
-
-    std::cout<<"BEFORE"<<std::endl;
+    
     write(msg);
-    std::cout<<"AFTER"<<std::endl;
 }
 
 ScribbleArea* NetworkClient::getScribbleArea()

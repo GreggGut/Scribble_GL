@@ -12,6 +12,7 @@ const std::string Sender::separatorPoints = "#";
 
 Sender::Sender(Painter* painter/*, NetworkClient* client, std::string serverName*/) : loggedIn(false), painter(painter)// : username(username)//, client(client), serverName(serverName)
 {
+    //TODO need to read from a file which will have all the info about the server address and port
 }
 
 Sender::~Sender()

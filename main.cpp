@@ -123,7 +123,6 @@ int main(int argc, char *argv[])
     boost::thread getInput(&InputData::run, inputData);
 
     //All the bellow is for testing
-    //TODO pass the port number to the Sender
     Sender* sender = new Sender(painter); //, client, serverName);
     painter->getScribbleArea()->setSender(sender);
     if ( sender->connectToServer() )

@@ -255,15 +255,16 @@ void NetworkClient::decodeRequest(std::string msg)
             {
                 std::cout << files[i] << std::endl;
             }
+            //Until here
             scribbleArea->setFilesOnServer(files);
             break;
         }
-        case Sender::DOWNLOAD_FILE:
-        {
-            //TOCONF will we use this??? possible use is to let the server know what file we are working on
-            std::cout << "DOWNLOAD_FILE Got part of the message" << std::endl;
-            break;
-        }
+//        case Sender::DOWNLOAD_FILE:
+//        {
+//            //TOCONF will we use this??? possible use is to let the server know what file we are working on
+//            std::cout << "DOWNLOAD_FILE" << std::endl;
+//            break;
+//        }
         case Sender::CLEAR_ALL:
         {
             scribbleArea->clearAll();

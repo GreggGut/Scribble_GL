@@ -63,7 +63,6 @@ public:
     //getFileList - username - requestID
     void sendGetFilesList();
 
-    //TOCONFIRM Do we Need this?
     void sendDownloadFile(std::string filename);
 
     void download(std::string filename);

@@ -65,7 +65,7 @@ public:
     void setSender(Sender* sender);
     Document* getDocument();
     Sender* getSender();
-    
+
     int getX();
     int getY();
     int getWidth();
@@ -78,9 +78,10 @@ public:
      */
 
     void setFilesOnServer(std::vector<std::string> filesOnServer);
+    std::vector<std::string> getFilesOnServer();
 private:
     bool network;
-    
+
     int x;
     int y;
     int width;
@@ -92,20 +93,20 @@ private:
     int mMode;
     bool scribbling;
 
-    
+
     Path *mTempPath;
 
     Point lastPoint;
 
     boost::mutex pathsLock;
     boost::mutex lockForTempPath;
-    
+
     std::vector<int> Paths_IDs;
 
     std::vector< std::vector<Path*> > pathsOnPage;
 
     std::vector< std::vector<Path*> > redoVector;
-    
+
     Document *document;
 
     /*

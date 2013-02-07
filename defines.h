@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   defines.h
  * Author: greg
  *
@@ -42,6 +42,6 @@
 #define N_ROW                   7
 #define N_COLUMN                10
 
-#define NETWORK 0
+#define NETWORK 1
 #endif	/* DEFINES_H */
 

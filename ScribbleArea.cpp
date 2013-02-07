@@ -13,16 +13,16 @@ ScribbleArea::ScribbleArea(): networkPathPage(-1) {
     penSize = 1.0;
 
     mTempPath = NULL;
-     
+
     pathsOnPage.resize(1);
     Paths_IDs.resize(1);
     redoVector.resize(1);
 }
 
 ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1){
-      
+
     network = NETWORK;
-    
+
     mMode = WRITE;
     x = x_;
     y = y_;
@@ -145,7 +145,7 @@ bool ScribbleArea::pointInsideArea(Point * point) {
  */
 void ScribbleArea::screenPressEvent(Point* point) {
     //if point is NULL return, nothing to do
-    
+
         if (point == NULL) {
         return;
     }
@@ -153,19 +153,19 @@ void ScribbleArea::screenPressEvent(Point* point) {
     //If mode is write, initialize the writing sequence
     if (this->mMode == WRITE) {
         //cleanRedoVector();
-        
+
         lastPoint.setX(point->getX());
         lastPoint.setY(point->getY());
         scribbling = true;
 
         lockForTempPath.lock();
         mTempPath = new Path(point, this->mMode, this->penColor, this->penSize, Paths_IDs[document->getCurrentPage()]++);
-       
+
         //TOTEST
         if(network == 1){
                 sender->sendNewPath(mTempPath->getPathID(), mMode, mTempPath->getPenColorInt()/*, mTempPath->isEnabled()*/, document->getCurrentPage(), penSize);
         }
-        
+
         lockForTempPath.unlock();
     }        //any other point needs to be delete
     else {
@@ -188,11 +188,11 @@ void ScribbleArea::screenMoveEvent(Point* point) {
         pathsLock.lock();
         lockForTempPath.lock();
         mTempPath->addPoint(point);
-        
+
         if (network == 1) {
                 sender->sendPoints(point);
         }
-        
+
         lockForTempPath.unlock();
         pathsLock.unlock();
     }//Here we can add more else if to enhance user experience by changing the color of the pressed button.
@@ -216,11 +216,11 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
         if (mTempPath != NULL) {
 
             pathsOnPage.at(document->getCurrentPage()).push_back(mTempPath);
-            
+
             if (network == 1) {
                 sender->sendEndPath();
             }
-            
+
             mTempPath = NULL;
         }
 
@@ -244,15 +244,15 @@ void ScribbleArea::undo() {
 
         if (!redoVector.at(document->getCurrentPage()).empty()) {
             if (pathsOnPage.at(document->getCurrentPage()).back()->getPathID() > redoVector.at(document->getCurrentPage()).back()->getPathID()) {
-                
+
                 for (uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++){
                         delete redoVector.at(document->getCurrentPage()).at(i);
                 }
-   
+
                 redoVector.at(document->getCurrentPage()).clear();
             }
         }
-        
+
         redoVector.at(document->getCurrentPage()).push_back(pathsOnPage.at(document->getCurrentPage()).back());
         pathsOnPage.at(document->getCurrentPage()).pop_back();
         //updatePageContent();
@@ -288,14 +288,14 @@ void ScribbleArea::clearAll() {
 
        for (uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++){
             delete redoVector.at(document->getCurrentPage()).at(i);
-         
+
        }
-       
+
        for (uint j = 0; j < pathsOnPage.at(document->getCurrentPage()).size(); j++){
             delete pathsOnPage.at(document->getCurrentPage()).at(j);
-       
+
        }
-       
+
         pathsOnPage.at(document->getCurrentPage()).clear();
         redoVector.at(document->getCurrentPage()).clear();
         //updatePageContent();
@@ -376,6 +376,10 @@ Document * ScribbleArea::getDocument() {
 void ScribbleArea::setFilesOnServer(std::vector<std::string> filesOnServer) {
     this->filesOnServer = filesOnServer;
 }
+std::vector<std::string> ScribbleArea::getFilesOnServer()
+{
+    return filesOnServer;
+}
 
 int ScribbleArea::getX() {
     return x;
@@ -394,34 +398,34 @@ int ScribbleArea::getHeight() {
 }
 
 void ScribbleArea::previousPage(){
-    
+
     if(document->getCurrentPage() != 0){
         document->changePage(document->getCurrentPage() - 1);
-        
+
     }
 }
 
 void ScribbleArea::nextPage(){
-    
+
     if(document->getCurrentPage() != document->getNumberOfPages() - 1){
         document->changePage(document->getCurrentPage() + 1);
-        
+
     }
 }
 
 void ScribbleArea::loadFile(std::string fileName){
-    
+
     document = new Document(x, y, width, height);
     document->load(fileName);
-    
+
     document->getCurrentPage();
-    
+
     pathsOnPage.clear();
     Paths_IDs.clear();
     redoVector.clear();
-    
+
     pathsOnPage.resize(document->getNumberOfPages());
     Paths_IDs.resize(document->getNumberOfPages());
     redoVector.resize(document->getNumberOfPages());
-   
+
 }

@@ -10,8 +10,28 @@
 const std::string Sender::separator = "&";
 const std::string Sender::separatorPoints = "#";
 
-Sender::Sender(std::string username, NetworkClient* client, std::string serverName) : username(username), client(client), serverName(serverName)
+Sender::Sender(Painter* painter/*, NetworkClient* client, std::string serverName*/)// : username(username)//, client(client), serverName(serverName)
 {
+    // This connects to the server
+
+    tcp::resolver resolver(io_service);
+    /*std::string */serverName = "localhost";
+    std::cout << "Connecting..." << std::endl;
+    try
+    {
+        tcp::resolver::query query(serverName.c_str(), "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
+        tcp::resolver::iterator iterator = resolver.resolve(query);
+        //NetworkClient
+        client = new NetworkClient(io_service, iterator, painter->getScribbleArea());
+
+        t = boost::thread(boost::bind(&boost::asio::io_service::run, &io_service));
+        connected = true;
+    }
+    catch ( boost::system::system_error x )
+    {
+        std::cout << "Exception" << std::endl;
+        connected = false;
+    }
 }
 
 Sender::~Sender()
@@ -45,8 +65,9 @@ std::string Sender::getSeparatorPoints()
  *
  * Info sent: login - username - password
  */
-void Sender::sendLogin(std::string password)
+void Sender::sendLogin(std::string username,std::string password)
 {
+    this->username=username;
     std::string toSend = separator;
     toSend += NumberToString(LOGIN);
     toSend += separator;
@@ -120,6 +141,9 @@ void Sender::sendGetFilesList()
 /**TOCONFIRM This needs to be fully tested
  *
  * @param filename
+ *
+ * This function will download the requested file from the server if the file is not available locally.
+ * Once downloaded it will load the file to the ScribbleArea
  */
 void Sender::sendDownloadFile(std::string filename)
 {
@@ -128,59 +152,73 @@ void Sender::sendDownloadFile(std::string filename)
     struct hostent *server;
     int LENGTH = 512;
 
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    server = gethostbyname(serverName.c_str());
-    if ( server == NULL )
+    //TOCONF The download will only occur if the file is not present of the client computer
+    //Therefore we assume that file names are unique
+    std::string filenameDir = "Files//" + filename;
+
+    std::ifstream ifile(filenameDir.c_str());
+    if ( ifile )
     {
-        fprintf(stderr, "ERROR, no such host\n");
-        exit(0);
+        // The file exists, and is open for input
+        std::cout << "FILE EXISTS!!!!" << std::endl;
     }
-    bzero(( char * ) &serv_addr, sizeof (serv_addr ));
-    serv_addr.sin_family = AF_INET;
-    bcopy(( char * ) server->h_addr,
-            ( char * ) &serv_addr.sin_addr.s_addr,
-            server->h_length);
-    //TODO take the port number from the main
-    //The port number is the regular port number +1
-    serv_addr.sin_port = htons(21224); //portno);
-    if ( connect(sockfd, ( struct sockaddr * ) &serv_addr, sizeof (serv_addr )) < 0 )
+    else
     {
-        std::cout << "The server is unavailable, try again later" << std::endl;
-        close(sockfd);
-        return;
-    }
-
-    //Converting filename to bytes and sending name to server
-    signed char filename2[filename.size()];
-
-    filename2[filename.size()] = 0;
-    memcpy(filename2, filename.c_str(), filename.size());
-    write(sockfd, filename2, filename.size());
-
-
-    signed char buffer[LENGTH];
-    bzero(buffer, LENGTH);
-    int fr_block_sz = 0;
-    char* fr_name = ( char* ) filename.c_str();
-    FILE *fr = fopen(fr_name, "w");
-    while ( fr_block_sz = read(sockfd, buffer, LENGTH - 1) )
-    {
-        if ( fr_block_sz < 0 )
+        sockfd = socket(AF_INET, SOCK_STREAM, 0);
+        server = gethostbyname(serverName.c_str());
+        if ( server == NULL )
         {
-            break;
+            fprintf(stderr, "ERROR, no such host\n");
+            exit(0);
         }
-        int write_sz = fwrite(buffer, sizeof (char ), fr_block_sz, fr);
-        if ( write_sz < fr_block_sz )
+        bzero(( char * ) &serv_addr, sizeof (serv_addr ));
+        serv_addr.sin_family = AF_INET;
+        bcopy(( char * ) server->h_addr,
+                ( char * ) &serv_addr.sin_addr.s_addr,
+                server->h_length);
+        //TODO take the port number from the main
+        //The port number is the regular port number +1
+        serv_addr.sin_port = htons(21224); //portno);
+        if ( connect(sockfd, ( struct sockaddr * ) &serv_addr, sizeof (serv_addr )) < 0 )
         {
-            printf("File write failed.\n");
+            std::cout << "The server is unavailable, try again later" << std::endl;
+            close(sockfd);
+            return;
         }
+
+        //Converting filename to bytes and sending name to server
+        signed char filename2[filename.size()];
+
+        filename2[filename.size()] = 0;
+        memcpy(filename2, filename.c_str(), filename.size());
+        write(sockfd, filename2, filename.size());
+
+
+        signed char buffer[LENGTH];
         bzero(buffer, LENGTH);
+        int fr_block_sz = 0;
+        char* fr_name = ( char* ) filenameDir.c_str();
+        FILE *fr = fopen(fr_name, "w");
+        while ( fr_block_sz = read(sockfd, buffer, LENGTH - 1) )
+        {
+            if ( fr_block_sz < 0 )
+            {
+                break;
+            }
+            int write_sz = fwrite(buffer, sizeof (char ), fr_block_sz, fr);
+            if ( write_sz < fr_block_sz )
+            {
+                printf("File write failed.\n");
+            }
+            bzero(buffer, LENGTH);
 
+        }
+        printf("File received from server!\n");
+        fclose(fr);
+        close(sockfd);
     }
-    printf("File received from server!\n");
-    fclose(fr);
-    close(sockfd);
 
+    ifile.close();
     /*
      * Sending filename to server to let it know on which file I am working
      */
@@ -191,6 +229,7 @@ void Sender::sendDownloadFile(std::string filename)
     toSend += filename;
     client->sendMessage(toSend);
 
+    client->getScribbleArea()->loadFile(filenameDir);
     sendUpdateFileContent();
 }
 
@@ -386,4 +425,9 @@ std::string Sender::BoolToString(bool boolean)
         return "1";
     }
     return "0";
+}
+
+bool Sender::isConnected()
+{
+    return connected;
 }

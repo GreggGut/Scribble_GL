@@ -288,3 +288,8 @@ void NetworkClient::sendMessage(std::string line)
 
     write(msg);
 }
+
+ScribbleArea* NetworkClient::getScribbleArea()
+{
+    return scribbleArea;
+}

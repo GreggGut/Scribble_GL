@@ -122,126 +122,25 @@ int main(int argc, char *argv[])
 
     boost::thread getInput(&InputData::run, inputData);
 
-    // This connects to the server
-    boost::asio::io_service io_service;
-    tcp::resolver resolver(io_service);
-
-    std::string serverName = "localhost";
-
-    std::cout << "Connecting..." << std::endl;
-    tcp::resolver::query query(serverName.c_str(), "21223"); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
-    tcp::resolver::iterator iterator = resolver.resolve(query);
-
-    //NetworkClient
-    NetworkClient* client = new NetworkClient(io_service, iterator, painter->getScribbleArea());
-
-    boost::thread t(boost::bind(&boost::asio::io_service::run, &io_service));
-
-
     //All the bellow is for testing
     //TODO pass the port number to the Sender
-    Sender* sender = new Sender("greg", client, serverName);
+    Sender* sender = new Sender(painter); //, client, serverName);
+    if ( sender->isConnected() )
+    {
+        sender->sendLogin("greg","pass");
+        painter->getScribbleArea()->setSender(sender);
+        sender->sendGetFilesList();
 
-    painter->getScribbleArea()->setSender(sender);
-
-    //std::string toSend;
-//    sender->sendLogin("pass");
-    //        c.write(sendMessage(toSend));
-
-    sender->sendGetFilesList();
-    sender->sendDownloadFile("0.pdf");
-
-//    sleep(1000);
-//    std::cout << "Before file update" << std::endl;
-//    std::cout << "After file update" << std::endl;
-//    sender->sendRequestOwnership();
-//    std::cout << "After Ownership" << std::endl;
-
-    //
-    //    int pathID = 10;
-    //    int page = 0;
-    //    sender->sendNewPath(pathID, true, 32453, page, 1);
-    //
-    //    Point* m1 = new Point(0, 0, 100, 100);
-    //    Point* m2 = new Point(0, 0, 200, 200);
-    //    Point* m3 = new Point(0, 0, 300, 300);
-    //    Point* m4 = new Point(0, 0, 400, 600);
-    //
-    //    sender->sendPoints(m1);
-    //    sender->sendPoints(m2);
-    //    sender->sendPoints(m3);
-    //    sender->sendPoints(m4);
-    //
-    //    pathID = 11;
-    //
-    //    sender->sendNewPath(pathID, true, 32453, page, 1);
-    //
-    //    m1 = new Point(0, 0, 10, 100);
-    //    m2 = new Point(0, 0, 20, 200);
-    //    m3 = new Point(0, 0, 30, 300);
-    //    m4 = new Point(0, 0, 40, 600);
-    //
-    //    sender->sendPoints(m1);
-    //    sender->sendPoints(m2);
-    //    sender->sendPoints(m3);
-    //    sender->sendPoints(m4);
-    //
-    //    pathID = 12;
-    //
-    //    sender->sendNewPath(pathID, true, 32453, page, 1);
-    //
-    //    m1 = new Point(0, 0, 10, 10);
-    //    m2 = new Point(0, 0, 20, 20);
-    //    m3 = new Point(0, 0, 30, 30);
-    //    m4 = new Point(0, 0, 40, 60);
-    //
-    //    sender->sendPoints(m1);
-    //    sender->sendPoints(m2);
-    //    sender->sendPoints(m3);
-    //    sender->sendPoints(m4);
-    //
-    //    pathID = 13;
-    //
-    //    sender->sendNewPath(pathID, true, 32453, page, 1);
-    //
-    //    m1 = new Point(0, 0, 10, 110);
-    //    m2 = new Point(0, 0, 20, 120);
-    //    m3 = new Point(0, 0, 30, 130);
-    //    m4 = new Point(0, 0, 40, 160);
-    //
-    //    sender->sendPoints(m1);
-    //    sender->sendPoints(m2);
-    //    sender->sendPoints(m3);
-    //    sender->sendPoints(m4);
-    //
-    //    pathID = 14;
-    //
-    //    sender->sendNewPath(pathID, true, 32453, page, 1);
-    //
-    //    m1 = new Point(0, 0, 110, 10);
-    //    m2 = new Point(0, 0, 120, 20);
-    //    m3 = new Point(0, 0, 130, 30);
-    //    m4 = new Point(0, 0, 140, 60);
-    //
-    //    sender->sendPoints(m1);
-    //    sender->sendPoints(m2);
-    //    sender->sendPoints(m3);
-    //    sender->sendPoints(m4);
-
-    //sender->sendUndo(0);
-
-
-    //s.sendAddPoints(mPoints);
-    //sender->sendEndPath();
-    //
-
-    //    //s.sendUndo(2);
-    //    //    sender->sendGetFilesList();
-    //    //    sender->sendDeletePath(page, pathID);
-    //    //    sender->sendReleaseOwnership();
-    //    //Testing until here....
-    //    std::cout << "Testing..." << std::endl;
-
+        //REMOVE The sleep is only due to the fact that we need to receive the file list first and then we can decide which one to download/use
+        sleep(1);
+        sender->sendDownloadFile(painter->getScribbleArea()->getFilesOnServer().at(3));
+        //TODO this is where we can set NETWORK to be true
+    }
+    else
+    {
+        std::cout << "Failed connecting" << endl;
+        //TODO this is where we can set NETWORK to be false so the app doesn't fail
+    }
 
     glutMainLoop();
 

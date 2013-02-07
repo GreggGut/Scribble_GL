@@ -34,6 +34,7 @@ public:
     void sendMessage(std::string line);
 
     tcp::socket& getSocket();
+    ScribbleArea* getScribbleArea();
 
 private:
     void write(const RequestMessage& msg);

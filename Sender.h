@@ -23,14 +23,24 @@
 #include <vector>
 #include "Point.h"
 #include "NetworkClient.h"
+#include "Painter.h"
 
 #include <cassert>
 #include <fstream>
 #include <arpa/inet.h>
 
+#include <boost/thread.hpp>
+
+#include <boost/bind.hpp>
+#include <boost/asio.hpp>
+//#include "NetworkConnection.h"
+
+#include "RequestMessage.h"
+#include "Sender.h"
+
 class Sender {
 public:
-    Sender(std::string username, NetworkClient* client, std::string fileName);
+    Sender(Painter* painter);//, NetworkClient* client, std::string serverName);
     //    Sender(const Sender& orig);
     virtual ~Sender();
 
@@ -38,7 +48,7 @@ public:
     static std::string getSeparatorPoints();
 
     //login - username - requestID - password - port
-    void sendLogin(std::string password);
+    void sendLogin(std::string username,std::string password);
 
     //logout - username - requestID
     void sendLogout();
@@ -77,6 +87,8 @@ public:
 
     void sendCleanAll(int page);
 
+    bool isConnected();
+
 public:
 
     static enum Protocol {
@@ -113,9 +125,12 @@ private:
     std::string serverName;
     int portno;
 
-    //Need to initialise this in login
+    //Need to initialize this in login
     std::string username;
     NetworkClient* client;
+    bool connected;
+    boost::thread t;
+    boost::asio::io_service io_service;
 };
 
 #endif	/* SENDER_H */

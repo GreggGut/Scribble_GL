@@ -35,10 +35,12 @@ void NetworkClient::handle_connect(const boost::system::error_code& error, tcp::
 {
     if ( !error )
     {
+        connected = true;
         boost::asio::async_read(socket_, boost::asio::buffer(read_msg_.data(), RequestMessage::header_length), boost::bind(&NetworkClient::handle_read_header, this, boost::asio::placeholders::error));
     }
     else if ( endpoint_iterator != tcp::resolver::iterator() )
     {
+        connected = false;
         std::cout << "Fail connecting to server... Try again later" << std::endl;
         socket_.close();
         tcp::endpoint endpoint = *endpoint_iterator;
@@ -125,23 +127,24 @@ void NetworkClient::decodeRequest(std::string msg)
         case Sender::REQUEST_OWNERSHIP:
         {
             //We have received a message with who is the current owner
-            //TODO once I integrate this with the scribbleArea then we can set the flag that i, or some other scribble, becomes the owner
             std::cout << "REQUEST_OWNERSHIP" << std::endl;
-            //            if(info.size()>1 && info[1]==scribbleArea->"username")
-            //            {
-            //                OK
-            //            }
-            //            else
-            //            {
-            //                I didn't get the ownership
-            //            }
+            if ( info.size() > 1 && info[1] == scribbleArea->getSender()->getUsername() )
+            {
+                std::cout << "I got ownership" << std::endl;
+                scribbleArea->setOwnershipMe();
+            }
+            else
+            {
+                std::cout << "I didn't get the ownership" << std::endl;
+                scribbleArea->setOwnershipTaken();
+            }
             break;
         }
         case Sender::RELEASE_OWNERSHIP:
         {
             //File ownership is available
-            //TODO once integrated with the ScribbleArea reset the ownership flag
             std::cout << "RELEASE_OWNERSHIP" << std::endl;
+            scribbleArea->setOwnershipFree();
             break;
         }
         case Sender::NEW_PATH:
@@ -292,4 +295,9 @@ void NetworkClient::sendMessage(std::string line)
 ScribbleArea* NetworkClient::getScribbleArea()
 {
     return scribbleArea;
+}
+
+bool NetworkClient::isConnected()
+{
+    return connected;
 }

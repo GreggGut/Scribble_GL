@@ -35,6 +35,7 @@ public:
 
     tcp::socket& getSocket();
     ScribbleArea* getScribbleArea();
+    bool isConnected();
 
 private:
     void write(const RequestMessage& msg);
@@ -48,13 +49,13 @@ private:
 
     RequestMessage encodeMessage(std::string line);
 
-
 private:
     boost::asio::io_service& io_service_;
     tcp::socket socket_;
     RequestMessage read_msg_;
     chat_message_queue write_msgs_;
     ScribbleArea* scribbleArea;
+    bool connected;
 };
 
 

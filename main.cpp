@@ -134,6 +134,7 @@ int main(int argc, char *argv[])
         //REMOVE The sleep is only due to the fact that we need to receive the file list first and then we can decide which one to download/use
         sleep(1);
         sender->sendDownloadFile(painter->getScribbleArea()->getFilesOnServer().at(3));
+        sender->sendRequestOwnership();
         //TODO this is where we can set NETWORK to be true
     }
     else
@@ -143,6 +144,7 @@ int main(int argc, char *argv[])
     }
 
     glutMainLoop();
+    delete sender;
 
     return 0;
 }

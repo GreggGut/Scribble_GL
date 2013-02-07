@@ -73,13 +73,17 @@ public:
     void previousPage();
     void nextPage();
     void loadFile(std::string fileName);
+
+    void setOwnershipMe();
+    void setOwnershipFree();
+    void setOwnershipTaken();
     /*
      * Used for networking Functions
      */
-
     void setFilesOnServer(std::vector<std::string> filesOnServer);
     std::vector<std::string> getFilesOnServer();
 private:
+
     bool network;
 
     int x;
@@ -117,6 +121,12 @@ private:
     int networkPathPage;
     Path* mNetworkPath;
     std::vector<std::string> filesOnServer;
+
+    enum
+    {
+        ME, TAKEN, FREE
+    } ownership;
+
 };
 
 #endif	/* SCRIBBLEAREA_H */

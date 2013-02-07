@@ -25,7 +25,7 @@ Sender::Sender(Painter* painter/*, NetworkClient* client, std::string serverName
         client = new NetworkClient(io_service, iterator, painter->getScribbleArea());
 
         t = boost::thread(boost::bind(&boost::asio::io_service::run, &io_service));
-        connected = true;
+        connected = client->isConnected();
     }
     catch ( boost::system::system_error x )
     {
@@ -65,9 +65,9 @@ std::string Sender::getSeparatorPoints()
  *
  * Info sent: login - username - password
  */
-void Sender::sendLogin(std::string username,std::string password)
+void Sender::sendLogin(std::string username, std::string password)
 {
-    this->username=username;
+    this->username = username;
     std::string toSend = separator;
     toSend += NumberToString(LOGIN);
     toSend += separator;
@@ -430,4 +430,14 @@ std::string Sender::BoolToString(bool boolean)
 bool Sender::isConnected()
 {
     return connected;
+}
+
+std::string Sender::getUsername()
+{
+    return username;
+}
+
+std::string Sender::getPassword()
+{
+    return password;
 }

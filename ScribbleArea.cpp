@@ -7,7 +7,8 @@
 #include "ScribbleArea.h"
 #include "Sender.h"
 
-ScribbleArea::ScribbleArea(): networkPathPage(-1) {
+ScribbleArea::ScribbleArea() : networkPathPage(-1)
+{
 
     penColor = Color();
     penSize = 1.0;
@@ -19,7 +20,8 @@ ScribbleArea::ScribbleArea(): networkPathPage(-1) {
     redoVector.resize(1);
 }
 
-ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1){
+ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1)
+{
 
     network = NETWORK;
 
@@ -34,27 +36,32 @@ ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1)
 
     mTempPath = NULL;
 
-    std::string  fileName= "./Files/test.pdf";
+    std::string fileName = "./Files/test.pdf";
     loadFile(fileName);
 }
 
-ScribbleArea::ScribbleArea(const ScribbleArea& orig) {
+ScribbleArea::ScribbleArea(const ScribbleArea& orig)
+{
 }
 
-ScribbleArea::~ScribbleArea() {
+ScribbleArea::~ScribbleArea()
+{
 
     delete mTempPath;
 }
 
-Color ScribbleArea::getPenColor() {
+Color ScribbleArea::getPenColor()
+{
     return penColor;
 }
 
-float ScribbleArea::getPenSize() {
+float ScribbleArea::getPenSize()
+{
     return penSize;
 }
 
-void ScribbleArea::setPenColor(Color &newColor) {
+void ScribbleArea::setPenColor(Color &newColor)
+{
     penColor = newColor;
 }
 
@@ -64,33 +71,42 @@ void ScribbleArea::setPenColor(Color &newColor) {
  *
  * This function set the width of the pen to be used.
  */
-void ScribbleArea::setPenWidth(int newWidth) {
+void ScribbleArea::setPenWidth(int newWidth)
+{
     penSize = newWidth;
 }
 
-int ScribbleArea::getMode() {
+int ScribbleArea::getMode()
+{
 
     return mMode;
 }
 
-void ScribbleArea::setMode(int mode) {
+void ScribbleArea::setMode(int mode)
+{
 
     mMode = mode;
 }
 
-std::vector<std::vector<Path*> > ScribbleArea::getPathsOnPage() {
+std::vector<std::vector<Path*> > ScribbleArea::getPathsOnPage()
+{
     return pathsOnPage;
 }
 
-int ScribbleArea::getCurrentPage() {
+int ScribbleArea::getCurrentPage()
+{
     return document->getCurrentPage();
 }
 
-void ScribbleArea::setLockForPath(bool lock) {
+void ScribbleArea::setLockForPath(bool lock)
+{
 
-    if (lock == 1) {
+    if ( lock == 1 )
+    {
         pathsLock.lock();
-    } else {
+    }
+    else
+    {
         pathsLock.unlock();
     }
 }
@@ -123,14 +139,17 @@ void ScribbleArea::setLockForTempPath(bool lock)
     }
 }
 
-Path* ScribbleArea::getTempPath() {
+Path* ScribbleArea::getTempPath()
+{
     return mTempPath;
 }
 
-bool ScribbleArea::pointInsideArea(Point * point) {
+bool ScribbleArea::pointInsideArea(Point * point)
+{
 
     //point has to be inside frame. could be changed but overlaps may occur
-    if ((point->getX() > x) && (point->getX() < width + x) && (point->getY() > y) && (point->getY() < height + y)) {
+    if ( ( point->getX() > x ) && ( point->getX() < width + x ) && ( point->getY() > y ) && ( point->getY() < height + y ) )
+    {
         return true;
     }
 
@@ -143,15 +162,18 @@ bool ScribbleArea::pointInsideArea(Point * point) {
  *
  * This function initializes the lastPoint and enables scribbling in Write mode, or tries to delete a path on which the point passes through in Erase mode
  */
-void ScribbleArea::screenPressEvent(Point* point) {
+void ScribbleArea::screenPressEvent(Point* point)
+{
     //if point is NULL return, nothing to do
 
-        if (point == NULL) {
+    if ( point == NULL )
+    {
         return;
     }
 
     //If mode is write, initialize the writing sequence
-    if (this->mMode == WRITE) {
+    if ( this->mMode == WRITE )
+    {
         //cleanRedoVector();
 
         lastPoint.setX(point->getX());
@@ -162,13 +184,15 @@ void ScribbleArea::screenPressEvent(Point* point) {
         mTempPath = new Path(point, this->mMode, this->penColor, this->penSize, Paths_IDs[document->getCurrentPage()]++);
 
         //TOTEST
-        if(network == 1){
-                sender->sendNewPath(mTempPath->getPathID(), mMode, mTempPath->getPenColorInt()/*, mTempPath->isEnabled()*/, document->getCurrentPage(), penSize);
+        if ( network == 1 )
+        {
+            sender->sendNewPath(mTempPath->getPathID(), mMode, mTempPath->getPenColorInt()/*, mTempPath->isEnabled()*/, document->getCurrentPage(), penSize);
         }
 
         lockForTempPath.unlock();
-    }        //any other point needs to be delete
-    else {
+    } //any other point needs to be delete
+    else
+    {
         delete point;
         point = NULL;
     }
@@ -180,23 +204,28 @@ void ScribbleArea::screenPressEvent(Point* point) {
  *
  * This function draws a line between a last point and the new point in Write mode or tries to delete a path on which the point passes through in Erase mode
  */
-void ScribbleArea::screenMoveEvent(Point* point) {
-    if (point == NULL) {
+void ScribbleArea::screenMoveEvent(Point* point)
+{
+    if ( point == NULL )
+    {
         return;
     }
-    if (scribbling == true) {
+    if ( scribbling == true )
+    {
         pathsLock.lock();
         lockForTempPath.lock();
         mTempPath->addPoint(point);
 
-        if (network == 1) {
-                sender->sendPoints(point);
+        if ( network == 1 )
+        {
+            sender->sendPoints(point);
         }
 
         lockForTempPath.unlock();
         pathsLock.unlock();
     }//Here we can add more else if to enhance user experience by changing the color of the pressed button.
-    else {
+    else
+    {
         delete point;
         point = NULL;
     }
@@ -206,18 +235,22 @@ void ScribbleArea::screenMoveEvent(Point* point) {
  *
  * This function disables scribbling and informs the ScribbleArea that nothing is touching the screen anymore
  */
-void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
-    if (scribbling == true) {
+void ScribbleArea::screenReleaseEvent(/*Points *point*/)
+{
+    if ( scribbling == true )
+    {
         scribbling = false;
 
         pathsLock.lock();
         lockForTempPath.lock();
 
-        if (mTempPath != NULL) {
+        if ( mTempPath != NULL )
+        {
 
             pathsOnPage.at(document->getCurrentPage()).push_back(mTempPath);
 
-            if (network == 1) {
+            if ( network == 1 )
+            {
                 sender->sendEndPath();
             }
 
@@ -227,7 +260,9 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
         lockForTempPath.unlock();
         pathsLock.unlock();
 
-    } else {
+    }
+    else
+    {
 
     }
 }
@@ -236,17 +271,22 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
  *
  * This function allows the user to undo the last actions. Presently, there is no limit of now many undo can be performed, meaning the user can press undo until there is nothing present on the screen
  */
-void ScribbleArea::undo() {
+void ScribbleArea::undo()
+{
 
     pathsLock.lock();
 
-    if (!pathsOnPage.at(document->getCurrentPage()).empty()) {
+    if ( !pathsOnPage.at(document->getCurrentPage()).empty() )
+    {
 
-        if (!redoVector.at(document->getCurrentPage()).empty()) {
-            if (pathsOnPage.at(document->getCurrentPage()).back()->getPathID() > redoVector.at(document->getCurrentPage()).back()->getPathID()) {
+        if ( !redoVector.at(document->getCurrentPage()).empty() )
+        {
+            if ( pathsOnPage.at(document->getCurrentPage()).back()->getPathID() > redoVector.at(document->getCurrentPage()).back()->getPathID() )
+            {
 
-                for (uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++){
-                        delete redoVector.at(document->getCurrentPage()).at(i);
+                for ( uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++ )
+                {
+                    delete redoVector.at(document->getCurrentPage()).at(i);
                 }
 
                 redoVector.at(document->getCurrentPage()).clear();
@@ -265,10 +305,12 @@ void ScribbleArea::undo() {
  *
  * This function allows the user to redo the last undone actions. This action is only available if the last action(s) is an undo, otherwise this function will have no effect
  */
-void ScribbleArea::redo() {
+void ScribbleArea::redo()
+{
 
     pathsLock.lock();
-    if (!redoVector.at(document->getCurrentPage()).empty()) {
+    if ( !redoVector.at(document->getCurrentPage()).empty() )
+    {
 
         pathsOnPage.at(document->getCurrentPage()).push_back(redoVector.at(document->getCurrentPage()).back());
         redoVector.at(document->getCurrentPage()).pop_back();
@@ -281,20 +323,24 @@ void ScribbleArea::redo() {
  *
  * This function clears the current page from all writing. This action <b>cannot</b> be undone.
  */
-void ScribbleArea::clearAll() {
+void ScribbleArea::clearAll()
+{
 
     pathsLock.lock();
-    if (!pathsOnPage.at(document->getCurrentPage()).empty()) {
+    if ( !pathsOnPage.at(document->getCurrentPage()).empty() )
+    {
 
-       for (uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++){
+        for ( uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++ )
+        {
             delete redoVector.at(document->getCurrentPage()).at(i);
 
-       }
+        }
 
-       for (uint j = 0; j < pathsOnPage.at(document->getCurrentPage()).size(); j++){
+        for ( uint j = 0; j < pathsOnPage.at(document->getCurrentPage()).size(); j++ )
+        {
             delete pathsOnPage.at(document->getCurrentPage()).at(j);
 
-       }
+        }
 
         pathsOnPage.at(document->getCurrentPage()).clear();
         redoVector.at(document->getCurrentPage()).clear();
@@ -307,7 +353,8 @@ void ScribbleArea::clearAll() {
  *
  * This function set the mode to write, allowing the user to write on top of the PDF
  */
-void ScribbleArea::write() {
+void ScribbleArea::write()
+{
     mMode = WRITE;
 }
 
@@ -315,42 +362,50 @@ void ScribbleArea::write() {
  *
  * This function set the mode to erase, allowing the user to erase anything that has been written on top of the PDF, leaving the PDF intact
  */
-void ScribbleArea::erase() {
+void ScribbleArea::erase()
+{
     mMode = ERASE;
 }
 
-bool ScribbleArea::getScribbling() {
+bool ScribbleArea::getScribbling()
+{
     return scribbling;
 }
 
-void ScribbleArea::setNetworkPage(int p) {
+void ScribbleArea::setNetworkPage(int p)
+{
     lockForNetworkPath.lock();
     std::cout << "Setting network page: " << p << std::endl;
     networkPathPage = p;
     lockForNetworkPath.unlock();
 }
 
-Path* ScribbleArea::getNetworkPath() {
+Path* ScribbleArea::getNetworkPath()
+{
     return mNetworkPath;
 }
 
-int ScribbleArea::getNetworkPage() {
+int ScribbleArea::getNetworkPage()
+{
     return networkPathPage;
 }
 
-void ScribbleArea::setNetworkPath(Path* p) {
+void ScribbleArea::setNetworkPath(Path* p)
+{
     lockForNetworkPath.lock();
     mNetworkPath = p;
     lockForNetworkPath.unlock();
 }
 
-void ScribbleArea::addNetworkPoint(Point * p) {
+void ScribbleArea::addNetworkPoint(Point * p)
+{
     lockForNetworkPath.lock();
     mNetworkPath->addPoint(p);
     lockForNetworkPath.unlock();
 }
 
-void ScribbleArea::endNetworkPath() {
+void ScribbleArea::endNetworkPath()
+{
     pathsLock.lock();
     lockForNetworkPath.lock();
     pathsOnPage.at(networkPathPage).push_back(mNetworkPath);
@@ -361,59 +416,73 @@ void ScribbleArea::endNetworkPath() {
     pathsLock.unlock();
 }
 
-void ScribbleArea::setSender(Sender* sender) {
+void ScribbleArea::setSender(Sender* sender)
+{
     this->sender = sender;
 }
 
-Sender* ScribbleArea::getSender() {
+Sender* ScribbleArea::getSender()
+{
     return sender;
 }
 
-Document * ScribbleArea::getDocument() {
+Document * ScribbleArea::getDocument()
+{
     return document;
 }
 
-void ScribbleArea::setFilesOnServer(std::vector<std::string> filesOnServer) {
+void ScribbleArea::setFilesOnServer(std::vector<std::string> filesOnServer)
+{
     this->filesOnServer = filesOnServer;
 }
+
 std::vector<std::string> ScribbleArea::getFilesOnServer()
 {
     return filesOnServer;
 }
 
-int ScribbleArea::getX() {
+int ScribbleArea::getX()
+{
     return x;
 }
 
-int ScribbleArea::getY() {
+int ScribbleArea::getY()
+{
     return y;
 }
 
-int ScribbleArea::getWidth() {
+int ScribbleArea::getWidth()
+{
     return width;
 }
 
-int ScribbleArea::getHeight() {
+int ScribbleArea::getHeight()
+{
     return height;
 }
 
-void ScribbleArea::previousPage(){
+void ScribbleArea::previousPage()
+{
 
-    if(document->getCurrentPage() != 0){
+    if ( document->getCurrentPage() != 0 )
+    {
         document->changePage(document->getCurrentPage() - 1);
 
     }
 }
 
-void ScribbleArea::nextPage(){
+void ScribbleArea::nextPage()
+{
 
-    if(document->getCurrentPage() != document->getNumberOfPages() - 1){
+    if ( document->getCurrentPage() != document->getNumberOfPages() - 1 )
+    {
         document->changePage(document->getCurrentPage() + 1);
 
     }
 }
 
-void ScribbleArea::loadFile(std::string fileName){
+void ScribbleArea::loadFile(std::string fileName)
+{
 
     document = new Document(x, y, width, height);
     document->load(fileName);
@@ -428,4 +497,19 @@ void ScribbleArea::loadFile(std::string fileName){
     Paths_IDs.resize(document->getNumberOfPages());
     redoVector.resize(document->getNumberOfPages());
 
+}
+
+void ScribbleArea::setOwnershipMe()
+{
+    ownership = ME;
+}
+
+void ScribbleArea::setOwnershipFree()
+{
+    ownership = FREE;
+}
+
+void ScribbleArea::setOwnershipTaken()
+{
+    ownership = TAKEN;
 }

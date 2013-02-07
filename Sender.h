@@ -38,9 +38,10 @@
 #include "RequestMessage.h"
 #include "Sender.h"
 
-class Sender {
+class Sender
+{
 public:
-    Sender(Painter* painter);//, NetworkClient* client, std::string serverName);
+    Sender(Painter* painter); //, NetworkClient* client, std::string serverName);
     //    Sender(const Sender& orig);
     virtual ~Sender();
 
@@ -48,7 +49,7 @@ public:
     static std::string getSeparatorPoints();
 
     //login - username - requestID - password - port
-    void sendLogin(std::string username,std::string password);
+    void sendLogin(std::string username, std::string password);
 
     //logout - username - requestID
     void sendLogout();
@@ -89,9 +90,12 @@ public:
 
     bool isConnected();
 
+    std::string getUsername();
+    std::string getPassword();
 public:
 
-    static enum Protocol {
+    static enum Protocol
+    {
         //Client to server
         LOGIN = 0,
         LOGOUT = 1,
@@ -127,6 +131,7 @@ private:
 
     //Need to initialize this in login
     std::string username;
+    std::string password;
     NetworkClient* client;
     bool connected;
     boost::thread t;

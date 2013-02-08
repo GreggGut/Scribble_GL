@@ -66,9 +66,12 @@ void ScreenInterpreter::screenMoveEvent(Point* point) {
         scribbleArea->screenMoveEvent(point);
         //menu->screenMoveEvent(point);
     }
-    else if (pointInMenu == true && pointInScribble == false) {
+    else if (pointInMenu == true && scribbleArea->getScribbling() == true) {
         //only menu action
         // menuState = 2;
+         scribbleState = 0;
+          scribbleArea->screenReleaseEvent();
+          delete point;
         // menu->screenMoveEvent(point);
     }
     else {

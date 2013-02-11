@@ -8,7 +8,7 @@
 #ifndef MENU_H
 #define	MENU_H
 #include "Point.h"
-#include "Button.h"
+#include "MenuButton.h"
 #include "Color.h"
 #include <vector>
 #include "ScribbleArea.h"
@@ -23,7 +23,7 @@ public:
     void screenPressEvent(Point* point);
     void screenMoveEvent(Point* point);
     void screenReleaseEvent();
-    std::vector <Button *> * getButtonArray();
+    std::vector <MenuButton *> * getButtonArray();
     int getX();
     int getY();
     int getWidth();
@@ -37,7 +37,7 @@ private:
     int y;
     int width;
     int height;
-    std::vector <Button *> *buttonArray;
+    std::vector <MenuButton *> *buttonArray;
     ScribbleArea *scribbleArea;
 };
 

@@ -9,12 +9,15 @@
 #define	SCREENINTERPRETER_H
 
 #include "ScribbleArea.h"
-#include "Menu.h"
+//#include "Menu.h"
 #include "Point.h"
-#include "Login.h"
+//#include "Login.h"
 #include "Keyboard.h"
 #include "Alert.h"
 #include "FileList.h"
+
+class Menu;
+class Login;
 
 class ScreenInterpreter {
 public:
@@ -26,6 +29,14 @@ public:
     void screenMoveEvent(Point* point);
     void screenReleaseEvent();
     ScribbleArea* getScribbleArea();
+    
+    void showLogin(bool show);
+    void showFilelist(bool show);
+    void showAlert(bool show);
+  
+    bool getShowLogin();
+    bool getShowFile();
+    bool getShowAlert();
     
 private:
     ScribbleArea *scribbleArea;
@@ -45,7 +56,10 @@ private:
     void loginPress(Point *point);
     void loginMove(Point *point);
     void loginRelease();
-    
+   
+    bool loginShown;
+    bool filelistShown;
+    bool alertShown;
 };
 
 #endif	/* SCREENINTERPRETER_H */

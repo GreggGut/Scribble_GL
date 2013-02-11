@@ -53,6 +53,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Path.o \
 	${OBJECTDIR}/FileList.o \
 	${OBJECTDIR}/lodepng.o \
+	${OBJECTDIR}/LoginButton.o \
 	${OBJECTDIR}/NetworkClient.o \
 	${OBJECTDIR}/ScreenAreas.o \
 	${OBJECTDIR}/Sender.o \
@@ -172,6 +173,11 @@ ${OBJECTDIR}/lodepng.o: lodepng.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/lodepng.o lodepng.cpp
+
+${OBJECTDIR}/LoginButton.o: LoginButton.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoginButton.o LoginButton.cpp
 
 ${OBJECTDIR}/NetworkClient.o: NetworkClient.cpp 
 	${MKDIR} -p ${OBJECTDIR}

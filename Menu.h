@@ -11,7 +11,10 @@
 #include "MenuButton.h"
 #include "Color.h"
 #include <vector>
-#include "ScribbleArea.h"
+#include "defines.h"
+#include <string>
+
+class ScreenInterpreter;
 
 class Menu {
 public:
@@ -29,7 +32,8 @@ public:
     int getWidth();
     int getHeight();
     void callAction(int action);
-    void setScribbleArea(ScribbleArea *s);
+    void setScreenInterpreter(ScreenInterpreter *s);
+    std::string getBackground();
     
 private:
     bool network;
@@ -38,7 +42,8 @@ private:
     int width;
     int height;
     std::vector <MenuButton *> *buttonArray;
-    ScribbleArea *scribbleArea;
+    ScreenInterpreter *screenInterpreter;
+    std::string background;
 };
 
 #endif	/* MENU_H */

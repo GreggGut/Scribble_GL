@@ -34,9 +34,6 @@ public:
     FileList *getFileList();
     ScreenInterpreter *getInterpreter();
     
-    void showLogin(bool show);
-    void showFilelist(bool show);
-    void showAlert(bool show);
 private:
    
     ScreenInterpreter *interpreter;
@@ -47,10 +44,6 @@ private:
     Alert *alert;
     FileList *filelist;
     
-    bool loginShown;
-    bool filelistShown;
-    bool alertShown;
-    
     void drawPaths();
     void drawMenu();
     void drawPDF();
@@ -58,6 +51,8 @@ private:
     void drawKeyboard();
     void drawFileList();
     void drawAlert();
+    
+    void getPNG(std::string imagePath);
 };
 
 #endif	/* PAINTER_H */

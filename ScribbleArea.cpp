@@ -309,10 +309,23 @@ void ScribbleArea::undo()
  */
 void ScribbleArea::redo()
 {
-
+#warning //check for overwritting old paths
     pathsLock.lock();
     if ( !redoVector.at(document->getCurrentPage()).empty() )
     {
+        /*if ( !redoVector.at(document->getCurrentPage()).empty() )
+        {
+            if ( pathsOnPage.at(document->getCurrentPage()).back()->getPathID() > redoVector.at(document->getCurrentPage()).back()->getPathID() )
+            {
+
+                for ( uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++ )
+                {
+                    delete redoVector.at(document->getCurrentPage()).at(i);
+                }
+
+                redoVector.at(document->getCurrentPage()).clear();
+            }
+        }*/
 
         pathsOnPage.at(document->getCurrentPage()).push_back(redoVector.at(document->getCurrentPage()).back());
         redoVector.at(document->getCurrentPage()).pop_back();

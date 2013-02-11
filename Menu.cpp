@@ -6,7 +6,7 @@
  */
 
 #include "Menu.h"
-#include "ScribbleArea.h"
+#include "ScreenInterpreter.h"
 #include "Sender.h"
 
 #define BTN_WIDTH 40
@@ -17,6 +17,9 @@ Menu::Menu() {
 
 Menu::Menu(int x_, int y_, int w_, int h_) {
 
+    std::string bgImage = "MenuBG.png";
+    background = bgImage.insert(0,IMAGE_PATH);
+    
     network = NETWORK;
     x = x_;
     y = y_;
@@ -32,52 +35,71 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
 
         int type;
         int action;
-
+        std::string fileName; 
+        
         switch (i) {
             case 0:
                 type = MOMENTARY;
                 action = UNDO_C;
+                fileName = "Undo.png";
                 break;
             case 1:
                 type = MOMENTARY;
                 action = REDO_C;
+                fileName = "Redo.png";
                 break;
             case 2:
                 type = MOMENTARY;
                 action = CLEAR_ALL_C;
+                fileName = "Clear.png";
                 break;
             case 3:
                 type = TOGGLE;
                 action = WRITE_C;
+                fileName = "Write.png";
                 break;
             case 4:
                 type = TOGGLE;
                 action = ERASE_C;
+                fileName = "Erase.png";
                 break;
             case 5:
                 type = PICKER;
                 action = SIZE_C;
+                fileName = "PenSize.png";
                 break;
             case 6:
                 type = PICKER;
                 action = COLOUR_C;
+                fileName = "PenColour.png";
                 break;
             case 7:
                 type = MOMENTARY;
                 action = PREV_PG_C;
+                fileName = "PreviousPage.png";
                 break;
             case 8:
                 type = MOMENTARY;
                 action = NEXT_PG_C;
+                fileName = "NextPage.png";
                 break;
             default:
                 type = MOMENTARY;
                 action = NULL;
+                fileName = "";
                 break;
         }
-
         
-        MenuButton *btn = new MenuButton(5 + (BTN_WIDTH + 5) * i, 5, 40, 40, type, action,green,white,green,white);
+        std::string imagePath; 
+        if (fileName != "") {
+            imagePath = fileName.insert(0,IMAGE_PATH);
+        }
+        
+        else{
+            imagePath = "";
+        }
+        
+        MenuButton *btn = new MenuButton(5 + (BTN_WIDTH + 5) * i, 5, 40, 40, type, action,green,white,green,white,imagePath);
         buttonArray->push_back(btn);
 
     }
@@ -196,36 +218,36 @@ void Menu::callAction(int action) {
 
     switch (action) {
         case UNDO_C:
-            scribbleArea->undo();
+            screenInterpreter->getScribbleArea()->undo();
 
             if (network == 1) {
-                scribbleArea->getSender()->sendUndo(scribbleArea->getCurrentPage());
+                screenInterpreter->getScribbleArea()->getSender()->sendUndo(screenInterpreter->getScribbleArea()->getCurrentPage());
             }
 
             break;
         case REDO_C:
-            scribbleArea->redo();
+            screenInterpreter->getScribbleArea()->redo();
             if (network == 1) {
-                scribbleArea->getSender()->sendRedo(scribbleArea->getCurrentPage());
+                screenInterpreter->getScribbleArea()->getSender()->sendRedo(screenInterpreter->getScribbleArea()->getCurrentPage());
             }
             break;
         case CLEAR_ALL_C:
-            scribbleArea->clearAll();
+            screenInterpreter->getScribbleArea()->clearAll();
             if (network == 1) {
-                scribbleArea->getSender()->sendCleanAll(scribbleArea->getCurrentPage());
+                screenInterpreter->getScribbleArea()->getSender()->sendCleanAll(screenInterpreter->getScribbleArea()->getCurrentPage());
             }
             break;
         case ERASE_C:
-            scribbleArea->setMode(ERASE);
+            screenInterpreter->getScribbleArea()->setMode(ERASE);
             break;
         case WRITE_C:
-            scribbleArea->setMode(WRITE);
+            screenInterpreter->getScribbleArea()->setMode(WRITE);
             break;
         case PREV_PG_C:
-            scribbleArea->previousPage();
+            screenInterpreter->getScribbleArea()->previousPage();
             break;
         case NEXT_PG_C:
-            scribbleArea->nextPage();
+            screenInterpreter->getScribbleArea()->nextPage();
             break;
         default:
             break;
@@ -233,6 +255,12 @@ void Menu::callAction(int action) {
 
 }
 
-void Menu::setScribbleArea(ScribbleArea *s) {
-    scribbleArea = s;
+void Menu::setScreenInterpreter(ScreenInterpreter *s) {
+    screenInterpreter = s;
 }
+
+
+ std::string Menu::getBackground(){
+     return background;
+ }
+    

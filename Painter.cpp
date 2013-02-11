@@ -11,17 +11,14 @@ using namespace poppler;
 
 Painter::Painter() {
 
-    loginShown = 0;
-    filelistShown = 0;
-    alertShown = 0;
-
     scribbleArea = new ScribbleArea(0, 50, WIDTH, HEIGHT - 50);
     menu = new Menu(0, 0, WIDTH, 50);
-    menu->setScribbleArea(scribbleArea);
-
     login = new Login(WIDTH / 2 - 656 / 2, HEIGHT / 2 - 387 / 2, 656, 387);
 
     interpreter = new ScreenInterpreter(scribbleArea, menu, login);
+
+    menu->setScreenInterpreter(interpreter);
+    login->setScreenInterpreter(interpreter);
 }
 
 Painter::Painter(const Painter& orig) {
@@ -59,16 +56,13 @@ ScreenInterpreter* Painter::getInterpreter() {
 
 void Painter::Draw() {
 
-    if (alertShown == 1) {
+    if (interpreter->getShowAlert() == 1) {
         drawAlert();
-    }
-    else if (loginShown == 1) {
+    } else if (interpreter->getShowLogin() == 1) {
         drawLogin();
-    }
-    else if (filelistShown == 1) {
+    } else if (interpreter->getShowFile() == 1) {
         drawFileList();
-    }
-    else {
+    } else {
         drawPDF();
 
         glEnable(GL_BLEND);
@@ -150,10 +144,13 @@ void Painter::drawPaths() {
 
 void Painter::drawMenu() {
 
+     glRasterPos2i(menu->getX(), menu->getY());
+     getPNG(menu->getBackground());
+        
     for (int i = 0; i < menu->getButtonArray()->size(); ++i) {
 
-        glColor3f(menu->getButtonArray()->at(i)->getFillColor()->getRed(), menu->getButtonArray()->at(i)->getFillColor()->getGreen(), menu->getButtonArray()->at(i)->getFillColor()->getBlue());
-        
+        /*glColor3f(menu->getButtonArray()->at(i)->getFillColor()->getRed(), menu->getButtonArray()->at(i)->getFillColor()->getGreen(), menu->getButtonArray()->at(i)->getFillColor()->getBlue());
+
         glBegin(GL_POLYGON);
 
         glVertex3i(menu->getButtonArray()->at(i)->getX(), menu->getButtonArray()->at(i)->getY(), 0);
@@ -162,15 +159,17 @@ void Painter::drawMenu() {
         glVertex3i(menu->getButtonArray()->at(i)->getX(), menu->getButtonArray()->at(i)->getY() + menu->getButtonArray()->at(i)->getHeight(), 0);
 
         glEnd();
-
+        */
+        
+        glRasterPos2i(menu->getButtonArray()->at(i)->getX(), menu->getButtonArray()->at(i)->getY());
+        getPNG(menu->getButtonArray()->at(i)->getImagePath());
     }
 
 }
 
 void Painter::drawPDF() {
 
-//#warning //add centering and scaling
-
+    //#warning //add centering and scaling
     glRasterPos2i(scribbleArea->getDocument()->getX(), scribbleArea->getDocument()->getY());
     glPixelZoom(1.0, -1.0);
 
@@ -178,35 +177,11 @@ void Painter::drawPDF() {
     // glScalef(1.2,1.2,0);
 }
 
-void Painter::showLogin(bool show) {
-    loginShown = show;
-}
-
-void Painter::showFilelist(bool show) {
-    filelistShown = show;
-}
-
-void Painter::showAlert(bool show) {
-    alertShown = show;
-}
-
 void Painter::drawLogin() {
 
     glRasterPos2i(login->getX(), login->getY());
-    glPixelZoom(1.0, -1.0);
-
-    std::vector<unsigned char> image; //the raw pixels
-    unsigned width, height;
-    //decode
-    unsigned error = lodepng::decode(image, width, height, login->getImagePath());
-
-    //if there's an error, display it
-    if (error) std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
-
-    //the pixels are now in the vector "image", 4 bytes per pixel, ordered RGBARGBA..., use it as texture, draw it, ...
-
-    glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
-
+  
+    getPNG(login->getImagePath());
 }
 
 void Painter::drawKeyboard() {
@@ -219,4 +194,21 @@ void Painter::drawFileList() {
 
 void Painter::drawAlert() {
 
+}
+
+void Painter::getPNG(std::string imagePath) {
+    //decode
+    glPixelZoom(1.0, -1.0);
+     
+    std::vector<unsigned char> image; //the raw pixels
+    unsigned width, height;
+   
+    unsigned error = lodepng::decode(image,width,height,imagePath);
+ 
+    //if there's an error, display it
+    //if (error) std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
+
+    //the pixels are now in the vector "image", 4 bytes per pixel, ordered RGBARGBA..., use it as texture, draw it, ...
+     glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
+    
 }

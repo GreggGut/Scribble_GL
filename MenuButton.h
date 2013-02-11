@@ -9,6 +9,7 @@
 #define	MENUBUTTON_H
 
 #include "Button.h"
+#include <string>
 
 #define UNDO_C 0
 #define REDO_C 1
@@ -25,11 +26,14 @@
 class MenuButton: public Button {
 public:
     MenuButton();
-    MenuButton(int x_, int y_, int w_, int h_, int mode_, int action_, Color *fill_, Color *stroke_, Color *highlight_, Color *highlightStroke_);
+    MenuButton(int x_, int y_, int w_, int h_, int mode_, int action_, Color *fill_, Color *stroke_, Color *highlight_, Color *highlightStroke_, std::string image_);
     MenuButton(const MenuButton& orig);
     virtual ~MenuButton();
+    
+    std::string getImagePath();
 private:
-
+    
+    std::string imagePath;
 };
 
 #endif	/* MENUBUTTON_H */

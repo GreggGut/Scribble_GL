@@ -10,6 +10,7 @@
       <itemPath>InputData.h</itemPath>
       <itemPath>Keyboard.h</itemPath>
       <itemPath>Login.h</itemPath>
+      <itemPath>LoginButton.h</itemPath>
       <itemPath>Menu.h</itemPath>
       <itemPath>MenuButton.h</itemPath>
       <itemPath>NetworkClient.h</itemPath>
@@ -37,6 +38,7 @@
       <itemPath>InputData.cpp</itemPath>
       <itemPath>Keyboard.cpp</itemPath>
       <itemPath>Login.cpp</itemPath>
+      <itemPath>LoginButton.cpp</itemPath>
       <itemPath>Menu.cpp</itemPath>
       <itemPath>MenuButton.cpp</itemPath>
       <itemPath>NetworkClient.cpp</itemPath>

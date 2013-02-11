@@ -82,6 +82,7 @@ public:
      */
     void setFilesOnServer(std::vector<std::string> filesOnServer);
     std::vector<std::string> getFilesOnServer();
+    
 private:
 
     bool network;

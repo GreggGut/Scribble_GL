@@ -6,19 +6,26 @@
  */
 
 #include "ScreenInterpreter.h"
+#include "Menu.h"
+#include "Login.h"
 
 ScreenInterpreter::ScreenInterpreter() {
 
 }
 
 ScreenInterpreter::ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l) {
-    scribbleArea =s;
+
+    loginShown = 0;
+    filelistShown = 0;
+    alertShown = 0;
+
+    scribbleArea = s;
     menu = m;
     login = l;
     //keyboard = p->getKeyboard();
     //alert = p->getAlert();
     //filelist = p->getFileList();
-    
+
     menuState = 0;
     scribbleState = 0;
 }
@@ -33,8 +40,56 @@ ScreenInterpreter::~ScreenInterpreter() {
 //TO TEST: Make sure that drawing and pressing button works
 
 void ScreenInterpreter::screenPressEvent(Point* point) {
-    //state 1
-    //std::cout << "press event\n";
+
+    if (alertShown == 1) {
+
+    }
+    else if (loginShown == 1) {
+        loginPress(point);
+    }
+    else if (filelistShown == 1) {
+
+    }
+    else {
+        scribblePress(point);
+    }
+}
+
+void ScreenInterpreter::screenMoveEvent(Point* point) {
+    if (alertShown == 1) {
+
+    }
+    else if (loginShown == 1) {
+        loginMove(point);
+    }
+    else if (filelistShown == 1) {
+
+    }
+    else {
+        scribbleMove(point);
+    }
+}
+
+void ScreenInterpreter::screenReleaseEvent() {
+    if (alertShown == 1) {
+
+    }
+    else if (loginShown == 1) {
+        loginRelease();
+    }
+    else if (filelistShown == 1) {
+
+    }
+    else {
+        scribbleRelease();
+    }
+}
+
+ScribbleArea* ScreenInterpreter::getScribbleArea() {
+    return scribbleArea;
+}
+
+void ScreenInterpreter::scribblePress(Point *point) {
     bool pointInMenu = menu->pointInsideArea(point);
     bool pointInScribble = scribbleArea->pointInsideArea(point);
 
@@ -45,22 +100,18 @@ void ScreenInterpreter::screenPressEvent(Point* point) {
         scribbleArea->screenPressEvent(point);
         menu->screenPressEvent(point);
 
-    }
-    else if (pointInMenu == true && pointInScribble == false) {
+    } else if (pointInMenu == true && pointInScribble == false) {
         //only menu action
         menuState = 1;
         menu->screenPressEvent(point);
-    }
-    else {
+    } else {
         //only scribble area
         scribbleState = 1;
         scribbleArea->screenPressEvent(point);
     }
 }
 
-void ScreenInterpreter::screenMoveEvent(Point* point) {
-    //state 2
-    //std::cout << "move event\n";
+void ScreenInterpreter::scribbleMove(Point *point) {
     bool pointInMenu = menu->pointInsideArea(point);
     bool pointInScribble = scribbleArea->pointInsideArea(point);
 
@@ -70,26 +121,21 @@ void ScreenInterpreter::screenMoveEvent(Point* point) {
         // menuState = 2;
         scribbleArea->screenMoveEvent(point);
         //menu->screenMoveEvent(point);
-    }
-    else if (pointInMenu == true && scribbleArea->getScribbling() == true) {
+    } else if (pointInMenu == true && scribbleArea->getScribbling() == true) {
         //only menu action
         // menuState = 2;
-         scribbleState = 0;
-          scribbleArea->screenReleaseEvent();
-          delete point;
+        scribbleState = 0;
+        scribbleArea->screenReleaseEvent();
+        delete point;
         // menu->screenMoveEvent(point);
-    }
-    else {
+    } else {
         //only scribble area
         scribbleState = 2;
         scribbleArea->screenMoveEvent(point);
     }
 }
 
-void ScreenInterpreter::screenReleaseEvent() {
-    //state 0
-
-    //std::cout << "end event\n";
+void ScreenInterpreter::scribbleRelease() {
     if (scribbleState != 1) {
         scribbleState = 0;
         scribbleArea->screenReleaseEvent();
@@ -101,30 +147,38 @@ void ScreenInterpreter::screenReleaseEvent() {
     }
 }
 
-ScribbleArea* ScreenInterpreter::getScribbleArea() {
-    return scribbleArea;
-}
-
-void ScreenInterpreter::scribblePress(Point *point) {
-
-}
-
-void ScreenInterpreter::scribbleMove(Point *point) {
-
-}
-
-void ScreenInterpreter::scribbleRelease() {
-
-}
-
 void ScreenInterpreter::loginPress(Point *point) {
-
+    login->screenPressEvent(point);
 }
 
 void ScreenInterpreter::loginMove(Point *point) {
-
+    //login->screenMoveEvent(point);
 }
 
 void ScreenInterpreter::loginRelease() {
+    //login->screenReleaseEvent();
+}
 
+void ScreenInterpreter::showLogin(bool show) {
+    loginShown = show;
+}
+
+void ScreenInterpreter::showFilelist(bool show) {
+    filelistShown = show;
+}
+
+void ScreenInterpreter::showAlert(bool show) {
+    alertShown = show;
+}
+
+bool ScreenInterpreter::getShowLogin() {
+    return loginShown;
+}
+
+bool ScreenInterpreter::getShowFile() {
+    return filelistShown;
+}
+
+bool ScreenInterpreter::getShowAlert() {
+    return alertShown;
 }

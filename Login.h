@@ -9,6 +9,12 @@
 #define	LOGIN_H
 
 #include <string>
+#include "LoginButton.h"
+#include <vector>
+#include "defines.h"
+//#include "ScreenInterpreter.h"
+
+class ScreenInterpreter;
 
 class Login {
 public:
@@ -22,13 +28,23 @@ public:
     int getWidth();
     int getHeight();
     std::string getImagePath();
-
+    void screenPressEvent(Point* point);
+    void screenMoveEvent(Point* point);
+    void screenReleaseEvent();
+    void callAction(int action);
+    void setScreenInterpreter(ScreenInterpreter *s);
+ 
 private:
     int x;
     int y;
     int width;
     int height;
     std::string imagePath;
+    std::vector<LoginButton *> *buttonArray;
+    std::string username;
+    std::string password;
+    ScreenInterpreter *screenInterpreter;
+    void login();
 };
 
 #endif	/* LOGIN_H */

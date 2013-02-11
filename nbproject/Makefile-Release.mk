@@ -35,19 +35,24 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/Alert.o \
 	${OBJECTDIR}/InputData.o \
 	${OBJECTDIR}/Point.o \
-	${OBJECTDIR}/Alert.o \
 	${OBJECTDIR}/main.o \
 	${OBJECTDIR}/Painter.o \
 	${OBJECTDIR}/RequestMessage.o \
 	${OBJECTDIR}/Document.o \
 	${OBJECTDIR}/Button.o \
 	${OBJECTDIR}/Color.o \
+	${OBJECTDIR}/Login.o \
 	${OBJECTDIR}/ScreenInterpreter.o \
 	${OBJECTDIR}/PalmRejection.o \
 	${OBJECTDIR}/Menu.o \
+	${OBJECTDIR}/Keyboard.o \
+	${OBJECTDIR}/MenuButton.o \
 	${OBJECTDIR}/Path.o \
+	${OBJECTDIR}/FileList.o \
+	${OBJECTDIR}/lodepng.o \
 	${OBJECTDIR}/NetworkClient.o \
 	${OBJECTDIR}/ScreenAreas.o \
 	${OBJECTDIR}/Sender.o \
@@ -78,6 +83,11 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
+${OBJECTDIR}/Alert.o: Alert.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Alert.o Alert.cpp
+
 ${OBJECTDIR}/InputData.o: InputData.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -87,11 +97,6 @@ ${OBJECTDIR}/Point.o: Point.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Point.o Point.cpp
-
-${OBJECTDIR}/Alert.o: Alert.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Alert.o Alert.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -123,6 +128,11 @@ ${OBJECTDIR}/Color.o: Color.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Color.o Color.cpp
 
+${OBJECTDIR}/Login.o: Login.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Login.o Login.cpp
+
 ${OBJECTDIR}/ScreenInterpreter.o: ScreenInterpreter.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
@@ -138,10 +148,30 @@ ${OBJECTDIR}/Menu.o: Menu.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Menu.o Menu.cpp
 
+${OBJECTDIR}/Keyboard.o: Keyboard.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Keyboard.o Keyboard.cpp
+
+${OBJECTDIR}/MenuButton.o: MenuButton.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/MenuButton.o MenuButton.cpp
+
 ${OBJECTDIR}/Path.o: Path.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Path.o Path.cpp
+
+${OBJECTDIR}/FileList.o: FileList.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/FileList.o FileList.cpp
+
+${OBJECTDIR}/lodepng.o: lodepng.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/lodepng.o lodepng.cpp
 
 ${OBJECTDIR}/NetworkClient.o: NetworkClient.cpp 
 	${MKDIR} -p ${OBJECTDIR}

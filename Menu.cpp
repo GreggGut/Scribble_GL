@@ -22,6 +22,9 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
     y = y_;
     width = w_;
     height = h_;
+    
+    Color *white = new Color(WHITE);
+    Color *green = new Color(GREEN);
 
     buttonArray = new std::vector<Button *>;
 
@@ -73,7 +76,8 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
                 break;
         }
 
-        Button *btn = new Button(5 + (BTN_WIDTH + 5) * i, 5, 40, 40, type, action);
+        
+        Button *btn = new Button(5 + (BTN_WIDTH + 5) * i, 5, 40, 40, type, action,green,white,green,white);
         buttonArray->push_back(btn);
 
     }

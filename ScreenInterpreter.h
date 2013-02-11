@@ -11,11 +11,15 @@
 #include "ScribbleArea.h"
 #include "Menu.h"
 #include "Point.h"
+#include "Login.h"
+#include "Keyboard.h"
+#include "Alert.h"
+#include "FileList.h"
 
 class ScreenInterpreter {
 public:
     ScreenInterpreter();
-    ScreenInterpreter(ScribbleArea *s, Menu *m);
+    ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l);
     ScreenInterpreter(const ScreenInterpreter& orig);
     virtual ~ScreenInterpreter();
     void screenPressEvent(Point* point);
@@ -26,8 +30,22 @@ public:
 private:
     ScribbleArea *scribbleArea;
     Menu *menu;
+    Login *login;
+    Keyboard *keyboard;
+    Alert *alert;
+    FileList *filelist;
+    
     int menuState;
     int scribbleState;
+    
+    void scribblePress(Point *point);
+    void scribbleMove(Point *point);
+    void scribbleRelease();
+    
+    void loginPress(Point *point);
+    void loginMove(Point *point);
+    void loginRelease();
+    
 };
 
 #endif	/* SCREENINTERPRETER_H */

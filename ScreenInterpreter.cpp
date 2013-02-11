@@ -11,9 +11,14 @@ ScreenInterpreter::ScreenInterpreter() {
 
 }
 
-ScreenInterpreter::ScreenInterpreter(ScribbleArea *s, Menu *m) {
-    scribbleArea = s;
+ScreenInterpreter::ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l) {
+    scribbleArea =s;
     menu = m;
+    login = l;
+    //keyboard = p->getKeyboard();
+    //alert = p->getAlert();
+    //filelist = p->getFileList();
+    
     menuState = 0;
     scribbleState = 0;
 }
@@ -98,4 +103,28 @@ void ScreenInterpreter::screenReleaseEvent() {
 
 ScribbleArea* ScreenInterpreter::getScribbleArea() {
     return scribbleArea;
+}
+
+void ScreenInterpreter::scribblePress(Point *point) {
+
+}
+
+void ScreenInterpreter::scribbleMove(Point *point) {
+
+}
+
+void ScreenInterpreter::scribbleRelease() {
+
+}
+
+void ScreenInterpreter::loginPress(Point *point) {
+
+}
+
+void ScreenInterpreter::loginMove(Point *point) {
+
+}
+
+void ScreenInterpreter::loginRelease() {
+
 }

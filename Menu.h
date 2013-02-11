@@ -9,6 +9,7 @@
 #define	MENU_H
 #include "Point.h"
 #include "Button.h"
+#include "Color.h"
 #include <vector>
 #include "ScribbleArea.h"
 

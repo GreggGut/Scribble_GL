@@ -6,8 +6,12 @@
       <itemPath>Button.h</itemPath>
       <itemPath>Color.h</itemPath>
       <itemPath>Document.h</itemPath>
+      <itemPath>FileList.h</itemPath>
       <itemPath>InputData.h</itemPath>
+      <itemPath>Keyboard.h</itemPath>
+      <itemPath>Login.h</itemPath>
       <itemPath>Menu.h</itemPath>
+      <itemPath>MenuButton.h</itemPath>
       <itemPath>NetworkClient.h</itemPath>
       <itemPath>Painter.h</itemPath>
       <itemPath>PalmRejection.h</itemPath>
@@ -19,6 +23,7 @@
       <itemPath>ScribbleArea.h</itemPath>
       <itemPath>Sender.h</itemPath>
       <itemPath>defines.h</itemPath>
+      <itemPath>lodepng.h</itemPath>
       <itemPath>main.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f3" displayName="Resource Files" projectFiles="true">
@@ -28,8 +33,12 @@
       <itemPath>Button.cpp</itemPath>
       <itemPath>Color.cpp</itemPath>
       <itemPath>Document.cpp</itemPath>
+      <itemPath>FileList.cpp</itemPath>
       <itemPath>InputData.cpp</itemPath>
+      <itemPath>Keyboard.cpp</itemPath>
+      <itemPath>Login.cpp</itemPath>
       <itemPath>Menu.cpp</itemPath>
+      <itemPath>MenuButton.cpp</itemPath>
       <itemPath>NetworkClient.cpp</itemPath>
       <itemPath>Painter.cpp</itemPath>
       <itemPath>PalmRejection.cpp</itemPath>
@@ -40,6 +49,7 @@
       <itemPath>ScreenInterpreter.cpp</itemPath>
       <itemPath>ScribbleArea.cpp</itemPath>
       <itemPath>Sender.cpp</itemPath>
+      <itemPath>lodepng.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"

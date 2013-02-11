@@ -12,7 +12,12 @@
 #include <poppler/cpp/poppler-image.h>
 #include "ScribbleArea.h"
 #include "Menu.h"
+#include "Login.h"
+#include "Keyboard.h"
 #include "ScreenInterpreter.h"
+#include "Alert.h"
+#include "FileList.h"
+#include "lodepng.h"
 
 class Painter {
    
@@ -23,16 +28,36 @@ public:
     void Draw();
     ScribbleArea* getScribbleArea();
     Menu *getMenu();
+    Login *getLogin();
+    Keyboard *getKeyboard();
+    Alert *getAlert();
+    FileList *getFileList();
     ScreenInterpreter *getInterpreter();
+    
+    void showLogin(bool show);
+    void showFilelist(bool show);
+    void showAlert(bool show);
 private:
    
     ScreenInterpreter *interpreter;
     ScribbleArea *scribbleArea;
     Menu *menu;
+    Keyboard *keyboard;
+    Login *login;
+    Alert *alert;
+    FileList *filelist;
     
-    void DrawPaths();
-    void DrawMenu();
-    void DrawPDF();
+    bool loginShown;
+    bool filelistShown;
+    bool alertShown;
+    
+    void drawPaths();
+    void drawMenu();
+    void drawPDF();
+    void drawLogin();
+    void drawKeyboard();
+    void drawFileList();
+    void drawAlert();
 };
 
 #endif	/* PAINTER_H */

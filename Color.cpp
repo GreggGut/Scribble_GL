@@ -6,6 +6,7 @@
  */
 
 #include "Color.h"
+#include "Alert.h"
 
 Color::Color() {
     //black by default
@@ -14,11 +15,42 @@ Color::Color() {
     blue = 0.0;
 }
 
+Color::Color(int color){
+    
+    switch(color){
+     
+        case GREEN:
+            red = convertToFloat(102);
+            green = convertToFloat(204);
+            blue = convertToFloat(102);
+            break;
+        case LIGHT_GRAY:
+            red = convertToFloat(220);
+            green = convertToFloat(220);
+            blue = convertToFloat(220);
+            break;
+        case DARK_GRAY:
+            red = convertToFloat(130);
+            green = convertToFloat(130);
+            blue = convertToFloat(130);
+            break;
+        case WHITE:
+            red = convertToFloat(255);
+            green = convertToFloat(255);
+            blue = convertToFloat(255);
+            break;
+        default:
+            red = convertToFloat(0);
+            green = convertToFloat(0);
+            blue = convertToFloat(0);
+            break;
+    }
+}
 //values from 0-255
 Color::Color(float r, float g, float b) {
-    red = r/255.0;
-    green = g/255.0;
-    blue = b/255.0;
+    red = convertToFloat(r);
+    green = convertToFloat(g);
+    blue = convertToFloat(b);
 }
 
 
@@ -44,7 +76,19 @@ float Color::getBlue(){
  }
 
 void Color::setColor(int r, int g, int b){
-    red = r/255.0;
-    green = g/255.0;
-    blue = b/255.0;
+    red = convertToFloat(r);
+    green = convertToFloat(g);
+    blue = convertToFloat(b);
+}
+
+/*void Color::setColorFromColor(float r, float g, float b){
+#warning //error
+    red = r;
+    //green = g;
+    //blue = b;
+}*/
+
+float Color::convertToFloat(int x){
+    
+    return x/255.0;
 }

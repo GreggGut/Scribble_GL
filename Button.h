@@ -29,7 +29,7 @@
 class Button {
 public:
     Button();
-    Button(int x_, int y_, int w_, int h_, int mode_, int action_);
+    Button(int x_, int y_, int w_, int h_, int mode_, int action_, Color *fill_, Color *stroke_, Color *highlight_, Color *highlightStroke_);
     Button(const Button& orig);
     virtual ~Button();
     int getX();
@@ -44,7 +44,7 @@ public:
     int getMode();
     int getAction();
     
-private:
+protected:
 
     int x;
     int y;
@@ -52,6 +52,10 @@ private:
     int height;
     Color *fillColor;
     Color *strokeColor;
+    Color *fill;
+    Color *stroke;
+    Color *highlight;
+    Color *highlightStroke; 
     bool selected;
     int mode;
     int action;

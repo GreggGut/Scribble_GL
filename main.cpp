@@ -109,7 +109,7 @@ void display()
     painter->Draw();
 
     glutSwapBuffers();
-    //glFlush();
+    glFlush();
 }
 
 int main(int argc, char *argv[])
@@ -125,6 +125,7 @@ int main(int argc, char *argv[])
     //All the bellow is for testing
     Sender* sender = new Sender(painter); //, client, serverName);
     painter->getScribbleArea()->setSender(sender);
+  
     if ( sender->connectToServer() )
     {
         sender->sendLogin("greg", "pass");
@@ -142,6 +143,8 @@ int main(int argc, char *argv[])
         std::cout << "Failed connecting" << endl;
         //TODO this is where we can set NETWORK to be false so the app doesn't fail
     }
+    
+   // painter->showLogin(1);
 
     glutMainLoop();
     delete sender;

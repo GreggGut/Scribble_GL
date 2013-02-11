@@ -37,6 +37,7 @@ ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1)
     mTempPath = NULL;
 
     std::string fileName = "./Files/test.pdf";
+
     loadFile(fileName);
 }
 
@@ -172,8 +173,9 @@ void ScribbleArea::screenPressEvent(Point* point)
     }
 
     //If mode is write, initialize the writing sequence
-    if ( this->mMode == WRITE )
-    {
+
+    if (this->mMode == WRITE || this->mMode == ERASE) {
+
         //cleanRedoVector();
 
         lastPoint.setX(point->getX());

@@ -18,10 +18,10 @@ void glInit(int argc, char** argv)
     glutCreateWindow("Scribble");
 
     glClearColor(1.0, 1.0, 1.0, 1.0);
-
+   
     glMatrixMode(GL_PROJECTION);
     gluOrtho2D(0.0, WIDTH, HEIGHT, 0.0);
-
+    
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
     glutKeyboardFunc(key);

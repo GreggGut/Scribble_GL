@@ -99,7 +99,6 @@ private:
 
 
     Path *mTempPath;
-
     Point lastPoint;
 
     boost::mutex pathsLock;
@@ -108,7 +107,6 @@ private:
     std::vector<int> Paths_IDs;
 
     std::vector< std::vector<Path*> > pathsOnPage;
-
     std::vector< std::vector<Path*> > redoVector;
 
     Document *document;

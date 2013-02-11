@@ -43,7 +43,8 @@ public:
     void setPenColor(Color color);
 
     int getPointsCount();
-
+    int *pointsArray();
+    
 private:
     int sqrt(const int x);
 

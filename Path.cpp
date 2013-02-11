@@ -28,21 +28,40 @@
  * 
  * The vector of *Points represents the actual path. Since it is a vector of pointers it needs to be iterated through in to delete all the Point objects
  */
-Path::Path(Point* point, int mode, Color color, int width, int id, bool fin/*, bool active*/) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(id), active(true), final(fin), totalLength(0)
+Path::Path(Point* point, int mode, Color color, int width, int id, bool fin/*, bool active*/) : WriteEraseMode(mode), myPenWidth(width), ID(id), active(true), final(fin), totalLength(0)
 {
     mX = point->getX();
     mY = point->getY();
     mPointsVector.push_back(point);
     area = new ScreenAreas();
     area->set(point->getColumn(), point->getRow());
+    
+    if (mode == WRITE){
+        //std::cout << "WRITE";
+        myPenColor = color;
+    }
+    
+    else if (mode == ERASE){
+        ///std::cout << "ERASE";
+        myPenColor = Color(255.0,255.0,255.0);
+    }
 }
 
-Path::Path(int mode, Color color, int width, int ID/*, bool active*/) : WriteEraseMode(mode), myPenWidth(width), myPenColor(color), ID(ID), active(true), final(false), totalLength(0)
+Path::Path(int mode, Color color, int width, int ID/*, bool active*/) : WriteEraseMode(mode), myPenWidth(width), ID(ID), active(true), final(false), totalLength(0)
 
 {
     mX = 0;
     mY = 0;
 
+    if (mode == WRITE){
+        std::cout << "WRITE";
+        myPenColor = color;
+    }
+    
+    else if (mode == ERASE){
+        std::cout << "ERASE";
+        myPenColor = Color(255.0,255.0,255.0);
+    }
     //?@?@?@?@?@?
     area = new ScreenAreas();
     area->set(1, 1);
@@ -264,4 +283,15 @@ void Path::setPenColor(Color color)
 int Path::getPointsCount()
 {
     return mPointsVector.size();
+}
+
+int * Path::pointsArray(){
+    
+    int vertexs[2*mPointsVector.size()];
+    
+    for (int i = 0; i<mPointsVector.size(); ++i){
+        *(vertexs + 2*i) = mPointsVector.at(i)->getX();
+        *(vertexs + 2*(i+1)) = mPointsVector.at(i)->getY();      
+    }
+    
 }

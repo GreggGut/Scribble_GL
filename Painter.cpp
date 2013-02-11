@@ -42,19 +42,49 @@ ScreenInterpreter* Painter::getInterpreter() {
 
 void Painter::Draw() {
 
+    //
+    //glEnable(GL_BLEND);
+    //
+    //
+    
+    
     DrawPDF();
+   
+    glEnable(GL_BLEND);
+    glEnable(GL_LINE_SMOOTH);
+    
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   
     DrawPaths();
+    
+    
+    glDisable(GL_LINE_SMOOTH);
+    glDisable(GL_BLEND);
+    
     DrawMenu();
+
+    
+    
 
 }
 
 void Painter::DrawPaths() {
 
     scribbleArea->setLockForPath(1);
-    glColor3f(scribbleArea->getPenColor().getRed(), scribbleArea->getPenColor().getGreen(), scribbleArea->getPenColor().getBlue());
 
     for (int i = 0; i < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).size(); ++i) {
 
+        glColor3f(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenColor().getRed(), scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenColor().getGreen(), scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenColor().getBlue());
+        glLineWidth(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenWidth());
+        
+        /*glEnableClientState( GL_VERTEX_ARRAY );
+
+        glVertexPointer(2,GL_INT,0,scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->pointsArray());
+ 
+        glDrawArrays(GL_QUADS,0,2*scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPointsCount());
+        */
+        
         glBegin(GL_LINE_STRIP);
         for (int j = 0; j < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().size(); ++j) {
 
@@ -62,11 +92,15 @@ void Painter::DrawPaths() {
         }
         glEnd();
     }
-    
+
     scribbleArea->setLockForPath(0);
 
     scribbleArea->setLockForTempPath(1);
     if (scribbleArea->getTempPath() != NULL) {
+
+        glColor3f(scribbleArea->getTempPath()->getPenColor().getRed(), scribbleArea->getTempPath()->getPenColor().getGreen(), scribbleArea->getTempPath()->getPenColor().getBlue());
+        glLineWidth(scribbleArea->getTempPath()->getPenWidth());
+
         glBegin(GL_LINE_STRIP);
         for (int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j) {
 
@@ -80,7 +114,10 @@ void Painter::DrawPaths() {
     scribbleArea->setLockForNetworkPath(1);
 
     if (scribbleArea->getCurrentPage() == scribbleArea->getNetworkPage() && scribbleArea->getNetworkPath() != NULL) {
+
         glColor3f(scribbleArea->getNetworkPath()->getPenColor().getRed(), scribbleArea->getNetworkPath()->getPenColor().getGreen(), scribbleArea->getNetworkPath()->getPenColor().getBlue());
+        glLineWidth(scribbleArea->getNetworkPath()->getPenWidth());
+
         glBegin(GL_LINE_STRIP);
         for (int j = 0; j < scribbleArea->getNetworkPath()->getPath().size(); ++j) {
 
@@ -120,5 +157,5 @@ void Painter::DrawPDF() {
     glPixelZoom(1.0, -1.0);
 
     glDrawPixels(scribbleArea->getDocument()->getImage()->width(), scribbleArea->getDocument()->getImage()->height(), GL_BGRA, GL_UNSIGNED_BYTE, scribbleArea->getDocument()->getImage()->data());
-   // glScalef(1.2,1.2,0);
+    // glScalef(1.2,1.2,0);
 }

@@ -45,11 +45,11 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
                 break;
             case 3:
                 type = TOGGLE;
-                action = ERASE_C;
+                action = WRITE_C;
                 break;
             case 4:
                 type = TOGGLE;
-                action = WRITE_C;
+                action = ERASE_C;
                 break;
             case 5:
                 type = PICKER;

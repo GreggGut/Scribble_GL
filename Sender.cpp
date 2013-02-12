@@ -13,6 +13,9 @@ const std::string Sender::separatorPoints = "#";
 Sender::Sender(Painter* painter/*, NetworkClient* client, std::string serverName*/) : loggedIn(false), painter(painter)// : username(username)//, client(client), serverName(serverName)
 {
     setPortNumber();
+    painter->getScribbleArea()->setSender(this);
+    client = NULL;
+
 }
 
 Sender::~Sender()
@@ -50,18 +53,38 @@ bool Sender::connectToServer()
 {
     // This connects to the server
 
-    tcp::resolver resolver(io_service);
-    /*std::string *///serverName = "localhost";
+
     std::cout << "Connecting..." << std::endl;
     try
     {
+        if ( client != NULL )
+        {
+            delete client;
+            t.join();
+            io_service.reset();
+            std::cout << "Thread is dead..." << std::endl;
+        }
+        tcp::resolver resolver(io_service);
+        /*std::string *///serverName = "localhost";
         tcp::resolver::query query(serverName.c_str(), serverPort.c_str()); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
         tcp::resolver::iterator iterator = resolver.resolve(query);
         //NetworkClient
-        client = new NetworkClient(io_service, iterator, painter->getScribbleArea());
 
+
+        client = new NetworkClient(io_service, iterator, painter->getScribbleArea());
         t = boost::thread(boost::bind(&boost::asio::io_service::run, &io_service));
+        std::cout << "before while\n";
+
+        int i = 0;
+        while ( !client->failedConnecting() && !client->isConnected() );
+//        {
+//            sleep(1);
+//            if ( ++i > 3 || client->isConnected() )
+//                break;
+//        }
+        std::cout << "After while\n";
         return client->isConnected();
+
     }
     catch ( boost::system::system_error x )
     {

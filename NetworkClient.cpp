@@ -14,7 +14,7 @@
 #include "Sender.h"
 
 NetworkClient::NetworkClient(boost::asio::io_service& io_service, tcp::resolver::iterator endpoint_iterator, ScribbleArea* scribbleArea) : io_service_(io_service),
-socket_(io_service), scribbleArea(scribbleArea)
+socket_(io_service), scribbleArea(scribbleArea), connected(false), connectionFailed(false)
 {
     tcp::endpoint endpoint = *endpoint_iterator;
     socket_.async_connect(endpoint, boost::bind(&NetworkClient::handle_connect, this, boost::asio::placeholders::error, ++endpoint_iterator));
@@ -36,11 +36,13 @@ void NetworkClient::handle_connect(const boost::system::error_code& error, tcp::
     if ( !error )
     {
         connected = true;
+        connectionFailed = false;
         boost::asio::async_read(socket_, boost::asio::buffer(read_msg_.data(), RequestMessage::header_length), boost::bind(&NetworkClient::handle_read_header, this, boost::asio::placeholders::error));
     }
     else if ( endpoint_iterator != tcp::resolver::iterator() )
     {
         connected = false;
+        connectionFailed = true;
         std::cout << "Fail connecting to server... Try again later" << std::endl;
         socket_.close();
         tcp::endpoint endpoint = *endpoint_iterator;
@@ -259,12 +261,12 @@ void NetworkClient::decodeRequest(std::string msg)
             scribbleArea->setFilesOnServer(files);
             break;
         }
-//        case Sender::DOWNLOAD_FILE:
-//        {
-//            //TOCONF will we use this??? possible use is to let the server know what file we are working on
-//            std::cout << "DOWNLOAD_FILE" << std::endl;
-//            break;
-//        }
+            //        case Sender::DOWNLOAD_FILE:
+            //        {
+            //            //TOCONF will we use this??? possible use is to let the server know what file we are working on
+            //            std::cout << "DOWNLOAD_FILE" << std::endl;
+            //            break;
+            //        }
         case Sender::CLEAR_ALL:
         {
             scribbleArea->clearAll();
@@ -289,7 +291,7 @@ void NetworkClient::sendMessage(std::string line)
     msg.body_length(std::strlen(line.c_str()));
     std::memcpy(msg.body(), line.c_str(), msg.body_length());
     msg.encode_header();
-    
+
     write(msg);
 }
 
@@ -301,4 +303,9 @@ ScribbleArea* NetworkClient::getScribbleArea()
 bool NetworkClient::isConnected()
 {
     return connected;
+}
+
+bool NetworkClient::failedConnecting()
+{
+    return connectionFailed;
 }

@@ -36,6 +36,8 @@ public:
     tcp::socket& getSocket();
     ScribbleArea* getScribbleArea();
     bool isConnected();
+    bool failedConnecting();
+    void connect(tcp::resolver::iterator endpoint_iterator);
 
 private:
     void write(const RequestMessage& msg);
@@ -56,6 +58,7 @@ private:
     chat_message_queue write_msgs_;
     ScribbleArea* scribbleArea;
     bool connected;
+    bool connectionFailed;
 };
 
 

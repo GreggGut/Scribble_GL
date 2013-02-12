@@ -45,7 +45,8 @@ void Sender::setPortNumber()
     }
     else
     {
-
+        serverPort = "21223";
+        serverName = "localhost";
     }
 }
 
@@ -177,6 +178,7 @@ void Sender::sendReleaseOwnership()
 void Sender::sendGetFilesList()
 {
     painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::WAITING_FOR_FILE_LIST);
+
     std::string toSend = separator;
     toSend += NumberToString(GET_FILES_LIST);
 
@@ -264,6 +266,7 @@ void Sender::sendDownloadFile(std::string filename)
         fclose(fr);
         close(sockfd);
     }
+    std::cout << "Done with download\n";
 
     ifile.close();
     /*

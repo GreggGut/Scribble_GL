@@ -41,7 +41,7 @@
 
 #define N_ROW                   7
 #define N_COLUMN                10
-#define IMAGE_PATH              "./resources/images/"  
-#define NETWORK 0
+#define IMAGE_PATH              "./resources/images/"
+#define NETWORK 1
 #endif	/* DEFINES_H */
 

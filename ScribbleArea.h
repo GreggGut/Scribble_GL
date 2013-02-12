@@ -40,11 +40,11 @@ public:
 
     //void nextPage();
     //void previousPage();
-    void undo();
-    void redo();
+    void undo(int page);
+    void redo(int page);
     void write();
     void erase();
-    void clearAll();
+    void clearAll(int page);
 
     int getMode();
     void setMode(int mode);
@@ -82,7 +82,7 @@ public:
      */
     void setFilesOnServer(std::vector<std::string> filesOnServer);
     std::vector<std::string> getFilesOnServer();
-    
+
 private:
 
     bool network;
@@ -125,6 +125,11 @@ private:
     {
         ME, TAKEN, FREE
     } ownership;
+
+    enum
+    {
+        FILES_AVAILABLE,
+    };
 
 };
 

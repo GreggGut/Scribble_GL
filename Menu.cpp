@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   Menu.cpp
  * Author: scribble
- * 
+ *
  * Created on November 26, 2012, 6:11 PM
  */
 
@@ -19,13 +19,13 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
 
     std::string bgImage = "MenuBG.png";
     background = bgImage.insert(0,IMAGE_PATH);
-    
+
     network = NETWORK;
     x = x_;
     y = y_;
     width = w_;
     height = h_;
-    
+
     Color *white = new Color(WHITE);
     Color *green = new Color(GREEN);
 
@@ -35,8 +35,8 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
 
         int type;
         int action;
-        std::string fileName; 
-        
+        std::string fileName;
+
         switch (i) {
             case 0:
                 type = MOMENTARY;
@@ -89,16 +89,16 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
                 fileName = "";
                 break;
         }
-        
-        std::string imagePath; 
+
+        std::string imagePath;
         if (fileName != "") {
             imagePath = fileName.insert(0,IMAGE_PATH);
         }
-        
+
         else{
             imagePath = "";
         }
-        
+
         MenuButton *btn = new MenuButton(5 + (BTN_WIDTH + 5) * i, 5, 40, 40, type, action,green,white,green,white,imagePath);
         buttonArray->push_back(btn);
 
@@ -218,7 +218,7 @@ void Menu::callAction(int action) {
 
     switch (action) {
         case UNDO_C:
-            screenInterpreter->getScribbleArea()->undo();
+            screenInterpreter->getScribbleArea()->undo(screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage());
 
             if (network == 1) {
                 screenInterpreter->getScribbleArea()->getSender()->sendUndo(screenInterpreter->getScribbleArea()->getCurrentPage());
@@ -226,13 +226,13 @@ void Menu::callAction(int action) {
 
             break;
         case REDO_C:
-            screenInterpreter->getScribbleArea()->redo();
+            screenInterpreter->getScribbleArea()->redo(screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage());
             if (network == 1) {
                 screenInterpreter->getScribbleArea()->getSender()->sendRedo(screenInterpreter->getScribbleArea()->getCurrentPage());
             }
             break;
         case CLEAR_ALL_C:
-            screenInterpreter->getScribbleArea()->clearAll();
+            screenInterpreter->getScribbleArea()->clearAll(screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage());
             if (network == 1) {
                 screenInterpreter->getScribbleArea()->getSender()->sendCleanAll(screenInterpreter->getScribbleArea()->getCurrentPage());
             }
@@ -263,4 +263,3 @@ void Menu::setScreenInterpreter(ScreenInterpreter *s) {
  std::string Menu::getBackground(){
      return background;
  }
-    

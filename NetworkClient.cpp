@@ -199,13 +199,15 @@ void NetworkClient::decodeRequest(std::string msg)
         {
             //Undo last action, this will simply call the UNDO function of the ScribbleArea
             std::cout << "UNDO" << std::endl;
-            scribbleArea->undo();
+            int page = atoi(info[1].c_str());
+            scribbleArea->undo(page);
             break;
         }
         case Sender::REDO:
         {
             std::cout << "REDO" << std::endl;
-            scribbleArea->redo();
+            int page = atoi(info[1].c_str());
+            scribbleArea->redo(page);
             break;
         }
         case Sender::DELETE_PATH:
@@ -269,7 +271,8 @@ void NetworkClient::decodeRequest(std::string msg)
             //        }
         case Sender::CLEAR_ALL:
         {
-            scribbleArea->clearAll();
+            int page = atoi(info[1].c_str());
+            scribbleArea->clearAll(page);
             break;
         }
         case Sender::DOWNLOAD_FILE_DONE:

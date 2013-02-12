@@ -174,7 +174,8 @@ void ScribbleArea::screenPressEvent(Point* point)
 
     //If mode is write, initialize the writing sequence
 
-    if (this->mMode == WRITE || this->mMode == ERASE) {
+    if ( this->mMode == WRITE || this->mMode == ERASE )
+    {
 
         //cleanRedoVector();
 
@@ -273,30 +274,30 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/)
  *
  * This function allows the user to undo the last actions. Presently, there is no limit of now many undo can be performed, meaning the user can press undo until there is nothing present on the screen
  */
-void ScribbleArea::undo()
+void ScribbleArea::undo(int page)
 {
 
     pathsLock.lock();
 
-    if ( !pathsOnPage.at(document->getCurrentPage()).empty() )
+    if ( !pathsOnPage.at(page).empty() )
     {
 
-        if ( !redoVector.at(document->getCurrentPage()).empty() )
+        if ( !redoVector.at(page).empty() )
         {
-            if ( pathsOnPage.at(document->getCurrentPage()).back()->getPathID() > redoVector.at(document->getCurrentPage()).back()->getPathID() )
+            if ( pathsOnPage.at(page).back()->getPathID() > redoVector.at(page).back()->getPathID() )
             {
 
-                for ( uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++ )
+                for ( uint i = 0; i < redoVector.at(page).size(); i++ )
                 {
-                    delete redoVector.at(document->getCurrentPage()).at(i);
+                    delete redoVector.at(page).at(i);
                 }
 
-                redoVector.at(document->getCurrentPage()).clear();
+                redoVector.at(page).clear();
             }
         }
 
-        redoVector.at(document->getCurrentPage()).push_back(pathsOnPage.at(document->getCurrentPage()).back());
-        pathsOnPage.at(document->getCurrentPage()).pop_back();
+        redoVector.at(page).push_back(pathsOnPage.at(page).back());
+        pathsOnPage.at(page).pop_back();
         //updatePageContent();
     }
 
@@ -307,11 +308,11 @@ void ScribbleArea::undo()
  *
  * This function allows the user to redo the last undone actions. This action is only available if the last action(s) is an undo, otherwise this function will have no effect
  */
-void ScribbleArea::redo()
+void ScribbleArea::redo(int page)
 {
 #warning //check for overwritting old paths
     pathsLock.lock();
-    if ( !redoVector.at(document->getCurrentPage()).empty() )
+    if ( !redoVector.at(page).empty() )
     {
         /*if ( !redoVector.at(document->getCurrentPage()).empty() )
         {
@@ -327,8 +328,8 @@ void ScribbleArea::redo()
             }
         }*/
 
-        pathsOnPage.at(document->getCurrentPage()).push_back(redoVector.at(document->getCurrentPage()).back());
-        redoVector.at(document->getCurrentPage()).pop_back();
+        pathsOnPage.at(page).push_back(redoVector.at(page).back());
+        redoVector.at(page).pop_back();
         //updatePageContent();
     }
     pathsLock.unlock();
@@ -338,27 +339,27 @@ void ScribbleArea::redo()
  *
  * This function clears the current page from all writing. This action <b>cannot</b> be undone.
  */
-void ScribbleArea::clearAll()
+void ScribbleArea::clearAll(int page)
 {
 
     pathsLock.lock();
-    if ( !pathsOnPage.at(document->getCurrentPage()).empty() )
+    if ( !pathsOnPage.at(page).empty() )
     {
 
-        for ( uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++ )
+        for ( uint i = 0; i < redoVector.at(page).size(); i++ )
         {
-            delete redoVector.at(document->getCurrentPage()).at(i);
+            delete redoVector.at(page).at(i);
 
         }
 
-        for ( uint j = 0; j < pathsOnPage.at(document->getCurrentPage()).size(); j++ )
+        for ( uint j = 0; j < pathsOnPage.at(page).size(); j++ )
         {
-            delete pathsOnPage.at(document->getCurrentPage()).at(j);
+            delete pathsOnPage.at(page).at(j);
 
         }
 
-        pathsOnPage.at(document->getCurrentPage()).clear();
-        redoVector.at(document->getCurrentPage()).clear();
+        pathsOnPage.at(page).clear();
+        redoVector.at(page).clear();
         //updatePageContent();
     }
     pathsLock.unlock();

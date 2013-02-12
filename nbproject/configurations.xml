@@ -82,7 +82,7 @@
           <incDir>
             <pElem>.</pElem>
           </incDir>
-          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler</commandLine>
+          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler -std=gnu++0x</commandLine>
         </ccTool>
         <linkerTool>
           <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl</output>
@@ -107,7 +107,7 @@
           <incDir>
             <pElem>.</pElem>
           </incDir>
-          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler</commandLine>
+          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler -std=gnu++0x</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>

@@ -75,7 +75,7 @@ bool Sender::connectToServer()
     }
     catch ( boost::system::system_error x )
     {
-        std::cout << "Exception" << std::endl;
+        std::cout << "Exception, Cannot connect!" << std::endl;
         return false;
     }
 }
@@ -109,6 +109,8 @@ std::string Sender::getSeparatorPoints()
  */
 void Sender::sendLogin(std::string username, std::string password)
 {
+    painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::WAITING_LOGIN);
+
     this->username = username;
     std::string toSend = separator;
     toSend += NumberToString(LOGIN);
@@ -174,6 +176,7 @@ void Sender::sendReleaseOwnership()
  */
 void Sender::sendGetFilesList()
 {
+    painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::WAITING_FOR_FILE_LIST);
     std::string toSend = separator;
     toSend += NumberToString(GET_FILES_LIST);
 
@@ -189,6 +192,7 @@ void Sender::sendGetFilesList()
  */
 void Sender::sendDownloadFile(std::string filename)
 {
+    painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::WAITING_FOR_FILE_DOWNLOAD);
     int sockfd, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
@@ -225,6 +229,7 @@ void Sender::sendDownloadFile(std::string filename)
         {
             std::cout << "The server is unavailable, try again later" << std::endl;
             close(sockfd);
+            painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::FILE_DOWNLOAD_FAILED);
             return;
         }
 
@@ -273,6 +278,7 @@ void Sender::sendDownloadFile(std::string filename)
 
     client->getScribbleArea()->loadFile(filenameDir);
     sendUpdateFileContent();
+    painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::DOWNLOAD_COMPLETED);
 }
 
 void Sender::sendUpdateFileContent()

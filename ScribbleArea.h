@@ -83,6 +83,15 @@ public:
     void setFilesOnServer(std::vector<std::string> filesOnServer);
     std::vector<std::string> getFilesOnServer();
 
+    enum class NetworkActivity
+    {
+        NONE, WAITING_FOR_FILE_LIST, FILES_LIST_AVAILABLE, WAITING_FOR_FILE_DOWNLOAD, DOWNLOAD_COMPLETED, LOGIN_OK, LOGIN_FAILED,
+        WAITING_LOGIN, FILE_DOWNLOAD_FAILED,
+    };
+
+    void setNetworkActivity(NetworkActivity n);
+    NetworkActivity getNetworkActivities();
+
 private:
 
     bool network;
@@ -126,11 +135,7 @@ private:
         ME, TAKEN, FREE
     } ownership;
 
-    enum
-    {
-        FILES_AVAILABLE,
-    };
-
+    NetworkActivity networkActivity;
 };
 
 #endif	/* SCRIBBLEAREA_H */

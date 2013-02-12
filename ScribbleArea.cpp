@@ -18,6 +18,7 @@ ScribbleArea::ScribbleArea() : networkPathPage(-1)
     pathsOnPage.resize(1);
     Paths_IDs.resize(1);
     redoVector.resize(1);
+    networkActivity = NetworkActivity::NONE;
 }
 
 ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1)
@@ -528,4 +529,14 @@ void ScribbleArea::setOwnershipFree()
 void ScribbleArea::setOwnershipTaken()
 {
     ownership = TAKEN;
+}
+
+void ScribbleArea::setNetworkActivity(ScribbleArea::NetworkActivity n)
+{
+    networkActivity = n;
+}
+
+ScribbleArea::NetworkActivity ScribbleArea::getNetworkActivities()
+{
+    return networkActivity;
 }

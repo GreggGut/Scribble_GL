@@ -231,13 +231,13 @@ void NetworkClient::decodeRequest(std::string msg)
             {
                 std::cout << "LOGIN FINE!!!!!! NEED TO SET some flag" << std::endl;
                 scribbleArea->getSender()->setLogin(true);
-                painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::LOGIN_OK);
+                scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::LOGIN_OK);
             }
             else
             {
                 std::cout << "LOGIN FAILED!!!!!! NEED TO DISPLAY AN ERROR MESSAGE" << std::endl;
                 scribbleArea->getSender()->setLogin(false);
-                painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::LOGIN_FAILED);
+                scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::LOGIN_FAILED);
             }
             break;
         }
@@ -263,7 +263,7 @@ void NetworkClient::decodeRequest(std::string msg)
             }
             //Until here
             scribbleArea->setFilesOnServer(files);
-            painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::FILES_LIST_AVAILABLE);
+            scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::FILES_LIST_AVAILABLE);
             break;
         }
             //        case Sender::DOWNLOAD_FILE:

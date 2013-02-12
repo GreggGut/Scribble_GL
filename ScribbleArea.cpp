@@ -228,8 +228,7 @@ void ScribbleArea::screenMoveEvent(Point* point)
         lockForTempPath.unlock();
         pathsLock.unlock();
     }//Here we can add more else if to enhance user experience by changing the color of the pressed button.
-    else
-    {
+    else {
         delete point;
         point = NULL;
     }
@@ -239,22 +238,18 @@ void ScribbleArea::screenMoveEvent(Point* point)
  *
  * This function disables scribbling and informs the ScribbleArea that nothing is touching the screen anymore
  */
-void ScribbleArea::screenReleaseEvent(/*Points *point*/)
-{
-    if ( scribbling == true )
-    {
+void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
+    if (scribbling == true) {
         scribbling = false;
 
         pathsLock.lock();
         lockForTempPath.lock();
 
-        if ( mTempPath != NULL )
-        {
+        if (mTempPath != NULL) {
 
             pathsOnPage.at(document->getCurrentPage()).push_back(mTempPath);
 
-            if ( network == 1 )
-            {
+            if (network == 1) {
                 sender->sendEndPath();
             }
 
@@ -264,9 +259,7 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/)
         lockForTempPath.unlock();
         pathsLock.unlock();
 
-    }
-    else
-    {
+    } else {
 
     }
 }
@@ -275,21 +268,16 @@ void ScribbleArea::screenReleaseEvent(/*Points *point*/)
  *
  * This function allows the user to undo the last actions. Presently, there is no limit of now many undo can be performed, meaning the user can press undo until there is nothing present on the screen
  */
-void ScribbleArea::undo(int page)
-{
+void ScribbleArea::undo(int page) {
 
     pathsLock.lock();
 
-    if ( !pathsOnPage.at(page).empty() )
-    {
+    if (!pathsOnPage.at(page).empty()) {
 
-        if ( !redoVector.at(page).empty() )
-        {
-            if ( pathsOnPage.at(page).back()->getPathID() > redoVector.at(page).back()->getPathID() )
-            {
+        if (!redoVector.at(page).empty()) {
+            if (pathsOnPage.at(page).back()->getPathID() > redoVector.at(page).back()->getPathID()) {
 
-                for ( uint i = 0; i < redoVector.at(page).size(); i++ )
-                {
+                for (uint i = 0; i < redoVector.at(page).size(); i++) {
                     delete redoVector.at(page).at(i);
                 }
 
@@ -309,30 +297,29 @@ void ScribbleArea::undo(int page)
  *
  * This function allows the user to redo the last undone actions. This action is only available if the last action(s) is an undo, otherwise this function will have no effect
  */
-void ScribbleArea::redo(int page)
-{
-#warning //check for overwritting old paths
-    pathsLock.lock();
-    if ( !redoVector.at(page).empty() )
-    {
-        /*if ( !redoVector.at(document->getCurrentPage()).empty() )
-        {
-            if ( pathsOnPage.at(document->getCurrentPage()).back()->getPathID() > redoVector.at(document->getCurrentPage()).back()->getPathID() )
-            {
+void ScribbleArea::redo(int page) {
 
-                for ( uint i = 0; i < redoVector.at(document->getCurrentPage()).size(); i++ )
-                {
-                    delete redoVector.at(document->getCurrentPage()).at(i);
+    pathsLock.lock();
+
+    if (!redoVector.at(page).empty()) {
+
+        if (!pathsOnPage.at(page).empty()) {
+            if (pathsOnPage.at(page).back()->getPathID() > redoVector.at(page).back()->getPathID()) {
+
+                for (uint i = 0; i < redoVector.at(page).size(); i++) {
+                    delete redoVector.at(page).at(i);
                 }
 
-                redoVector.at(document->getCurrentPage()).clear();
+                redoVector.at(page).clear();
             }
-        }*/
+        }
 
-        pathsOnPage.at(page).push_back(redoVector.at(page).back());
-        redoVector.at(page).pop_back();
-        //updatePageContent();
+        if (!redoVector.at(page).empty()) {
+            pathsOnPage.at(page).push_back(redoVector.at(page).back());
+            redoVector.at(page).pop_back();
+        }
     }
+
     pathsLock.unlock();
 }
 
@@ -340,29 +327,28 @@ void ScribbleArea::redo(int page)
  *
  * This function clears the current page from all writing. This action <b>cannot</b> be undone.
  */
-void ScribbleArea::clearAll(int page)
-{
+void ScribbleArea::clearAll(int page) {
 
     pathsLock.lock();
-    if ( !pathsOnPage.at(page).empty() )
-    {
 
-        for ( uint i = 0; i < redoVector.at(page).size(); i++ )
-        {
-            delete redoVector.at(page).at(i);
+    if (!pathsOnPage.at(page).empty()) {
 
-        }
-
-        for ( uint j = 0; j < pathsOnPage.at(page).size(); j++ )
-        {
+        for (uint j = 0; j < pathsOnPage.at(page).size(); j++) {
             delete pathsOnPage.at(page).at(j);
-
         }
 
         pathsOnPage.at(page).clear();
-        redoVector.at(page).clear();
-        //updatePageContent();
     }
+
+    if (!redoVector.at(page).empty()) {
+        
+        for (uint i = 0; i < redoVector.at(page).size(); i++) {
+            delete redoVector.at(page).at(i);
+        }
+
+        redoVector.at(page).clear();
+    }
+
     pathsLock.unlock();
 }
 
@@ -370,8 +356,7 @@ void ScribbleArea::clearAll(int page)
  *
  * This function set the mode to write, allowing the user to write on top of the PDF
  */
-void ScribbleArea::write()
-{
+void ScribbleArea::write() {
     mMode = WRITE;
 }
 
@@ -379,50 +364,42 @@ void ScribbleArea::write()
  *
  * This function set the mode to erase, allowing the user to erase anything that has been written on top of the PDF, leaving the PDF intact
  */
-void ScribbleArea::erase()
-{
+void ScribbleArea::erase() {
     mMode = ERASE;
 }
 
-bool ScribbleArea::getScribbling()
-{
+bool ScribbleArea::getScribbling() {
     return scribbling;
 }
 
-void ScribbleArea::setNetworkPage(int p)
-{
+void ScribbleArea::setNetworkPage(int p) {
     lockForNetworkPath.lock();
     std::cout << "Setting network page: " << p << std::endl;
     networkPathPage = p;
     lockForNetworkPath.unlock();
 }
 
-Path* ScribbleArea::getNetworkPath()
-{
+Path* ScribbleArea::getNetworkPath() {
     return mNetworkPath;
 }
 
-int ScribbleArea::getNetworkPage()
-{
+int ScribbleArea::getNetworkPage() {
     return networkPathPage;
 }
 
-void ScribbleArea::setNetworkPath(Path* p)
-{
+void ScribbleArea::setNetworkPath(Path* p) {
     lockForNetworkPath.lock();
     mNetworkPath = p;
     lockForNetworkPath.unlock();
 }
 
-void ScribbleArea::addNetworkPoint(Point * p)
-{
+void ScribbleArea::addNetworkPoint(Point * p) {
     lockForNetworkPath.lock();
     mNetworkPath->addPoint(p);
     lockForNetworkPath.unlock();
 }
 
-void ScribbleArea::endNetworkPath()
-{
+void ScribbleArea::endNetworkPath() {
     pathsLock.lock();
     lockForNetworkPath.lock();
     pathsOnPage.at(networkPathPage).push_back(mNetworkPath);
@@ -433,73 +410,59 @@ void ScribbleArea::endNetworkPath()
     pathsLock.unlock();
 }
 
-void ScribbleArea::setSender(Sender* sender)
-{
+void ScribbleArea::setSender(Sender* sender) {
     this->sender = sender;
 }
 
-Sender* ScribbleArea::getSender()
-{
+Sender* ScribbleArea::getSender() {
     return sender;
 }
 
-Document * ScribbleArea::getDocument()
-{
+Document * ScribbleArea::getDocument() {
     return document;
 }
 
-void ScribbleArea::setFilesOnServer(std::vector<std::string> filesOnServer)
-{
+void ScribbleArea::setFilesOnServer(std::vector<std::string> filesOnServer) {
     this->filesOnServer = filesOnServer;
 }
 
-std::vector<std::string> ScribbleArea::getFilesOnServer()
-{
+std::vector<std::string> ScribbleArea::getFilesOnServer() {
     return filesOnServer;
 }
 
-int ScribbleArea::getX()
-{
+int ScribbleArea::getX() {
     return x;
 }
 
-int ScribbleArea::getY()
-{
+int ScribbleArea::getY() {
     return y;
 }
 
-int ScribbleArea::getWidth()
-{
+int ScribbleArea::getWidth() {
     return width;
 }
 
-int ScribbleArea::getHeight()
-{
+int ScribbleArea::getHeight() {
     return height;
 }
 
-void ScribbleArea::previousPage()
-{
+void ScribbleArea::previousPage() {
 
-    if ( document->getCurrentPage() != 0 )
-    {
+    if (document->getCurrentPage() != 0) {
         document->changePage(document->getCurrentPage() - 1);
 
     }
 }
 
-void ScribbleArea::nextPage()
-{
+void ScribbleArea::nextPage() {
 
-    if ( document->getCurrentPage() != document->getNumberOfPages() - 1 )
-    {
+    if (document->getCurrentPage() != document->getNumberOfPages() - 1) {
         document->changePage(document->getCurrentPage() + 1);
 
     }
 }
 
-void ScribbleArea::loadFile(std::string fileName)
-{
+void ScribbleArea::loadFile(std::string fileName) {
 
     document = new Document(x, y, width, height);
     document->load(fileName);
@@ -516,27 +479,22 @@ void ScribbleArea::loadFile(std::string fileName)
 
 }
 
-void ScribbleArea::setOwnershipMe()
-{
+void ScribbleArea::setOwnershipMe() {
     ownership = ME;
 }
 
-void ScribbleArea::setOwnershipFree()
-{
+void ScribbleArea::setOwnershipFree() {
     ownership = FREE;
 }
 
-void ScribbleArea::setOwnershipTaken()
-{
+void ScribbleArea::setOwnershipTaken() {
     ownership = TAKEN;
 }
 
-void ScribbleArea::setNetworkActivity(ScribbleArea::NetworkActivity n)
-{
+void ScribbleArea::setNetworkActivity(ScribbleArea::NetworkActivity n) {
     networkActivity = n;
 }
 
-ScribbleArea::NetworkActivity ScribbleArea::getNetworkActivities()
-{
+ScribbleArea::NetworkActivity ScribbleArea::getNetworkActivities() {
     return networkActivity;
 }

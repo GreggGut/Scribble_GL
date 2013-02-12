@@ -190,13 +190,13 @@ void Login::callAction(int action) {
 
 void Login::login(){
     
+    #warning //testing login dismiss
+        screenInterpreter->showLogin(0);
+        
     if (screenInterpreter->getScribbleArea()->getSender()->connectToServer())
     {
         screenInterpreter->getScribbleArea()->getSender()->sendLogin(username, password);
         screenInterpreter->getScribbleArea()->getSender()->sendGetFilesList();
-
-#warning //testing login dismiss
-        screenInterpreter->showLogin(0);
         
         if (screenInterpreter->getScribbleArea()->getFilesOnServer().size() > 0){
             screenInterpreter->showLogin(0);

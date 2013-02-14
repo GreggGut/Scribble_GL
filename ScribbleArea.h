@@ -90,7 +90,7 @@ public:
     };
 
     void setNetworkActivity(NetworkActivity n);
-    NetworkActivity getNetworkActivities();
+    NetworkActivity getNetworkActivity();
 
 private:
 

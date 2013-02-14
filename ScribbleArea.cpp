@@ -341,7 +341,7 @@ void ScribbleArea::clearAll(int page) {
     }
 
     if (!redoVector.at(page).empty()) {
-        
+
         for (uint i = 0; i < redoVector.at(page).size(); i++) {
             delete redoVector.at(page).at(i);
         }
@@ -495,6 +495,6 @@ void ScribbleArea::setNetworkActivity(ScribbleArea::NetworkActivity n) {
     networkActivity = n;
 }
 
-ScribbleArea::NetworkActivity ScribbleArea::getNetworkActivities() {
+ScribbleArea::NetworkActivity ScribbleArea::getNetworkActivity() {
     return networkActivity;
 }

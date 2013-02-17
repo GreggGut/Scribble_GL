@@ -14,6 +14,7 @@
 #include <boost/asio.hpp>
 #include <boost/thread.hpp>
 #include <boost/algorithm/string.hpp>   //Used for boost split function
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 
 #include "RequestMessage.h"
 #include "Path.h"
@@ -49,6 +50,8 @@ private:
     void do_close();
     void decodeRequest(std::string msg);
 
+    void ServerConnectionFailed();
+
     RequestMessage encodeMessage(std::string line);
 
 private:
@@ -59,6 +62,7 @@ private:
     ScribbleArea* scribbleArea;
     bool connected;
     bool connectionFailed;
+    boost::asio::deadline_timer timer_;
 };
 
 

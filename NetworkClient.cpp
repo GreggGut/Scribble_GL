@@ -14,10 +14,23 @@
 #include "Sender.h"
 
 NetworkClient::NetworkClient(boost::asio::io_service& io_service, tcp::resolver::iterator endpoint_iterator, ScribbleArea* scribbleArea) : io_service_(io_service),
-socket_(io_service), scribbleArea(scribbleArea), connected(false), connectionFailed(false)
+socket_(io_service), scribbleArea(scribbleArea), connected(false), connectionFailed(false), timer_(io_service)
 {
     tcp::endpoint endpoint = *endpoint_iterator;
     socket_.async_connect(endpoint, boost::bind(&NetworkClient::handle_connect, this, boost::asio::placeholders::error, ++endpoint_iterator));
+
+    //Closing the connection if not connected within 5 seconds
+    timer_.expires_from_now(boost::posix_time::seconds(5));
+    timer_.async_wait(boost::bind(&NetworkClient::ServerConnectionFailed, this));
+
+}
+
+void NetworkClient::ServerConnectionFailed()
+{
+    if ( !connected )
+    {
+        close();
+    }
 }
 
 void NetworkClient::write(const RequestMessage& msg)
@@ -47,6 +60,11 @@ void NetworkClient::handle_connect(const boost::system::error_code& error, tcp::
         socket_.close();
         tcp::endpoint endpoint = *endpoint_iterator;
         socket_.async_connect(endpoint, boost::bind(&NetworkClient::handle_connect, this, boost::asio::placeholders::error, ++endpoint_iterator));
+    }
+    else
+    {
+        std::cout << "Fail connecting to server... Server is not available" << std::endl;
+        connectionFailed = true;
     }
 }
 
@@ -110,6 +128,7 @@ tcp::socket& NetworkClient::getSocket()
 
 void NetworkClient::do_close()
 {
+    scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::LOST_NETWORK_CONNECTION);
     std::cout << "Socket closed" << std::endl;
     socket_.close();
 }

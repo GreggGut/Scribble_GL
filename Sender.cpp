@@ -67,10 +67,14 @@ bool Sender::connectToServer()
         tcp::resolver resolver(io_service);
         tcp::resolver::query query(serverName.c_str(), serverPort.c_str()); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
         tcp::resolver::iterator iterator = resolver.resolve(query);
-
         client = new NetworkClient(io_service, iterator, painter->getScribbleArea());
         t = boost::thread(boost::bind(&boost::asio::io_service::run, &io_service));
-        while ( !client->failedConnecting() && !client->isConnected() );
+        //The longest wait here will be of 5 seconds
+        int i=0;
+        while ( !client->failedConnecting() && !client->isConnected() )
+        {
+            usleep(100000);
+        }
         return client->isConnected();
 
     }

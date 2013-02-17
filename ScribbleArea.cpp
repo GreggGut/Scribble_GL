@@ -324,7 +324,7 @@ void ScribbleArea::redo(int page) {
 }
 
 /*! Clear all
- *
+ * 
  * This function clears the current page from all writing. This action <b>cannot</b> be undone.
  */
 void ScribbleArea::clearAll(int page) {

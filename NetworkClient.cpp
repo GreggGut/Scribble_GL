@@ -302,6 +302,23 @@ void NetworkClient::decodeRequest(std::string msg)
             std::cout << "DOWNLOAD_FILE COMPLETED" << std::endl;
             break;
         }
+        case Sender::CREATE_NEW_FILE:
+        {
+            int result = atoi(info[1].c_str());
+            if ( result == 1 )
+            {
+                scribbleArea->getSender()->sendDownloadFile(info[2]);
+            }
+            else if ( result == 2 )
+            {
+                scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::NEW_FILE_ALREADY_EXISTS);
+            }
+            else
+            {
+                scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::NEW_FILE_CREATION_FAILED);
+            }
+            break;
+        }
         default:
             std::cout << "Should not be here" << std::endl;
 

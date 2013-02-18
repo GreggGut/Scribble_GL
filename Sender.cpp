@@ -10,10 +10,10 @@
 const std::string Sender::separator = "&";
 const std::string Sender::separatorPoints = "#";
 
-Sender::Sender(Painter* painter/*, NetworkClient* client, std::string serverName*/) : loggedIn(false), painter(painter)// : username(username)//, client(client), serverName(serverName)
+Sender::Sender(ScribbleArea* scribbleArea/*Painter* painter/*, NetworkClient* client, std::string serverName*/) : loggedIn(false), scribbleArea(scribbleArea)// : username(username)//, client(client), serverName(serverName)
 {
     setPortNumber();
-    painter->getScribbleArea()->setSender(this);
+    scribbleArea->setSender(this);
     client = NULL;
 
 }
@@ -67,10 +67,9 @@ bool Sender::connectToServer()
         tcp::resolver resolver(io_service);
         tcp::resolver::query query(serverName.c_str(), serverPort.c_str()); //"132.205.8.68"   localhost, MHO.encs.concordia.ca
         tcp::resolver::iterator iterator = resolver.resolve(query);
-        client = new NetworkClient(io_service, iterator, painter->getScribbleArea());
+        client = new NetworkClient(io_service, iterator, scribbleArea);
         t = boost::thread(boost::bind(&boost::asio::io_service::run, &io_service));
         //The longest wait here will be of 5 seconds
-        int i=0;
         while ( !client->failedConnecting() && !client->isConnected() )
         {
             usleep(100000);
@@ -114,7 +113,7 @@ std::string Sender::getSeparatorPoints()
  */
 void Sender::sendLogin(std::string username, std::string password)
 {
-    painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::WAITING_LOGIN);
+    scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::WAITING_LOGIN);
 
     this->username = username;
     std::string toSend = separator;
@@ -181,7 +180,7 @@ void Sender::sendReleaseOwnership()
  */
 void Sender::sendGetFilesList()
 {
-    painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::WAITING_FOR_FILE_LIST);
+    scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::WAITING_FOR_FILE_LIST);
 
     std::string toSend = separator;
     toSend += NumberToString(GET_FILES_LIST);
@@ -198,8 +197,8 @@ void Sender::sendGetFilesList()
  */
 void Sender::sendDownloadFile(std::string filename)
 {
-    painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::WAITING_FOR_FILE_DOWNLOAD);
-    int sockfd, n;
+    scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::WAITING_FOR_FILE_DOWNLOAD);
+    int sockfd;
     struct sockaddr_in serv_addr;
     struct hostent *server;
     int LENGTH = 512;
@@ -235,7 +234,7 @@ void Sender::sendDownloadFile(std::string filename)
         {
             std::cout << "The server is unavailable, try again later" << std::endl;
             close(sockfd);
-            painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::FILE_DOWNLOAD_FAILED);
+            scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::FILE_DOWNLOAD_FAILED);
             return;
         }
 
@@ -285,7 +284,7 @@ void Sender::sendDownloadFile(std::string filename)
 
     client->getScribbleArea()->loadFile(filenameDir);
     sendUpdateFileContent();
-    painter->getScribbleArea()->setNetworkActivity(ScribbleArea::NetworkActivity::DOWNLOAD_COMPLETED);
+    scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::DOWNLOAD_COMPLETED);
 }
 
 void Sender::sendUpdateFileContent()
@@ -452,6 +451,21 @@ void Sender::sendCleanAll(int page)
     toSend += separator;
 
     toSend += NumberToString(page);
+
+    client->sendMessage(toSend);
+}
+
+void Sender::sendCreateNewFile(std::string fileName, int nOfPages)
+{
+
+    std::string toSend = separator;
+    toSend += NumberToString(CREATE_NEW_FILE);
+    toSend += separator;
+
+    toSend += fileName;
+    toSend += separator;
+
+    toSend += NumberToString(nOfPages);
 
     client->sendMessage(toSend);
 }

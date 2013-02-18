@@ -18,10 +18,10 @@ void glInit(int argc, char** argv)
     glutCreateWindow("Scribble");
 
     glClearColor(1.0, 1.0, 1.0, 1.0);
-   
+
     glMatrixMode(GL_PROJECTION);
     gluOrtho2D(0.0, WIDTH, HEIGHT, 0.0);
-    
+
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
     glutKeyboardFunc(key);
@@ -123,27 +123,27 @@ int main(int argc, char *argv[])
     boost::thread getInput(&InputData::run, inputData);
 
     //All the bellow is for testing
-    Sender* sender = new Sender(painter); //, client, serverName);
-    painter->getScribbleArea()->setSender(sender);
-  
-    /*if ( sender->connectToServer() )
-    {
-        sender->sendLogin("greg", "pass");
-        sender->sendGetFilesList();
+    Sender* sender = new Sender(painter->getScribbleArea()); //, client, serverName);
 
-        //REMOVE The sleep is only due to the fact that we need to receive the file list first and then we can decide which one to download/use
-        sleep(1);
-        sender->sendDownloadFile(painter->getScribbleArea()->getFilesOnServer().at(3));
-        sender->sendRequestOwnership();
-        //sender->sendLogout();
-        //TODO this is where we can set NETWORK to be true
-    }
-    else
-    {
-        std::cout << "Failed connecting" << endl;
-        //TODO this is where we can set NETWORK to be false so the app doesn't fail
-    }*/
-    
+//    if ( sender->connectToServer() )
+//    {
+//        std::cout<<"Here\n";
+//        sender->sendLogin("greg", "pass");
+//        sender->sendGetFilesList();
+//
+//        //REMOVE The sleep is only due to the fact that we need to receive the file list first and then we can decide which one to download/use
+//        sleep(1);
+//        sender->sendDownloadFile(painter->getScribbleArea()->getFilesOnServer().at(3));
+//        sender->sendRequestOwnership();
+//        //sender->sendLogout();
+//        //TODO this is where we can set NETWORK to be true
+//    }
+//    else
+//    {
+//        std::cout << "Failed connecting" << endl;
+//        //TODO this is where we can set NETWORK to be false so the app doesn't fail
+//    }
+
     painter->getInterpreter()->showLogin(1);
 
     glutMainLoop();

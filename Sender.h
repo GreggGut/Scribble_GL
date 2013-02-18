@@ -41,7 +41,7 @@
 class Sender
 {
 public:
-    Sender(Painter* painter); //, NetworkClient* client, std::string serverName);
+    Sender(ScribbleArea* scribbleArea); //, NetworkClient* client, std::string serverName);
     //    Sender(const Sender& orig);
     virtual ~Sender();
 
@@ -85,6 +85,8 @@ public:
     //Delete - username - requestID - page - pathID
     void sendDeletePath(int page, int PathID);
 
+    void sendCreateNewFile(std::string fileName, int nOfPages);
+
     bool connectToServer();
 
     void sendCleanAll(int page);
@@ -115,6 +117,7 @@ public:
         CLEAR_ALL = 12,
         UPDATE_FILE_CONTENT = 13,
         DOWNLOAD_FILE_DONE = 14,
+        CREATE_NEW_FILE = 15,
     } protocol;
 
     static const std::string separator; // = "&";
@@ -132,10 +135,11 @@ private:
 
     std::string serverName;
     std::string serverPort;
-  //  int portno;
+    //  int portno;
 
     bool loggedIn;
-    Painter* painter;
+    //Painter* painter;
+    ScribbleArea* scribbleArea;
     std::string username;
     std::string password;
     NetworkClient* client;

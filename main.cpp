@@ -122,32 +122,14 @@ int main(int argc, char *argv[])
 
     boost::thread getInput(&InputData::run, inputData);
 
-    //All the bellow is for testing
-    Sender* sender = new Sender(painter->getScribbleArea()); //, client, serverName);
-
-//    if ( sender->connectToServer() )
-//    {
-//        std::cout<<"Here\n";
-//        sender->sendLogin("greg", "pass");
-//        sender->sendGetFilesList();
-//
-//        //REMOVE The sleep is only due to the fact that we need to receive the file list first and then we can decide which one to download/use
-//        sleep(1);
-//        sender->sendDownloadFile(painter->getScribbleArea()->getFilesOnServer().at(3));
-//        sender->sendRequestOwnership();
-//        //sender->sendLogout();
-//        //TODO this is where we can set NETWORK to be true
-//    }
-//    else
-//    {
-//        std::cout << "Failed connecting" << endl;
-//        //TODO this is where we can set NETWORK to be false so the app doesn't fail
-//    }
+    Sender* sender = new Sender(painter->getScribbleArea());
 
     painter->getInterpreter()->showLogin(1);
 
     glutMainLoop();
     delete sender;
+    //TOCONF does this work?
+    getInput.interrupt();
 
     return 0;
 }

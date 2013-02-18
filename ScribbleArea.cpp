@@ -324,7 +324,7 @@ void ScribbleArea::redo(int page) {
 }
 
 /*! Clear all
- * 
+ *
  * This function clears the current page from all writing. This action <b>cannot</b> be undone.
  */
 void ScribbleArea::clearAll(int page) {
@@ -404,7 +404,6 @@ void ScribbleArea::endNetworkPath() {
     lockForNetworkPath.lock();
     pathsOnPage.at(networkPathPage).push_back(mNetworkPath);
     mNetworkPath = NULL;
-    //TOCONF This could be done more efficiently by sending the page number only on page changes and not with each new path, undo, redo, delete... and so on
     networkPathPage = -1;
     lockForNetworkPath.unlock();
     pathsLock.unlock();

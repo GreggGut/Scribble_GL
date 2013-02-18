@@ -188,7 +188,7 @@ void Sender::sendGetFilesList()
     client->sendMessage(toSend);
 }
 
-/**TOCONFIRM This needs to be fully tested
+/**
  *
  * @param filename
  *
@@ -203,8 +203,7 @@ void Sender::sendDownloadFile(std::string filename)
     struct hostent *server;
     int LENGTH = 512;
 
-    //TOCONF The download will only occur if the file is not present of the client computer
-    //Therefore we assume that file names are unique
+    //We assume that file names are unique
     std::string filenameDir = "Files//" + filename;
 
     std::ifstream ifile(filenameDir.c_str());
@@ -227,9 +226,9 @@ void Sender::sendDownloadFile(std::string filename)
         bcopy(( char * ) server->h_addr,
                 ( char * ) &serv_addr.sin_addr.s_addr,
                 server->h_length);
-        //TODO take the port number from the main
+
         //The port number is the regular port number +1
-        serv_addr.sin_port = htons(atoi(serverPort.c_str()) + 1); //portno);
+        serv_addr.sin_port = htons(atoi(serverPort.c_str()) + 1);
         if ( connect(sockfd, ( struct sockaddr * ) &serv_addr, sizeof (serv_addr )) < 0 )
         {
             std::cout << "The server is unavailable, try again later" << std::endl;

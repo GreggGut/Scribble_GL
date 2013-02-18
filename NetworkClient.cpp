@@ -233,15 +233,7 @@ void NetworkClient::decodeRequest(std::string msg)
         {
             //Delete path, this will find the path to be deleted and completely remove it from the drawings
             std::cout << "DELETE_PATH" << std::endl;
-            //TODO After integration with ScribbleArea find the path on page and delete it
-            // alorithm:
-            /*
-             for(all paths on page)
-                if(pathID=thisPathID)
-                        remove
-                        break
-             */
-            //TODO call the delete function of the scribble area...
+            //TODO call the delete function of the scribble area... For now we use white color as eraser, but keeping this if that would change
             break;
         }
         case Sender::LOGIN:
@@ -285,12 +277,12 @@ void NetworkClient::decodeRequest(std::string msg)
             scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::FILES_LIST_AVAILABLE);
             break;
         }
-            //        case Sender::DOWNLOAD_FILE:
-            //        {
-            //            //TOCONF will we use this??? possible use is to let the server know what file we are working on
-            //            std::cout << "DOWNLOAD_FILE" << std::endl;
-            //            break;
-            //        }
+        case Sender::DOWNLOAD_FILE:
+        {
+            //TOCONF Not in use, file download is done through other threads.
+            std::cout << "DOWNLOAD_FILE, not implemented!!!" << std::endl;
+            break;
+        }
         case Sender::CLEAR_ALL:
         {
             int page = atoi(info[1].c_str());

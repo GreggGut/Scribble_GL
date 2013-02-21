@@ -119,7 +119,7 @@ void cleanup()
 {
     delete sender;
     delete painter;
-    delete inputData;
+    //delete inputData;
 }
 
 int main(int argc, char *argv[])
@@ -137,6 +137,6 @@ int main(int argc, char *argv[])
     painter->getInterpreter()->showLogin(1);
     atexit(cleanup);
     glutMainLoop();
-    
+
     return 0;
 }

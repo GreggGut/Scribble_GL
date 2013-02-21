@@ -374,7 +374,7 @@ bool ScribbleArea::getScribbling() {
 
 void ScribbleArea::setNetworkPage(int p) {
     lockForNetworkPath.lock();
-    std::cout << "Setting network page: " << p << std::endl;
+    //std::cout << "Setting network page: " << p << std::endl;
     networkPathPage = p;
     lockForNetworkPath.unlock();
 }

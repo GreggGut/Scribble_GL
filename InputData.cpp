@@ -24,8 +24,12 @@ InputData::InputData(ScreenInterpreter* s) : scribbleAreaAccess(s), stop_request
 
 InputData::~InputData()
 {
+    stop();
     std::cout << "Destructor InputData" << std::endl;
     delete mPointsQueue;
+
+    //TODO this should be enabled but crashes the app, we need a nice way to end this
+    //close(fd);
     //    /palm.stop();
     //palm.wait();
     //palm.terminate();
@@ -43,17 +47,16 @@ int InputData::open_port()
 
     int fd; /* File descriptor for the port */
     fd = open("/dev/ttyUSB0", O_RDWR | O_NOCTTY | O_NDELAY);
-    if ( fd == -1 )
+    if (fd == -1)
     {
         //Could not open the port.
         perror("open_port: Unable to open /dev/ttyUSB0 - ");
         //exit(CANNOT_OPEN_PORT);
-    }
-    else
+    } else
     {
         fcntl(fd, F_SETFL, O_DIRECT); //0);
     }
-    return (fd );
+    return (fd);
 }
 
 /*! Stop thread
@@ -78,20 +81,19 @@ void InputData::stop()
  */
 void InputData::run()
 {
-    int fd = open_port();
+    fd = open_port();
 
     //Used to pass the pointer to the point to the scibblearea to be drawn
     //Point action_Point;
     //    QPoint* tPoint;
 
-    if ( fd != -1 )
+    if (fd != -1)
     {
         initialise_port(fd);
         fcntl(fd, F_SETFL, FNDELAY);
-    }
-    else
+    } else
     {
-        std::cout<<"Cannot open input port..."<<std::endl;
+        std::cout << "Cannot open input port..." << std::endl;
         return;
         //exit(CANNOT_OPEN_PORT);
         // return; // (int*) - 1;
@@ -114,21 +116,21 @@ void InputData::run()
     bool event = false;
     int number_of_points;
 
-    while ( !stop_request )
+    while (!stop_request)
     {
         //std::cout<<"running..."<<std::endl;
-        read(fd, &start_bit_1, sizeof (char ));
+        read(fd, &start_bit_1, sizeof (char));
         start_bit_1 = start_bit_1 & CROP;
 
         //This look makes sure we are synchronized with the input data stream
-        while ( 1 )
+        while (!stop_request)
         {
-            read(fd, &start_bit_2, sizeof (char ));
+            read(fd, &start_bit_2, sizeof (char));
             start_bit_2 = start_bit_2 & CROP;
 
             //std::cout<<"start bit 1 = "<<start_bit_1<< "\n start bit 2 = "<<start_bit_2<<"\n";
 
-            if ( ( start_bit_1 == 0xc0 ) && start_bit_2 == 0xf0 )
+            if ((start_bit_1 == 0xc0) && start_bit_2 == 0xf0)
             {
                 break;
             }
@@ -137,20 +139,19 @@ void InputData::run()
         }
 
         number_of_points = 0;
-        /*int c = */read(fd, &number_of_points, sizeof (char ));
+        /*int c = */read(fd, &number_of_points, sizeof (char));
 
-        if ( number_of_points == 0 )
+        if (number_of_points == 0)
         {
             //action_Point = NULL;
             palm.eventRelease();
             //scribbleAreaAccess->eventRelease(/*action_Point*/);
             event = false;
-        }
-        else
+        } else
         {
             //Getting the first Press event
             Point* action_Point = read_data_from_file(fd);
-            if ( action_Point != NULL )
+            if (action_Point != NULL)
             {
                 mPointsQueue->push(action_Point);
             }
@@ -162,11 +163,11 @@ void InputData::run()
 
             }
             //For multi-touch, all points ignored for now
-            for ( int i = 1; i < number_of_points; i++ )
+            for (int i = 1; i < number_of_points; i++)
             {
                 //Get point and ignore it
                 action_Point = read_data_from_file(fd);
-                if ( action_Point != NULL )
+                if (action_Point != NULL)
                 {
                     mPointsQueue->push(action_Point);
                 }
@@ -179,24 +180,24 @@ void InputData::run()
         }
 
         char_from_serial = 0;
-        read(fd, &char_from_serial, sizeof (char ));
+        read(fd, &char_from_serial, sizeof (char));
         char_from_serial = char_from_serial & 0xff;
-        if ( char_from_serial == 0xf0 )
+        if (char_from_serial == 0xf0)
         {
             char_from_serial = 0;
-            read(fd, &char_from_serial, sizeof (char ));
+            read(fd, &char_from_serial, sizeof (char));
             char_from_serial = char_from_serial & 0xff;
-            if ( char_from_serial == 0xc0 )
+            if (char_from_serial == 0xc0)
             {
                 //send point to be drawn only after receiving the termination bits (0xF0 0xC0)
-                while ( mPointsQueue->size() > 0 )
+                while (mPointsQueue->size() > 0)
                 {
-                    if ( event )
+                    if (event)
                     {
                         //std::cout << "Case 1" << std::endl;
                         palm.eventMove(mPointsQueue);
                         //scribbleAreaAccess->screenPressEvent(mPointsQueue.front());
-                        while ( !mPointsQueue->empty() )
+                        while (!mPointsQueue->empty())
                         {
                             mPointsQueue->pop();
                         }
@@ -204,13 +205,12 @@ void InputData::run()
                         //mPointsQueue.pop();
                         //std::cout << " Move event" << std::endl;
 
-                    }
-                    else
+                    } else
                     {
                         //std::cout << "Case 0" << std::endl;
                         palm.eventTouch(mPointsQueue);
                         //scribbleAreaAccess->screenPressEvent(mPointsQueue.front());
-                        while ( !mPointsQueue->empty() )
+                        while (!mPointsQueue->empty())
                         {
                             mPointsQueue->pop();
                         }
@@ -219,19 +219,17 @@ void InputData::run()
                     }
                 }
                 continue;
-            }
-            else
+            } else
             {
-                while ( mPointsQueue->size() > 0 )
+                while (mPointsQueue->size() > 0)
                 {
                     mPointsQueue->pop();
                 }
                 continue;
             }
-        }
-        else
+        } else
         {
-            while ( mPointsQueue->size() > 0 )
+            while (mPointsQueue->size() > 0)
             {
                 mPointsQueue->pop();
             }
@@ -256,12 +254,12 @@ Point* InputData::read_data_from_file(int fd)
     //Gathering the X and Y points
     column = 0;
     row = 0;
-    read(fd, &column, sizeof (char ));
-    read(fd, &row, sizeof (char ));
-    read(fd, &uX, sizeof (char ));
-    read(fd, &lX, sizeof (char ));
-    read(fd, &uY, sizeof (char ));
-    read(fd, &lY, sizeof (char ));
+    read(fd, &column, sizeof (char));
+    read(fd, &row, sizeof (char));
+    read(fd, &uX, sizeof (char));
+    read(fd, &lX, sizeof (char));
+    read(fd, &uY, sizeof (char));
+    read(fd, &lY, sizeof (char));
 
     //Removing any possible garbage
     /*
@@ -278,8 +276,8 @@ Point* InputData::read_data_from_file(int fd)
     //Creating the X and Y point
     uX = uX << 8;
     uY = uY << 8;
-    int Y = ( ( uX + lX ) * HEIGHT / 1024 ); //done to scale to the screen
-    int X = ( ( uY + lY ) * WIDTH / 1024 ); //done to scale to the screen
+    int Y = ((uX + lX) * HEIGHT / 1024); //done to scale to the screen
+    int X = ((uY + lY) * WIDTH / 1024); //done to scale to the screen
 
     //For testing purpose
     //printf(" Before creating object: %x, %x, %x, %x, %x, %x , %x, %x",column, row, uX, lX, uY, lY ,X,Y);
@@ -287,7 +285,7 @@ Point* InputData::read_data_from_file(int fd)
     //std::cout<<"Column: "<<column<<" row: "<<row<<std::endl;
 
     //Point point;
-    if ( X >= 0 && X <= WIDTH && Y >= 0 && Y <= HEIGHT )
+    if (X >= 0 && X <= WIDTH && Y >= 0 && Y <= HEIGHT)
     {
         return new Point(column, row, X, Y);
     }
@@ -319,11 +317,11 @@ void InputData::initialise_port(int fd)
     options.c_cflag |= CS8;
 
     // Raw input, no echo
-    options.c_lflag &= ~( ECHO | ECHOE | ECHONL | ICANON | IEXTEN | ISIG );
-    options.c_iflag &= ~( IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON | IXOFF | IXANY | INPCK );
+    options.c_lflag &= ~(ECHO | ECHOE | ECHONL | ICANON | IEXTEN | ISIG);
+    options.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON | IXOFF | IXANY | INPCK);
 
     //Enable the receiver and set local mode...
-    options.c_cflag |= ( CLOCAL | CREAD );
+    options.c_cflag |= (CLOCAL | CREAD);
 
     // Flush any buffered characters
     tcflush(fd, TCIOFLUSH);

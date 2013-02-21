@@ -26,6 +26,8 @@
 
 Painter *painter;
 InputData *inputData;
+Sender* sender;
+boost::thread getInput;
 
 void glInit (int argc, char** argv);
 

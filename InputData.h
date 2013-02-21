@@ -32,6 +32,7 @@ public:
     ~InputData();
     void run();
     void stop();
+    void endReader();
 
 private:
     void initialise_port(int fd);
@@ -39,6 +40,7 @@ private:
     Point * read_data_from_file(int fd);
     ScreenInterpreter * scribbleAreaAccess;
     queue<Point* > *mPointsQueue;
+    int fd;
 
     volatile bool stop_request;
     //int fd;
@@ -48,6 +50,8 @@ private:
     int column, row, uX, lX, uY, lY;
     
     PalmRejection palm;
+    
+    
 };
 
 #endif	/* INPUTDATA_H */

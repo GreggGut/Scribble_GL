@@ -25,8 +25,7 @@ using boost::asio::ip::tcp;
 
 typedef std::deque<RequestMessage> chat_message_queue;
 
-class NetworkClient
-{
+class NetworkClient {
 public:
 
     NetworkClient(boost::asio::io_service& io_service, tcp::resolver::iterator endpoint_iterator, ScribbleArea* scribbleArea);
@@ -63,6 +62,12 @@ private:
     bool connected;
     bool connectionFailed;
     boost::asio::deadline_timer timer_;
+
+    enum {
+        FILE_WAS_CREATED = 1,
+        FILE_EXISTS = 2,
+        FILE_CREATION_FAILED = 3,
+    } newFileCreationStatus;
 };
 
 

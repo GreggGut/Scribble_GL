@@ -188,28 +188,43 @@ void Login::callAction(int action) {
 
 }
 
-void Login::login(){
-    
-    #warning //testing login dismiss
-        screenInterpreter->showLogin(0);
-        
-    if (screenInterpreter->getScribbleArea()->getSender()->connectToServer())
+void Login::login()
+{
+
+#warning //testing login dismiss
+    //screenInterpreter->showLogin(0);
+
+    if ( screenInterpreter->getScribbleArea()->getSender()->connectToServer() )
     {
         screenInterpreter->getScribbleArea()->getSender()->sendLogin(username, password);
-        screenInterpreter->getScribbleArea()->getSender()->sendGetFilesList();
-        
-        if (screenInterpreter->getScribbleArea()->getFilesOnServer().size() > 0){
-            screenInterpreter->showLogin(0);
+        while ( screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_LOGIN );
+        if ( screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::LOGIN_FAILED )
+        {
+            std::cout << "Login Failed!!!\n";
+            return;
         }
-        
-        else {
-            std::cout<<"ERROR: No files on server\n";
+
+
+        screenInterpreter->getScribbleArea()->getSender()->sendGetFilesList();
+        while ( screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_FOR_FILE_LIST );
+
+        if ( screenInterpreter->getScribbleArea()->getFilesOnServer().size() > 0 )
+        {
+            //screenInterpreter->getScribbleArea()->getSender()->sendDownloadFile(screenInterpreter->getScribbleArea()->getFilesOnServer().at(4));
+            screenInterpreter->getScribbleArea()->getSender()->sendDownloadFile(screenInterpreter->getScribbleArea()->getFilesOnServer().at(6));
+            while ( screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_FOR_FILE_DOWNLOAD );
+            screenInterpreter->showLogin(0);
+
+        }
+
+        else
+        {
+            std::cout << "ERROR: No files on server\n";
         }
     }
     else
     {
         std::cout << "Failed connecting" << std::endl;
-        //TODO this is where we can set NETWORK to be false so the app doesn't fail
     }
 }
 

@@ -45,7 +45,7 @@ void resize(int width, int height)
 
 void key(unsigned char key, int x, int y)
 {
-    switch ( key )
+    switch (key)
     {
         case 27:
             exit(0);
@@ -66,18 +66,18 @@ void key(unsigned char key, int x, int y)
 void mouse(int button, int state, int x, int y)
 {
 
-    if ( button == GLUT_LEFT_BUTTON && state == GLUT_DOWN )
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
         //std::cout << "down x: "<<x<< " y: "<< y <<"\n";
 
-        if ( painter->getInterpreter()->getScribbleArea()->getScribbling() == false )
+        if (painter->getInterpreter()->getScribbleArea()->getScribbling() == false)
         {
             painter->getInterpreter()->screenPressEvent(new Point(x, y));
 
         }
     }
 
-    if ( button == GLUT_LEFT_BUTTON && state == GLUT_UP )
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
     {
         //std::cout << "up x: "<<x<< " y: "<< y <<"\n";
         painter->getInterpreter()->screenReleaseEvent();
@@ -89,7 +89,7 @@ void mouse(int button, int state, int x, int y)
 void mouseCoords(int x, int y)
 {
 
-    if ( painter->getInterpreter()->getScribbleArea()->getScribbling() == true )
+    if (painter->getInterpreter()->getScribbleArea()->getScribbling() == true)
     {
         painter->getInterpreter()->screenMoveEvent(new Point(x, y));
     }
@@ -112,6 +112,16 @@ void display()
     glFlush();
 }
 
+/**
+ * This function will get called once we exit the application
+ */
+void cleanup()
+{
+    delete sender;
+    delete painter;
+    delete inputData;
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -120,16 +130,13 @@ int main(int argc, char *argv[])
     painter = new Painter();
     inputData = new InputData(painter->getInterpreter());
 
-    boost::thread getInput(&InputData::run, inputData);
+    getInput = boost::thread(&InputData::run, inputData);
 
-    Sender* sender = new Sender(painter->getScribbleArea());
+    sender = new Sender(painter->getScribbleArea());
 
     painter->getInterpreter()->showLogin(1);
-
+    atexit(cleanup);
     glutMainLoop();
-    delete sender;
-    //TOCONF does this work?
-    getInput.interrupt();
-
+    
     return 0;
 }

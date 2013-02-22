@@ -48,6 +48,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ScreenInterpreter.o \
 	${OBJECTDIR}/PalmRejection.o \
 	${OBJECTDIR}/Menu.o \
+	${OBJECTDIR}/FileListButton.o \
 	${OBJECTDIR}/Keyboard.o \
 	${OBJECTDIR}/MenuButton.o \
 	${OBJECTDIR}/Path.o \
@@ -148,6 +149,11 @@ ${OBJECTDIR}/Menu.o: Menu.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Menu.o Menu.cpp
+
+${OBJECTDIR}/FileListButton.o: FileListButton.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/FileListButton.o FileListButton.cpp
 
 ${OBJECTDIR}/Keyboard.o: Keyboard.cpp 
 	${MKDIR} -p ${OBJECTDIR}

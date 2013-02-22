@@ -13,9 +13,9 @@ Painter::Painter() {
 
     scribbleArea = new ScribbleArea(0, 50, WIDTH, HEIGHT - 50);
     menu = new Menu(0, 0, WIDTH, 50);
-    login = new Login(WIDTH / 2 - 656 / 2, HEIGHT / 2 - 387 / 2, 656, 387);
-
-    interpreter = new ScreenInterpreter(scribbleArea, menu, login);
+    login = new Login(WIDTH/2 - 656/2, HEIGHT/2 - 387/2, 656, 387);
+    filelist = new FileList(WIDTH / 2 -656/2, HEIGHT/2 - 738/2,656,738);
+    interpreter = new ScreenInterpreter(scribbleArea, menu, login, filelist);
 
     menu->setScreenInterpreter(interpreter);
     login->setScreenInterpreter(interpreter);
@@ -28,6 +28,10 @@ Painter::Painter(const Painter& orig) {
 Painter::~Painter() {
     delete scribbleArea;
     delete menu;
+    delete login;
+    delete interpreter;
+    delete keyboard;
+    delete alert;
 }
 
 ScribbleArea* Painter::getScribbleArea() {
@@ -189,7 +193,15 @@ void Painter::drawKeyboard() {
 }
 
 void Painter::drawFileList() {
-
+    glRasterPos2i(filelist->getX(), filelist->getY());
+  
+    getPNG(filelist->getImagePath());
+    
+    for (int i = 0; i < filelist->getButtonArray()->size(); ++i){
+        
+        glRasterPos2i(filelist->getButtonArray()->at(i)->getX(), filelist->getButtonArray()->at(i)->getY());
+        getPNG(filelist->getButtonArray()->at(i)->getImagePath());
+    }
 }
 
 void Painter::drawAlert() {

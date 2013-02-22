@@ -5,6 +5,9 @@
  * Created on November 27, 2012, 2:40 PM
  */
 
+#include "Painter.h"
+
+
 #include "ScreenInterpreter.h"
 #include "Menu.h"
 #include "Login.h"
@@ -13,7 +16,7 @@ ScreenInterpreter::ScreenInterpreter() {
 
 }
 
-ScreenInterpreter::ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l) {
+ScreenInterpreter::ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l, FileList *fl) {
 
     loginShown = 0;
     filelistShown = 0;
@@ -24,7 +27,7 @@ ScreenInterpreter::ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l) {
     login = l;
     //keyboard = p->getKeyboard();
     //alert = p->getAlert();
-    //filelist = p->getFileList();
+    filelist = fl;
 
     menuState = 0;
     scribbleState = 0;
@@ -48,7 +51,7 @@ void ScreenInterpreter::screenPressEvent(Point* point) {
         loginPress(point);
     }
     else if (filelistShown == 1) {
-
+        filelistPress(point);
     }
     else {
         scribblePress(point);
@@ -63,7 +66,7 @@ void ScreenInterpreter::screenMoveEvent(Point* point) {
         loginMove(point);
     }
     else if (filelistShown == 1) {
-
+        filelistMove(point);
     }
     else {
         scribbleMove(point);
@@ -78,7 +81,7 @@ void ScreenInterpreter::screenReleaseEvent() {
         loginRelease();
     }
     else if (filelistShown == 1) {
-
+        filelistRelease();
     }
     else {
         scribbleRelease();
@@ -159,6 +162,18 @@ void ScreenInterpreter::loginMove(Point *point) {
 }
 
 void ScreenInterpreter::loginRelease() {
+    //login->screenReleaseEvent();
+}
+
+void ScreenInterpreter::filelistPress(Point *point) {
+    filelist->screenPressEvent(point);
+}
+
+void ScreenInterpreter::filelistMove(Point *point) {
+    //login->screenMoveEvent(point);
+}
+
+void ScreenInterpreter::filelistRelease() {
     //login->screenReleaseEvent();
 }
 

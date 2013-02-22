@@ -7,6 +7,8 @@
       <itemPath>Color.h</itemPath>
       <itemPath>Document.h</itemPath>
       <itemPath>FileList.h</itemPath>
+      <itemPath>FileListButton.cpp</itemPath>
+      <itemPath>FileListButton.h</itemPath>
       <itemPath>InputData.h</itemPath>
       <itemPath>Keyboard.h</itemPath>
       <itemPath>Login.h</itemPath>

@@ -192,8 +192,9 @@ void Login::login()
 {
 
 #warning //testing login dismiss
-    //screenInterpreter->showLogin(0);
-
+    screenInterpreter->showLogin(0);
+    screenInterpreter->showFilelist(1);
+    
     if ( screenInterpreter->getScribbleArea()->getSender()->connectToServer() )
     {
         screenInterpreter->getScribbleArea()->getSender()->sendLogin(username, password);

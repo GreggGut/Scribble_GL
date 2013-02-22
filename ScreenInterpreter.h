@@ -22,7 +22,7 @@ class Login;
 class ScreenInterpreter {
 public:
     ScreenInterpreter();
-    ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l);
+    ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l, FileList *fl);
     ScreenInterpreter(const ScreenInterpreter& orig);
     virtual ~ScreenInterpreter();
     void screenPressEvent(Point* point);
@@ -57,6 +57,10 @@ private:
     void loginMove(Point *point);
     void loginRelease();
    
+    void filelistPress(Point *point);
+    void filelistMove(Point *point);
+    void filelistRelease();
+    
     bool loginShown;
     bool filelistShown;
     bool alertShown;

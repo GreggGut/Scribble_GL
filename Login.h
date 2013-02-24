@@ -33,7 +33,9 @@ public:
     void screenReleaseEvent();
     void callAction(int action);
     void setScreenInterpreter(ScreenInterpreter *s);
- 
+    std::string getUserName();
+    std::string getPassword();
+    
 private:
     int x;
     int y;

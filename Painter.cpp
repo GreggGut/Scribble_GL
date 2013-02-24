@@ -5,6 +5,8 @@
  * Created on October 24, 2012, 10:15 AM
  */
 
+#include <FTGL/FTGLPixmapFont.h>
+
 #include "Painter.h"
 
 using namespace poppler;
@@ -13,12 +15,13 @@ Painter::Painter() {
 
     scribbleArea = new ScribbleArea(0, 50, WIDTH, HEIGHT - 50);
     menu = new Menu(0, 0, WIDTH, 50);
-    login = new Login(WIDTH/2 - 656/2, HEIGHT/2 - 387/2, 656, 387);
-    filelist = new FileList(WIDTH / 2 -656/2, HEIGHT/2 - 738/2,656,738);
+    login = new Login(WIDTH / 2 - 656 / 2, HEIGHT / 2 - 387 / 2, 656, 387);
+    filelist = new FileList(WIDTH / 2 - 656 / 2, HEIGHT / 2 - 738 / 2, 656, 738);
     interpreter = new ScreenInterpreter(scribbleArea, menu, login, filelist);
 
     menu->setScreenInterpreter(interpreter);
     login->setScreenInterpreter(interpreter);
+    filelist->setScreenInterpreter(interpreter);
 }
 
 Painter::Painter(const Painter& orig) {
@@ -148,9 +151,9 @@ void Painter::drawPaths() {
 
 void Painter::drawMenu() {
 
-     glRasterPos2i(menu->getX(), menu->getY());
-     getPNG(menu->getBackground());
-        
+    glRasterPos2i(menu->getX(), menu->getY());
+    getPNG(menu->getBackground());
+
     for (int i = 0; i < menu->getButtonArray()->size(); ++i) {
 
         /*glColor3f(menu->getButtonArray()->at(i)->getFillColor()->getRed(), menu->getButtonArray()->at(i)->getFillColor()->getGreen(), menu->getButtonArray()->at(i)->getFillColor()->getBlue());
@@ -163,8 +166,8 @@ void Painter::drawMenu() {
         glVertex3i(menu->getButtonArray()->at(i)->getX(), menu->getButtonArray()->at(i)->getY() + menu->getButtonArray()->at(i)->getHeight(), 0);
 
         glEnd();
-        */
-        
+         */
+
         glRasterPos2i(menu->getButtonArray()->at(i)->getX(), menu->getButtonArray()->at(i)->getY());
         getPNG(menu->getButtonArray()->at(i)->getImagePath());
     }
@@ -184,8 +187,11 @@ void Painter::drawPDF() {
 void Painter::drawLogin() {
 
     glRasterPos2i(login->getX(), login->getY());
-  
+
     getPNG(login->getImagePath());
+       
+    drawText(login->getUserName(), 35, login->getX() + 78, login->getY() + 128, Color(DARK_GRAY));
+    drawText(login->getPassword(), 35, login->getX() + 78, login->getY() + 205, Color(DARK_GRAY));
 }
 
 void Painter::drawKeyboard() {
@@ -194,14 +200,35 @@ void Painter::drawKeyboard() {
 
 void Painter::drawFileList() {
     glRasterPos2i(filelist->getX(), filelist->getY());
-  
+
     getPNG(filelist->getImagePath());
-    
-    for (int i = 0; i < filelist->getButtonArray()->size(); ++i){
+
+    for (int i = 0; i < filelist->getButtonArray()->size(); ++i) {
+
+        int x = filelist->getButtonArray()->at(i)->getX();
+        int y = filelist->getButtonArray()->at(i)->getY();
         
-        glRasterPos2i(filelist->getButtonArray()->at(i)->getX(), filelist->getButtonArray()->at(i)->getY());
+        glRasterPos2i(x,y);
         getPNG(filelist->getButtonArray()->at(i)->getImagePath());
+ 
     }
+
+    for (int i = 0; i < filelist->getFileListTable()->size(); ++i) {
+        
+        int x = filelist->getFileListTable()->at(i)->getX();
+        int y = filelist->getFileListTable()->at(i)->getY();
+        
+        glRasterPos2i(x,y);
+        getPNG(filelist->getFileListTable()->at(i)->getImagePath());
+               
+        drawText(filelist->getFileListTable()->at(i)->getFileName(), 25, x + 56, y + 20, Color(DARK_GRAY));
+    }
+    
+    
+    std::string page;
+    page = "Page " + filelist->getCurrentPage() + "/" + filelist->getNumberOfPages();
+    
+    drawText(page, 35, filelist->getX() + 18, filelist->getY() + 690, Color(GREEN));
 }
 
 void Painter::drawAlert() {
@@ -211,16 +238,33 @@ void Painter::drawAlert() {
 void Painter::getPNG(std::string imagePath) {
     //decode
     glPixelZoom(1.0, -1.0);
-     
+
     std::vector<unsigned char> image; //the raw pixels
     unsigned width, height;
-   
-    unsigned error = lodepng::decode(image,width,height,imagePath);
- 
+
+    unsigned error = lodepng::decode(image, width, height, imagePath);
+
     //if there's an error, display it
     //if (error) std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
 
     //the pixels are now in the vector "image", 4 bytes per pixel, ordered RGBARGBA..., use it as texture, draw it, ...
-     glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
+    glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
+
+}
+
+void Painter::drawText(std::string text, int size, int x, int y, Color color) {
     
+    glColor3f(color.getRed(), color.getGreen(), color.getBlue());
+    glPixelZoom(1.0, 1.0);
+    glRasterPos2i(x, y+size-5);
+    // Create a pixmap font from a TrueType file.
+    FTGLPixmapFont font("./resources/fonts/century_gothic.ttf");
+
+    // If something went wrong, bail out.
+    if (font.Error())
+        std::cout << "ERROR: FONT WAS NOT LOADED\n";
+
+    // Set the font size and render a small text.
+    font.FaceSize(size);
+    font.Render(text.c_str(), -1, FTPoint(), FTPoint(), FTGL::RENDER_ALL);
 }

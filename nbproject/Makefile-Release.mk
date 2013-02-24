@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Painter.o \
 	${OBJECTDIR}/RequestMessage.o \
 	${OBJECTDIR}/Document.o \
+	${OBJECTDIR}/FileListCell.o \
 	${OBJECTDIR}/Button.o \
 	${OBJECTDIR}/Color.o \
 	${OBJECTDIR}/Login.o \
@@ -65,8 +66,8 @@ OBJECTFILES= \
 CFLAGS=
 
 # CC Compiler Flags
-CCFLAGS=-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler -std=gnu++0x
-CXXFLAGS=-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler -std=gnu++0x
+CCFLAGS=-lglut -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler -lftgl -std=gnu++0x
+CXXFLAGS=-lglut -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler -lftgl -std=gnu++0x
 
 # Fortran Compiler Flags
 FFLAGS=
@@ -75,7 +76,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-L/usr/local/lib -L/usr/local/include/poppler
+LDLIBSOPTIONS=-L/usr/local/lib
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -88,122 +89,127 @@ ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl: ${OBJECTFILES}
 ${OBJECTDIR}/Alert.o: Alert.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Alert.o Alert.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Alert.o Alert.cpp
 
 ${OBJECTDIR}/InputData.o: InputData.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/InputData.o InputData.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/InputData.o InputData.cpp
 
 ${OBJECTDIR}/Point.o: Point.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Point.o Point.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Point.o Point.cpp
 
 ${OBJECTDIR}/main.o: main.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
 
 ${OBJECTDIR}/Painter.o: Painter.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Painter.o Painter.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Painter.o Painter.cpp
 
 ${OBJECTDIR}/RequestMessage.o: RequestMessage.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/RequestMessage.o RequestMessage.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/RequestMessage.o RequestMessage.cpp
 
 ${OBJECTDIR}/Document.o: Document.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Document.o Document.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Document.o Document.cpp
+
+${OBJECTDIR}/FileListCell.o: FileListCell.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/FileListCell.o FileListCell.cpp
 
 ${OBJECTDIR}/Button.o: Button.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Button.o Button.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Button.o Button.cpp
 
 ${OBJECTDIR}/Color.o: Color.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Color.o Color.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Color.o Color.cpp
 
 ${OBJECTDIR}/Login.o: Login.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Login.o Login.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Login.o Login.cpp
 
 ${OBJECTDIR}/ScreenInterpreter.o: ScreenInterpreter.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenInterpreter.o ScreenInterpreter.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenInterpreter.o ScreenInterpreter.cpp
 
 ${OBJECTDIR}/PalmRejection.o: PalmRejection.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/PalmRejection.o PalmRejection.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/PalmRejection.o PalmRejection.cpp
 
 ${OBJECTDIR}/Menu.o: Menu.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Menu.o Menu.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Menu.o Menu.cpp
 
 ${OBJECTDIR}/FileListButton.o: FileListButton.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/FileListButton.o FileListButton.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/FileListButton.o FileListButton.cpp
 
 ${OBJECTDIR}/Keyboard.o: Keyboard.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Keyboard.o Keyboard.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Keyboard.o Keyboard.cpp
 
 ${OBJECTDIR}/MenuButton.o: MenuButton.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/MenuButton.o MenuButton.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/MenuButton.o MenuButton.cpp
 
 ${OBJECTDIR}/Path.o: Path.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Path.o Path.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Path.o Path.cpp
 
 ${OBJECTDIR}/FileList.o: FileList.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/FileList.o FileList.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/FileList.o FileList.cpp
 
 ${OBJECTDIR}/lodepng.o: lodepng.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/lodepng.o lodepng.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/lodepng.o lodepng.cpp
 
 ${OBJECTDIR}/LoginButton.o: LoginButton.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoginButton.o LoginButton.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/LoginButton.o LoginButton.cpp
 
 ${OBJECTDIR}/NetworkClient.o: NetworkClient.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/NetworkClient.o NetworkClient.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/NetworkClient.o NetworkClient.cpp
 
 ${OBJECTDIR}/ScreenAreas.o: ScreenAreas.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenAreas.o ScreenAreas.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenAreas.o ScreenAreas.cpp
 
 ${OBJECTDIR}/Sender.o: Sender.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/Sender.o Sender.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Sender.o Sender.cpp
 
 ${OBJECTDIR}/ScribbleArea.o: ScribbleArea.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -I. -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScribbleArea.o ScribbleArea.cpp
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScribbleArea.o ScribbleArea.cpp
 
 # Subprojects
 .build-subprojects:

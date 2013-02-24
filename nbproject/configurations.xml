@@ -7,8 +7,8 @@
       <itemPath>Color.h</itemPath>
       <itemPath>Document.h</itemPath>
       <itemPath>FileList.h</itemPath>
-      <itemPath>FileListButton.cpp</itemPath>
       <itemPath>FileListButton.h</itemPath>
+      <itemPath>FileListCell.h</itemPath>
       <itemPath>InputData.h</itemPath>
       <itemPath>Keyboard.h</itemPath>
       <itemPath>Login.h</itemPath>
@@ -37,6 +37,8 @@
       <itemPath>Color.cpp</itemPath>
       <itemPath>Document.cpp</itemPath>
       <itemPath>FileList.cpp</itemPath>
+      <itemPath>FileListButton.cpp</itemPath>
+      <itemPath>FileListCell.cpp</itemPath>
       <itemPath>InputData.cpp</itemPath>
       <itemPath>Keyboard.cpp</itemPath>
       <itemPath>Login.cpp</itemPath>
@@ -83,14 +85,14 @@
           <commandlineTool>g++</commandlineTool>
           <incDir>
             <pElem>.</pElem>
+            <pElem>/usr/local/include/freetype2</pElem>
           </incDir>
-          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler -std=gnu++0x</commandLine>
+          <commandLine>-lglut -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler -lftgl -std=gnu++0x</commandLine>
         </ccTool>
         <linkerTool>
           <output>${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl</output>
           <linkerAddLib>
             <pElem>/usr/local/lib</pElem>
-            <pElem>/usr/local/include/poppler</pElem>
           </linkerAddLib>
         </linkerTool>
       </compileType>
@@ -108,8 +110,9 @@
           <developmentMode>5</developmentMode>
           <incDir>
             <pElem>.</pElem>
+            <pElem>/usr/local/include/freetype2</pElem>
           </incDir>
-          <commandLine>-lglut -lGL -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler -std=gnu++0x</commandLine>
+          <commandLine>-lglut -lGLU -lboost_thread-mt -lboost_system-mt -lboost_program_options-mt -lpoppler-cpp -lpoppler -lftgl -std=gnu++0x</commandLine>
         </ccTool>
         <fortranCompilerTool>
           <developmentMode>5</developmentMode>
@@ -120,7 +123,6 @@
         <linkerTool>
           <linkerAddLib>
             <pElem>/usr/local/lib</pElem>
-            <pElem>/usr/local/include/poppler</pElem>
           </linkerAddLib>
         </linkerTool>
       </compileType>

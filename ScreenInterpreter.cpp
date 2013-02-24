@@ -200,3 +200,7 @@ bool ScreenInterpreter::getShowFile() {
 bool ScreenInterpreter::getShowAlert() {
     return alertShown;
 }
+
+FileList *ScreenInterpreter::getFileList(){
+    return filelist;
+}

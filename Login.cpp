@@ -12,18 +12,18 @@
 Login::Login() {
 }
 
-Login::Login(int x_, int y_, int w_, int h_){
+Login::Login(int x_, int y_, int w_, int h_) {
     x = x_;
     y = y_;
     width = w_;
     height = h_;
-    
+
     std::string fileName = "Login.png";
-    imagePath = fileName.insert(0,IMAGE_PATH);
-    
+    imagePath = fileName.insert(0, IMAGE_PATH);
+
     username = "";
     password = "";
-    
+
     buttonArray = new std::vector<LoginButton *>;
 
     for (int i = 0; i < 3; ++i) {
@@ -34,7 +34,7 @@ Login::Login(int x_, int y_, int w_, int h_){
         int btny;
         int btnw;
         int btnh;
-        
+
         switch (i) {
             case 0:
                 type = MOMENTARY;
@@ -70,8 +70,8 @@ Login::Login(int x_, int y_, int w_, int h_){
                 break;
         }
 
-        
-        LoginButton *btn = new LoginButton(btnx+x, btny+y, btnw, btnh, type, action, NULL, NULL, NULL, NULL);
+
+        LoginButton *btn = new LoginButton(btnx + x, btny + y, btnw, btnh, type, action, NULL, NULL, NULL, NULL);
         buttonArray->push_back(btn);
 
     }
@@ -147,7 +147,7 @@ void Login::screenPressEvent(Point* point) {
  * This function draws a line between a last point and the new point in Write mode or tries to delete a path on which the point passes through in Erase mode
  */
 void Login::screenMoveEvent(Point* point) {
-  
+
 }
 
 /*! Screen Release Event
@@ -165,70 +165,71 @@ void Login::callAction(int action) {
 #warning //testing values only
             username = "greg";
             password = "pass";
-            
-            if (username == "" || password == ""){
-                std::cout<<"ERROR: no username or password\n";
+
+            if (username == "" || password == "") {
+                std::cout << "ERROR: no username or password\n";
             }
-            
             else {
                 login();
             }
-            
+
             break;
         case USER_NAME_C:
-                std::cout<<"username"<<std::endl;
+            std::cout << "username" << std::endl;
             break;
         case PASSWORD_C:
-            std::cout<<"password"<<std::endl;
+            std::cout << "password" << std::endl;
             break;
-        
+
         default:
             break;
     }
 
 }
 
-void Login::login()
-{
+void Login::login() {
 
-#warning //testing login dismiss
-    screenInterpreter->showLogin(0);
-    screenInterpreter->showFilelist(1);
+#warning //show download alert
     
-    if ( screenInterpreter->getScribbleArea()->getSender()->connectToServer() )
-    {
+    if (screenInterpreter->getScribbleArea()->getSender()->connectToServer()) {
         screenInterpreter->getScribbleArea()->getSender()->sendLogin(username, password);
-        while ( screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_LOGIN );
-        if ( screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::LOGIN_FAILED )
-        {
+        while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_LOGIN);
+        if (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::LOGIN_FAILED) {
             std::cout << "Login Failed!!!\n";
             return;
         }
 
 
         screenInterpreter->getScribbleArea()->getSender()->sendGetFilesList();
-        while ( screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_FOR_FILE_LIST );
+        while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_FOR_FILE_LIST);
 
-        if ( screenInterpreter->getScribbleArea()->getFilesOnServer().size() > 0 )
-        {
-            //screenInterpreter->getScribbleArea()->getSender()->sendDownloadFile(screenInterpreter->getScribbleArea()->getFilesOnServer().at(4));
-            screenInterpreter->getScribbleArea()->getSender()->sendDownloadFile(screenInterpreter->getScribbleArea()->getFilesOnServer().at(6));
-            while ( screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_FOR_FILE_DOWNLOAD );
+        if (screenInterpreter->getScribbleArea()->getFilesOnServer().size() > 0) {
             screenInterpreter->showLogin(0);
-
+            screenInterpreter->getFileList()->setFileList(screenInterpreter->getScribbleArea()->getFilesOnServer());
+            screenInterpreter->showFilelist(1);
         }
-
-        else
-        {
+        else {
             std::cout << "ERROR: No files on server\n";
         }
-    }
-    else
-    {
+    } else {
         std::cout << "Failed connecting" << std::endl;
     }
 }
 
 void Login::setScreenInterpreter(ScreenInterpreter *s) {
     screenInterpreter = s;
+}
+
+std::string Login::getUserName(){
+    
+    if (username == "")
+        return "Username";
+    return username;
+}
+
+std::string Login::getPassword(){
+    
+    if (password == "")
+        return "Password";
+    return password;
 }

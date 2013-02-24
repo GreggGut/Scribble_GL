@@ -38,6 +38,8 @@ public:
     bool getShowFile();
     bool getShowAlert();
     
+    FileList *getFileList();
+    
 private:
     ScribbleArea *scribbleArea;
     Menu *menu;

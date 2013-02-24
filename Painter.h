@@ -18,6 +18,8 @@
 #include "Alert.h"
 #include "FileList.h"
 #include "lodepng.h"
+#include <FTGL/ftgl.h>
+#include "Color.h"
 
 class Painter {
    
@@ -53,6 +55,7 @@ private:
     void drawAlert();
     
     void getPNG(std::string imagePath);
+    void drawText(std::string text, int size, int x, int y, Color color);
 };
 
 #endif	/* PAINTER_H */

@@ -24,6 +24,7 @@ public:
     
 private:
     std::string imagePath;
+  
 };
 
 #endif	/* FILELISTBUTTON_H */

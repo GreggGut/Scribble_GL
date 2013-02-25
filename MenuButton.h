@@ -21,6 +21,7 @@
 #define CLEAR_ALL_C 7
 #define WRITE_C 8
 #define STATUS_C 9
+#define FILE_LIST_C 10
 
 class MenuButton: public Button {
 public:

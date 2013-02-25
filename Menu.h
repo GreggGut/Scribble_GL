@@ -36,6 +36,7 @@ public:
     std::string getBackground();
     void handleOwnership();
     MenuButton *getOwnershipBTN();
+    void getFilelist();
     
 private:
     bool network;

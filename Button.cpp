@@ -25,6 +25,8 @@ Button::Button(int x_, int y_, int w_, int h_, int mode_, int action_, Color *fi
     stroke = stroke_;
     highlight = highlight_;
     highlightStroke = highlightStroke_;
+    enabled = 1;
+    
 }
 
 Button::Button(const Button& orig) {
@@ -93,4 +95,12 @@ int Button::getMode(){
 int Button::getAction(){
     
     return action;
+}
+
+void Button::setEnabled(bool en){
+    enabled = en;
+}
+
+bool Button::getEnabled(){
+    return enabled;
 }

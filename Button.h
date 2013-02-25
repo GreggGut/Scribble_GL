@@ -31,9 +31,12 @@ public:
     bool pointInsideArea(Point *point);
     int getMode();
     int getAction();
+    void setEnabled(bool en);
+    bool getEnabled();
     
 protected:
 
+    bool enabled;
     int x;
     int y;
     int width;

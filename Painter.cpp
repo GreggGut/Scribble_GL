@@ -160,6 +160,28 @@ void Painter::drawMenu() {
         getPNG(menu->getButtonArray()->at(i)->getImagePath());
     }
 
+    std::string ownershipImage;
+    
+    int ownership = scribbleArea->getOwnershipValue();
+
+    if (ownership == 0) { //ME
+        //release it since I already have it
+        ownershipImage = "OwnershipMine.png";
+
+    } else if (ownership == 1) { //Taken
+        //busy
+        ownershipImage = "OwnershipTaken.png";
+    } else if (ownership == 2) { //Free
+        //send to get it
+        ownershipImage = "GetOwnership.png";
+        
+    } else {
+        std::cout << "ERROR WITH OWNERSHIP\n";
+    }
+    
+     ownershipImage.insert(0, IMAGE_PATH);
+     menu->getOwnershipBTN()->setImagePath(ownershipImage);
+     
      glRasterPos2i(menu->getOwnershipBTN()->getX(), menu->getOwnershipBTN()->getY());
      getPNG(menu->getOwnershipBTN()->getImagePath());
 }

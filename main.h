@@ -41,6 +41,8 @@ void idle(void);
 
 void display(void);
 
+void close(void);
+
 int main(int argc, char *argv[]);
 
 void mouseCoords(int x, int y);

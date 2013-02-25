@@ -124,7 +124,6 @@ void Login::screenPressEvent(Point* point) {
                     callAction(buttonArray->at(i)->getAction());
                     break;
                 case TOGGLE:
-#warning //add toggling fucntionality
                     callAction(buttonArray->at(i)->getAction());
                     break;
                 case PICKER:
@@ -163,13 +162,10 @@ void Login::callAction(int action) {
     switch (action) {
         case LOGIN_C:
 #warning //testing values only
-            username = "greg";
-            password = "pass";
 
             if (username == "" || password == "") {
                 std::cout << "ERROR: no username or password\n";
-            }
-            else {
+            } else {
                 login();
             }
 
@@ -190,7 +186,7 @@ void Login::callAction(int action) {
 void Login::login() {
 
 #warning //show download alert
-    
+
     if (screenInterpreter->getScribbleArea()->getSender()->connectToServer()) {
         screenInterpreter->getScribbleArea()->getSender()->sendLogin(username, password);
         while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_LOGIN);
@@ -207,8 +203,7 @@ void Login::login() {
             screenInterpreter->showLogin(0);
             screenInterpreter->getFileList()->setFileList(screenInterpreter->getScribbleArea()->getFilesOnServer());
             screenInterpreter->showFilelist(1);
-        }
-        else {
+        } else {
             std::cout << "ERROR: No files on server\n";
         }
     } else {
@@ -220,16 +215,24 @@ void Login::setScreenInterpreter(ScreenInterpreter *s) {
     screenInterpreter = s;
 }
 
-std::string Login::getUserName(){
-    
+std::string Login::getUserName() {
+
     if (username == "")
         return "Username";
     return username;
 }
 
-std::string Login::getPassword(){
-    
+std::string Login::getPassword() {
+
     if (password == "")
         return "Password";
     return password;
+}
+
+void Login::setUserName(std::string user_) {
+    username = user_;
+}
+
+void Login::setPassword(std::string pass_) {
+    password = pass_;
 }

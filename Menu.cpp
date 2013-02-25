@@ -31,83 +31,130 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
 
     buttonArray = new std::vector<MenuButton *>;
 
-    for (int i = 0; i < 9; ++i) {
+    for (int i = 0; i < 10; ++i) {
 
         int type;
         int action;
-        std::string fileName;
+        int btnx;
+        int btny;
+        int btnw;
+        int btnh;
+        std::string buttonImage;
 
         switch (i) {
             case 0:
                 type = MOMENTARY;
                 action = UNDO_C;
-                fileName = "Undo.png";
+                buttonImage = "Undo.png";
+                btnx = 5 + (BTN_WIDTH + 5) * i;
+                btny = 5;
+                btnw = 40;
+                btnh = 40;
                 break;
             case 1:
                 type = MOMENTARY;
                 action = REDO_C;
-                fileName = "Redo.png";
+                buttonImage = "Redo.png";
+                btnx = 5 + (BTN_WIDTH + 5) * i;
+                btny = 5;
+                btnw = 40;
+                btnh = 40;
                 break;
             case 2:
                 type = MOMENTARY;
                 action = CLEAR_ALL_C;
-                fileName = "Clear.png";
+                buttonImage = "Clear.png";
+                btnx = 5 + (BTN_WIDTH + 5) * i;
+                btny = 5;
+                btnw = 40;
+                btnh = 40;
                 break;
             case 3:
                 type = TOGGLE;
                 action = WRITE_C;
-                fileName = "Write_Selected.png";
+                buttonImage = "Write_Selected.png";
+                btnx = 5 + (BTN_WIDTH + 5) * i;
+                btny = 5;
+                btnw = 40;
+                btnh = 40;
                 break;
             case 4:
                 type = TOGGLE;
                 action = ERASE_C;
-                fileName = "Erase.png";
+                buttonImage = "Erase.png";
+                btnx = 5 + (BTN_WIDTH + 5) * i;
+                btny = 5;
+                btnw = 40;
+                btnh = 40;
                 break;
             case 5:
                 type = PICKER;
                 action = SIZE_C;
-                fileName = "PenSize.png";
+                buttonImage = "PenSize.png";
+                btnx = 5 + (BTN_WIDTH + 5) * i;
+                btny = 5;
+                btnw = 40;
+                btnh = 40;
                 break;
             case 6:
                 type = PICKER;
                 action = COLOUR_C;
-                fileName = "PenColour.png";
+                buttonImage = "PenColour.png";
+                btnx = 5 + (BTN_WIDTH + 5) * i;
+                btny = 5;
+                btnw = 40;
+                btnh = 40;
                 break;
             case 7:
                 type = MOMENTARY;
                 action = PREVIOUS_PAGE_C;
-                fileName = "PreviousPage.png";
+                buttonImage = "PreviousPage.png";
+                btnx = 5 + (BTN_WIDTH + 5) * i;
+                btny = 5;
+                btnw = 40;
+                btnh = 40;
                 break;
             case 8:
                 type = MOMENTARY;
                 action = NEXT_PAGE_C;
-                fileName = "NextPage.png";
+                buttonImage = "NextPage.png";
+                btnx = 5 + (BTN_WIDTH + 5) * i;
+                btny = 5;
+                btnw = 40;
+                btnh = 40;
+                break;
+            case 9:
+                type = MOMENTARY;
+                action = FILE_LIST_C;
+                buttonImage = "FileList.png";
+                btnx = WIDTH - (BTN_WIDTH + 5)*2 - 5;
+                btny = 5;
+                btnw = 40;
+                btnh = 40;
                 break;
             default:
                 type = MOMENTARY;
                 action = NULL;
-                fileName = "";
+                buttonImage = "";
                 break;
         }
 
         std::string imagePath;
-        if (fileName != "") {
-            imagePath = fileName.insert(0, IMAGE_PATH);
-        }
-        else {
+        if (buttonImage != "") {
+            imagePath = buttonImage.insert(0, IMAGE_PATH);
+        } else {
             imagePath = "";
         }
 
-        MenuButton *btn = new MenuButton(5 + (BTN_WIDTH + 5) * i, 5, 40, 40, type, action, NULL, NULL, NULL, NULL, imagePath, i);
+        MenuButton *btn = new MenuButton(btnx, btny, btnw, btnh, type, action, NULL, NULL, NULL, NULL, imagePath, i);
         buttonArray->push_back(btn);
 
     }
 
     std::string ownershipImage = "Write.png";
     ownershipImage.insert(0, IMAGE_PATH);
-#warning //change to toggle maybe
-    
-    ownershipBTN = new MenuButton(WIDTH - 40 - 5, 5, 40, 40, MOMENTARY, STATUS_C, NULL, NULL, NULL, NULL, ownershipImage,20);
+
+    ownershipBTN = new MenuButton(WIDTH - 40 - 5, 5, 40, 40, MOMENTARY, STATUS_C, NULL, NULL, NULL, NULL, ownershipImage, 20);
 
 }
 
@@ -177,7 +224,6 @@ void Menu::screenPressEvent(Point* point) {
                     callAction(buttonArray->at(i)->getAction());
                     break;
                 case TOGGLE:
-#warning //add toggling fucntionality
                     callAction(buttonArray->at(i)->getAction());
                     break;
                 case PICKER:
@@ -191,22 +237,21 @@ void Menu::screenPressEvent(Point* point) {
 
     if (ownershipBTN->pointInsideArea(point) == 1) {
 
-            switch (ownershipBTN->getMode()) {
-                case MOMENTARY:
-                    callAction(ownershipBTN->getAction());
-                    break;
-                case TOGGLE:
-#warning //add toggling fucntionality
-                    callAction(ownershipBTN->getAction());
-                    break;
-                case PICKER:
-                    break;
-                default:
-                    break;
-            }
-
+        switch (ownershipBTN->getMode()) {
+            case MOMENTARY:
+                callAction(ownershipBTN->getAction());
+                break;
+            case TOGGLE:
+                callAction(ownershipBTN->getAction());
+                break;
+            case PICKER:
+                break;
+            default:
+                break;
         }
-    
+
+    }
+
     delete point;
     point = NULL;
 }
@@ -250,33 +295,46 @@ void Menu::callAction(int action) {
 
     switch (action) {
         case UNDO_C:
-            screenInterpreter->getScribbleArea()->undo(screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage());
+            if (screenInterpreter->getScribbleArea()->getEnabled() == 1) {
+                screenInterpreter->getScribbleArea()->undo(screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage());
 
-            if (network == 1) {
-                screenInterpreter->getScribbleArea()->getSender()->sendUndo(screenInterpreter->getScribbleArea()->getCurrentPage());
+                if (network == 1) {
+                    screenInterpreter->getScribbleArea()->getSender()->sendUndo(screenInterpreter->getScribbleArea()->getCurrentPage());
+                }
             }
-
             break;
         case REDO_C:
-            screenInterpreter->getScribbleArea()->redo(screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage());
-            if (network == 1) {
-                screenInterpreter->getScribbleArea()->getSender()->sendRedo(screenInterpreter->getScribbleArea()->getCurrentPage());
+            if (screenInterpreter->getScribbleArea()->getEnabled() == 1) {
+                screenInterpreter->getScribbleArea()->redo(screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage());
+                if (network == 1) {
+                    screenInterpreter->getScribbleArea()->getSender()->sendRedo(screenInterpreter->getScribbleArea()->getCurrentPage());
+                }
             }
             break;
         case CLEAR_ALL_C:
-            screenInterpreter->getScribbleArea()->clearAll(screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage());
-            if (network == 1) {
-                screenInterpreter->getScribbleArea()->getSender()->sendCleanAll(screenInterpreter->getScribbleArea()->getCurrentPage());
+            if (screenInterpreter->getScribbleArea()->getEnabled() == 1) {
+                screenInterpreter->getScribbleArea()->clearAll(screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage());
+                if (network == 1) {
+                    screenInterpreter->getScribbleArea()->getSender()->sendCleanAll(screenInterpreter->getScribbleArea()->getCurrentPage());
+                }
             }
             break;
         case ERASE_C:
-            buttonArray->at(4)->setSelectedImage(1);
-            buttonArray->at(3)->setSelectedImage(0);
+        
+            if (buttonArray->at(3)->getEnabled() != 0){
+                buttonArray->at(3)->setSelectedImage(0);
+                buttonArray->at(4)->setSelectedImage(1);
+            }
+            
             screenInterpreter->getScribbleArea()->setMode(ERASE);
             break;
         case WRITE_C:
-            buttonArray->at(4)->setSelectedImage(0);
-            buttonArray->at(3)->setSelectedImage(1);
+           
+            if (buttonArray->at(4)->getEnabled() != 0){
+                buttonArray->at(4)->setSelectedImage(0);
+                buttonArray->at(3)->setSelectedImage(1);
+            }
+     
             screenInterpreter->getScribbleArea()->setMode(WRITE);
             break;
         case PREVIOUS_PAGE_C:
@@ -287,6 +345,24 @@ void Menu::callAction(int action) {
             break;
         case STATUS_C:
             handleOwnership();
+            break;
+        case FILE_LIST_C:
+#warning //button write may disappear
+            if (buttonArray->at(4)->getEnabled() != 0){
+                buttonArray->at(4)->setSelectedImage(0);
+            }
+            
+            if (buttonArray->at(3)->getEnabled() != 1){
+                buttonArray->at(3)->setSelectedImage(1);
+            }
+            screenInterpreter->getScribbleArea()->setMode(WRITE);
+
+            if (screenInterpreter->getScribbleArea()->getOwnershipValue() == 0) {
+                screenInterpreter->getScribbleArea()->getSender()->sendReleaseOwnership();
+                while (screenInterpreter->getScribbleArea()->getOwnershipValue() != 2);
+            }
+
+            screenInterpreter->showFilelist(1);
         default:
             break;
     }
@@ -307,32 +383,37 @@ void Menu::handleOwnership() {
 
     if (ownership == 0) { //ME
         //release it since I already have it
-        screenInterpreter->getScribbleArea()->setOwnershipFree();
-        
-        std::string ownershipImage = "Write.png";
-        ownershipImage.insert(0, IMAGE_PATH);
-        
-        ownershipBTN->setImagePath(ownershipImage);
-        
-    }
-    else if (ownership == 1) { //Taken
+        screenInterpreter->getScribbleArea()->getSender()->sendReleaseOwnership();
+
+        while (screenInterpreter->getScribbleArea()->getOwnershipValue() != 2);
+
+    } else if (ownership == 1) { //Taken
         //busy
-    }
-    else if (ownership == 2) { //Free
+    } else if (ownership == 2) { //Free
         //send to get it
-        screenInterpreter->getScribbleArea()->setOwnershipMe();
-        
-        std::string ownershipImage = "Write_Selected.png";
-        ownershipImage.insert(0, IMAGE_PATH);
-        
-        ownershipBTN->setImagePath(ownershipImage);
-    }
-    else {
+        screenInterpreter->getScribbleArea()->getSender()->sendRequestOwnership();
+
+        while (screenInterpreter->getScribbleArea()->getOwnershipValue() != 0);
+
+    } else {
         std::cout << "ERROR WITH OWNERSHIP\n";
     }
 }
 
-MenuButton *Menu::getOwnershipBTN(){
+MenuButton *Menu::getOwnershipBTN() {
     return ownershipBTN;
 }
-    
+
+void Menu::getFilelist() {
+
+    screenInterpreter->getScribbleArea()->getSender()->sendGetFilesList();
+    while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_FOR_FILE_LIST);
+
+    if (screenInterpreter->getScribbleArea()->getFilesOnServer().size() > 0) {
+
+        screenInterpreter->getFileList()->setFileList(screenInterpreter->getScribbleArea()->getFilesOnServer());
+        screenInterpreter->showFilelist(1);
+    } else {
+        std::cout << "ERROR: No files on server\n";
+    }
+}

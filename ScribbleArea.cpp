@@ -12,7 +12,8 @@ ScribbleArea::ScribbleArea() : networkPathPage(-1)
 
     penColor = Color();
     penSize = 1.0;
-
+    enable = 0;
+    
     mTempPath = NULL;
 
     pathsOnPage.resize(1);
@@ -25,7 +26,8 @@ ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1)
 {
 
     network = NETWORK;
-
+    enable = 0;
+    
     mMode = WRITE;
     x = x_;
     y = y_;
@@ -37,6 +39,8 @@ ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1)
 
     mTempPath = NULL;
 
+    document = new Document(x, y, width, height);
+    
     std::string fileName = "./Files/test.pdf";
 
     loadFile(fileName);
@@ -175,7 +179,7 @@ void ScribbleArea::screenPressEvent(Point* point)
 
     //If mode is write, initialize the writing sequence
 
-    if ( this->mMode == WRITE || this->mMode == ERASE )
+    if ((this->mMode == WRITE || this->mMode == ERASE) && enable == 1)
     {
 
         //cleanRedoVector();
@@ -214,7 +218,8 @@ void ScribbleArea::screenMoveEvent(Point* point)
     {
         return;
     }
-    if ( scribbling == true )
+    
+    if (scribbling == true)
     {
         pathsLock.lock();
         lockForTempPath.lock();
@@ -239,6 +244,7 @@ void ScribbleArea::screenMoveEvent(Point* point)
  * This function disables scribbling and informs the ScribbleArea that nothing is touching the screen anymore
  */
 void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
+   
     if (scribbling == true) {
         scribbling = false;
 
@@ -463,7 +469,6 @@ void ScribbleArea::nextPage() {
 
 void ScribbleArea::loadFile(std::string fileName) {
 
-    document = new Document(x, y, width, height);
     document->load(fileName);
 
     document->getCurrentPage();
@@ -479,14 +484,17 @@ void ScribbleArea::loadFile(std::string fileName) {
 }
 
 void ScribbleArea::setOwnershipMe() {
+    enableScribbleArea(1);
     ownership = ME;
 }
 
 void ScribbleArea::setOwnershipFree() {
+    enableScribbleArea(0);
     ownership = FREE;
 }
 
 void ScribbleArea::setOwnershipTaken() {
+    enableScribbleArea(0);
     ownership = TAKEN;
 }
 
@@ -500,4 +508,12 @@ ScribbleArea::NetworkActivity ScribbleArea::getNetworkActivity() {
 
 int ScribbleArea::getOwnershipValue() {
     return ownership;
+}
+
+void ScribbleArea::enableScribbleArea(bool en) {
+    enable = en;
+}
+
+bool ScribbleArea::getEnabled() {
+    return enable;
 }

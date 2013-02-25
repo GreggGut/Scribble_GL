@@ -46,7 +46,7 @@ FileList::FileList(int x_, int y_, int w_, int h_) {
     width = w_;
     height = h_;
 
-    std::string fileName = "FileList.png";
+    std::string fileName = "FileListBG.png";
     imagePath = fileName.insert(0, IMAGE_PATH);
 
     buttonArray = new std::vector<FileListButton *>;
@@ -69,8 +69,8 @@ FileList::FileList(int x_, int y_, int w_, int h_) {
                 buttonImage = "AddDocument.png";
                 btnx = 604;
                 btny = 9;
-                btnw = 60;
-                btnh = 60;
+                btnw = 40;
+                btnh = 40;
                 break;
             case 1:
                 type = MOMENTARY;
@@ -149,7 +149,6 @@ void FileList::screenPressEvent(Point* point) {
                     callAction(buttonArray->at(i)->getAction());
                     break;
                 case TOGGLE:
-#warning //add toggling fucntionality
                     callAction(buttonArray->at(i)->getAction());
                     break;
                 case PICKER:

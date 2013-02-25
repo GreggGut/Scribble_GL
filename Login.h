@@ -35,6 +35,8 @@ public:
     void setScreenInterpreter(ScreenInterpreter *s);
     std::string getUserName();
     std::string getPassword();
+    void setUserName(std::string user_);
+    void setPassword(std::string pass_);
     
 private:
     int x;

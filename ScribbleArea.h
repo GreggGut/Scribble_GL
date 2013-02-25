@@ -34,6 +34,9 @@ public:
     void setPenWidth(int newWidth);
     bool pointInsideArea(Point * point);
 
+    void enableScribbleArea(bool en);
+    bool getEnabled();
+    
     void screenPressEvent(Point* point);
     void screenMoveEvent(Point* point);
     void screenReleaseEvent(/*Points *point*/);
@@ -96,6 +99,7 @@ public:
     
 private:
 
+    bool enable;
     bool network;
 
     int x;

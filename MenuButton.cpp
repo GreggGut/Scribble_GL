@@ -36,9 +36,10 @@ int MenuButton::getId(){
 void MenuButton::setSelectedImage(bool selected){
     
     if (selected == 1){
-        
+
         if (imagePath.find(".png") != std::string::npos){
             imagePath.replace(imagePath.end()-4, imagePath.end(), "_Selected.png");
+            setEnabled(1);
         } 
         
         else {
@@ -50,6 +51,7 @@ void MenuButton::setSelectedImage(bool selected){
         
         if (imagePath.find("_Selected.png") != std::string::npos){
             imagePath.replace(imagePath.end()-13, imagePath.end(), ".png");
+            setEnabled(0);
         }
         
         else {

@@ -34,6 +34,8 @@ public:
     void callAction(int action);
     void setScreenInterpreter(ScreenInterpreter *s);
     std::string getBackground();
+    void handleOwnership();
+    MenuButton *getOwnershipBTN();
     
 private:
     bool network;
@@ -44,6 +46,7 @@ private:
     std::vector <MenuButton *> *buttonArray;
     ScreenInterpreter *screenInterpreter;
     std::string background;
+    MenuButton *ownershipBTN;
 };
 
 #endif	/* MENU_H */

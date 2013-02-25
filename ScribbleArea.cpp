@@ -497,3 +497,7 @@ void ScribbleArea::setNetworkActivity(ScribbleArea::NetworkActivity n) {
 ScribbleArea::NetworkActivity ScribbleArea::getNetworkActivity() {
     return networkActivity;
 }
+
+int ScribbleArea::getOwnershipValue() {
+    return ownership;
+}

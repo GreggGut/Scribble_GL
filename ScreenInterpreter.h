@@ -9,9 +9,7 @@
 #define	SCREENINTERPRETER_H
 
 #include "ScribbleArea.h"
-//#include "Menu.h"
 #include "Point.h"
-//#include "Login.h"
 #include "Keyboard.h"
 #include "Alert.h"
 #include "FileList.h"

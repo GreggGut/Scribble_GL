@@ -18,7 +18,7 @@ Menu::Menu() {
 Menu::Menu(int x_, int y_, int w_, int h_) {
 
     std::string bgImage = "MenuBG.png";
-    background = bgImage.insert(0,IMAGE_PATH);
+    background = bgImage.insert(0, IMAGE_PATH);
 
     network = NETWORK;
     x = x_;
@@ -56,7 +56,7 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
             case 3:
                 type = TOGGLE;
                 action = WRITE_C;
-                fileName = "Write.png";
+                fileName = "Write_Selected.png";
                 break;
             case 4:
                 type = TOGGLE;
@@ -75,12 +75,12 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
                 break;
             case 7:
                 type = MOMENTARY;
-                action = PREV_PG_C;
+                action = PREVIOUS_PAGE_C;
                 fileName = "PreviousPage.png";
                 break;
             case 8:
                 type = MOMENTARY;
-                action = NEXT_PG_C;
+                action = NEXT_PAGE_C;
                 fileName = "NextPage.png";
                 break;
             default:
@@ -92,17 +92,22 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
 
         std::string imagePath;
         if (fileName != "") {
-            imagePath = fileName.insert(0,IMAGE_PATH);
+            imagePath = fileName.insert(0, IMAGE_PATH);
         }
-
-        else{
+        else {
             imagePath = "";
         }
 
-        MenuButton *btn = new MenuButton(5 + (BTN_WIDTH + 5) * i, 5, 40, 40, type, action,NULL,NULL,NULL,NULL,imagePath);
+        MenuButton *btn = new MenuButton(5 + (BTN_WIDTH + 5) * i, 5, 40, 40, type, action, NULL, NULL, NULL, NULL, imagePath, i);
         buttonArray->push_back(btn);
 
     }
+
+    std::string ownershipImage = "Write.png";
+    ownershipImage.insert(0, IMAGE_PATH);
+#warning //change to toggle maybe
+    
+    ownershipBTN = new MenuButton(WIDTH - 40 - 5, 5, 40, 40, MOMENTARY, STATUS_C, NULL, NULL, NULL, NULL, ownershipImage,20);
 
 }
 
@@ -110,14 +115,15 @@ Menu::Menu(const Menu& orig) {
 }
 
 Menu::~Menu() {
-    
+
     for (uint i = 0; i < buttonArray->size(); i++) {
         delete buttonArray->at(i);
     }
 
     buttonArray->clear();
-                
+
     delete buttonArray;
+    delete ownershipBTN;
 }
 
 std::vector <MenuButton *> * Menu::getButtonArray() {
@@ -183,6 +189,24 @@ void Menu::screenPressEvent(Point* point) {
         }
     }
 
+    if (ownershipBTN->pointInsideArea(point) == 1) {
+
+            switch (ownershipBTN->getMode()) {
+                case MOMENTARY:
+                    callAction(ownershipBTN->getAction());
+                    break;
+                case TOGGLE:
+#warning //add toggling fucntionality
+                    callAction(ownershipBTN->getAction());
+                    break;
+                case PICKER:
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    
     delete point;
     point = NULL;
 }
@@ -246,17 +270,23 @@ void Menu::callAction(int action) {
             }
             break;
         case ERASE_C:
+            buttonArray->at(4)->setSelectedImage(1);
+            buttonArray->at(3)->setSelectedImage(0);
             screenInterpreter->getScribbleArea()->setMode(ERASE);
             break;
         case WRITE_C:
+            buttonArray->at(4)->setSelectedImage(0);
+            buttonArray->at(3)->setSelectedImage(1);
             screenInterpreter->getScribbleArea()->setMode(WRITE);
             break;
-        case PREV_PG_C:
+        case PREVIOUS_PAGE_C:
             screenInterpreter->getScribbleArea()->previousPage();
             break;
-        case NEXT_PG_C:
+        case NEXT_PAGE_C:
             screenInterpreter->getScribbleArea()->nextPage();
             break;
+        case STATUS_C:
+            handleOwnership();
         default:
             break;
     }
@@ -267,7 +297,42 @@ void Menu::setScreenInterpreter(ScreenInterpreter *s) {
     screenInterpreter = s;
 }
 
+std::string Menu::getBackground() {
+    return background;
+}
 
- std::string Menu::getBackground(){
-     return background;
- }
+void Menu::handleOwnership() {
+
+    int ownership = screenInterpreter->getScribbleArea()->getOwnershipValue();
+
+    if (ownership == 0) { //ME
+        //release it since I already have it
+        screenInterpreter->getScribbleArea()->setOwnershipFree();
+        
+        std::string ownershipImage = "Write.png";
+        ownershipImage.insert(0, IMAGE_PATH);
+        
+        ownershipBTN->setImagePath(ownershipImage);
+        
+    }
+    else if (ownership == 1) { //Taken
+        //busy
+    }
+    else if (ownership == 2) { //Free
+        //send to get it
+        screenInterpreter->getScribbleArea()->setOwnershipMe();
+        
+        std::string ownershipImage = "Write_Selected.png";
+        ownershipImage.insert(0, IMAGE_PATH);
+        
+        ownershipBTN->setImagePath(ownershipImage);
+    }
+    else {
+        std::cout << "ERROR WITH OWNERSHIP\n";
+    }
+}
+
+MenuButton *Menu::getOwnershipBTN(){
+    return ownershipBTN;
+}
+    

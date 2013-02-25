@@ -20,20 +20,24 @@
 #define PREVIOUS_PAGE_C 6
 #define CLEAR_ALL_C 7
 #define WRITE_C 8
-#define NEXT_PG_C 9
-#define PREV_PG_C 10
+#define STATUS_C 9
 
 class MenuButton: public Button {
 public:
     MenuButton();
-    MenuButton(int x_, int y_, int w_, int h_, int mode_, int action_, Color *fill_, Color *stroke_, Color *highlight_, Color *highlightStroke_, std::string image_);
+    MenuButton(int x_, int y_, int w_, int h_, int mode_, int action_, Color *fill_, Color *stroke_, Color *highlight_, Color *highlightStroke_, std::string image_, int id_);
     MenuButton(const MenuButton& orig);
     virtual ~MenuButton();
     
     std::string getImagePath();
+    void setImagePath(std::string image);
+    int getId();
+    void setSelectedImage(bool selected);
+    
 private:
     
     std::string imagePath;
+    int id;
 };
 
 #endif	/* MENUBUTTON_H */

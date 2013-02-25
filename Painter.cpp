@@ -156,22 +156,12 @@ void Painter::drawMenu() {
 
     for (int i = 0; i < menu->getButtonArray()->size(); ++i) {
 
-        /*glColor3f(menu->getButtonArray()->at(i)->getFillColor()->getRed(), menu->getButtonArray()->at(i)->getFillColor()->getGreen(), menu->getButtonArray()->at(i)->getFillColor()->getBlue());
-
-        glBegin(GL_POLYGON);
-
-        glVertex3i(menu->getButtonArray()->at(i)->getX(), menu->getButtonArray()->at(i)->getY(), 0);
-        glVertex3i(menu->getButtonArray()->at(i)->getX() + menu->getButtonArray()->at(i)->getWidth(), menu->getButtonArray()->at(i)->getY(), 0);
-        glVertex3i(menu->getButtonArray()->at(i)->getX() + menu->getButtonArray()->at(i)->getWidth(), menu->getButtonArray()->at(i)->getY() + menu->getButtonArray()->at(i)->getHeight(), 0);
-        glVertex3i(menu->getButtonArray()->at(i)->getX(), menu->getButtonArray()->at(i)->getY() + menu->getButtonArray()->at(i)->getHeight(), 0);
-
-        glEnd();
-         */
-
         glRasterPos2i(menu->getButtonArray()->at(i)->getX(), menu->getButtonArray()->at(i)->getY());
         getPNG(menu->getButtonArray()->at(i)->getImagePath());
     }
 
+     glRasterPos2i(menu->getOwnershipBTN()->getX(), menu->getOwnershipBTN()->getY());
+     getPNG(menu->getOwnershipBTN()->getImagePath());
 }
 
 void Painter::drawPDF() {

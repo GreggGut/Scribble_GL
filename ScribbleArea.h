@@ -92,6 +92,8 @@ public:
     void setNetworkActivity(NetworkActivity n);
     NetworkActivity getNetworkActivity();
 
+    int getOwnershipValue();
+    
 private:
 
     bool network;

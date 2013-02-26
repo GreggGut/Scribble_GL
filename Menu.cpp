@@ -151,6 +151,9 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
 
     }
 
+    buttonArray->at(4)->setEnabled(0);
+    buttonArray->at(3)->setEnabled(1);
+    
     std::string ownershipImage = "Write.png";
     ownershipImage.insert(0, IMAGE_PATH);
 
@@ -347,7 +350,7 @@ void Menu::callAction(int action) {
             handleOwnership();
             break;
         case FILE_LIST_C:
-#warning //button write may disappear
+    
             if (buttonArray->at(4)->getEnabled() != 0){
                 buttonArray->at(4)->setSelectedImage(0);
             }
@@ -393,7 +396,7 @@ void Menu::handleOwnership() {
         //send to get it
         screenInterpreter->getScribbleArea()->getSender()->sendRequestOwnership();
 
-        while (screenInterpreter->getScribbleArea()->getOwnershipValue() != 0);
+        while (screenInterpreter->getScribbleArea()->getOwnershipValue() == 2);
 
     } else {
         std::cout << "ERROR WITH OWNERSHIP\n";

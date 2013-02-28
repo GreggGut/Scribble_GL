@@ -134,7 +134,7 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
                 break;
             default:
                 type = MOMENTARY;
-                action = NULL;
+                action = -1;
                 buttonImage = "";
                 break;
         }
@@ -166,7 +166,7 @@ Menu::Menu(const Menu& orig) {
 
 Menu::~Menu() {
 
-    for (uint i = 0; i < buttonArray->size(); i++) {
+    for (unsigned int i = 0; i < buttonArray->size(); i++) {
         delete buttonArray->at(i);
     }
 

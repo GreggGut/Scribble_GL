@@ -10,7 +10,7 @@
 FileListCell::FileListCell() {
 }
 
-FileListCell::FileListCell(int x_, int y_, int w_, int h_, int mode_, int action_, Color* fill_, Color* stroke_, Color* highlight_, Color* highlightStroke_, std::string fileName_, uint id_):Button(x_,y_,w_,h_,mode_,action_,fill_,stroke_,highlight_,highlightStroke_){
+FileListCell::FileListCell(int x_, int y_, int w_, int h_, int mode_, int action_, Color* fill_, Color* stroke_, Color* highlight_, Color* highlightStroke_, std::string fileName_, unsigned int id_):Button(x_,y_,w_,h_,mode_,action_,fill_,stroke_,highlight_,highlightStroke_){
     imagePath = "FileListCell.png";
     imagePath.insert(0,IMAGE_PATH);
     fileName = fileName_;
@@ -31,6 +31,6 @@ std::string FileListCell::getFileName(){
     return fileName;
 }
 
-uint FileListCell::getID(){
+unsigned int FileListCell::getID(){
     return id;
 }

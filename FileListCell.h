@@ -15,16 +15,16 @@
 class FileListCell:public Button {
 public:
     FileListCell();    
-    FileListCell(int x_, int y_, int w_, int h_, int mode_, int action_, Color* fill_, Color* stroke_, Color* highlight_, Color* highlightStroke_, std::string fileName_, uint id_);
+    FileListCell(int x_, int y_, int w_, int h_, int mode_, int action_, Color* fill_, Color* stroke_, Color* highlight_, Color* highlightStroke_, std::string fileName_, unsigned int id_);
     FileListCell(const FileListCell& orig);
     virtual ~FileListCell();
     std::string getImagePath();
     std::string getFileName();
-    uint getID();
+    unsigned int getID();
 private:
     std::string imagePath;
     std::string fileName;
-    uint id;
+    unsigned int id;
 };
 #endif	/* FILELISTCELL_H */
 

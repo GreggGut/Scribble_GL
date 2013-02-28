@@ -88,7 +88,7 @@ Path::Path(const Path& orig) : WriteEraseMode(orig.WriteEraseMode), myPenWidth(o
  */
 Path::~Path()
 {
-    for (uint i = 0; i < mPointsVector.size(); i++)
+    for (unsigned int i = 0; i < mPointsVector.size(); i++)
     {
         delete mPointsVector[i];
     }
@@ -293,5 +293,6 @@ int * Path::pointsArray(){
         *(vertexs + 2*i) = mPointsVector.at(i)->getX();
         *(vertexs + 2*(i+1)) = mPointsVector.at(i)->getY();
     }
-
+    
+    //return *(vertexs);
 }

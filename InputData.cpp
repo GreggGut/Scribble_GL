@@ -54,7 +54,7 @@ int InputData::open_port()
         //exit(CANNOT_OPEN_PORT);
     } else
     {
-        fcntl(fd, F_SETFL, O_DIRECT); //0);
+        //fcntl(fd, F_SETFL, O_DIRECT); //linux
     }
     return (fd);
 }

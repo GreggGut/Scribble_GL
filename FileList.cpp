@@ -17,7 +17,7 @@ FileList::FileList(const FileList& orig) {
 
 FileList::~FileList() {
 
-    for (uint i = 0; i < buttonArray->size(); i++) {
+    for (unsigned int i = 0; i < buttonArray->size(); i++) {
         delete buttonArray->at(i);
     }
 
@@ -25,7 +25,7 @@ FileList::~FileList() {
 
     delete buttonArray;
 
-    for (uint i = 0; i < fileTable->size(); i++) {
+    for (unsigned int i = 0; i < fileTable->size(); i++) {
         delete fileTable->at(i);
     }
 
@@ -92,7 +92,7 @@ FileList::FileList(int x_, int y_, int w_, int h_) {
                 break;
             default:
                 type = MOMENTARY;
-                action = NULL;
+                action = -1;
                 buttonImage = "";
                 btnx = 0;
                 btny = 0;
@@ -284,13 +284,13 @@ void FileList::createTable() {
     int btnw = 656;
     int btnh = 62;
 
-    for (uint i = 0; i < fileTable->size(); i++) {
+    for (unsigned int i = 0; i < fileTable->size(); i++) {
         delete fileTable->at(i);
     }
 
     fileTable->clear();
 
-    for (uint i = 0; i < size; ++i) {
+    for (unsigned int i = 0; i < size; ++i) {
         FileListCell *cell = new FileListCell(btnx + x, btny * (i + 1) + 2 * i + y, btnw, btnh, type, action, NULL, NULL, NULL, NULL, fileList.at(start + i), start + i);
         fileTable->push_back(cell);
     }

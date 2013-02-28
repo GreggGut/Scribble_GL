@@ -13,7 +13,7 @@ ScribbleArea::ScribbleArea() : networkPathPage(-1)
     penColor = Color();
     penSize = 1.0;
     enable = 0;
-    
+
     mTempPath = NULL;
 
     pathsOnPage.resize(1);
@@ -27,7 +27,7 @@ ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1)
 
     network = NETWORK;
     enable = 0;
-    
+
     mMode = WRITE;
     x = x_;
     y = y_;
@@ -40,7 +40,7 @@ ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1)
     mTempPath = NULL;
 
     document = new Document(x, y, width, height);
-    
+
     std::string fileName = "./Files/test.pdf";
 
     loadFile(fileName);
@@ -218,7 +218,7 @@ void ScribbleArea::screenMoveEvent(Point* point)
     {
         return;
     }
-    
+
     if (scribbling == true)
     {
         pathsLock.lock();
@@ -244,7 +244,7 @@ void ScribbleArea::screenMoveEvent(Point* point)
  * This function disables scribbling and informs the ScribbleArea that nothing is touching the screen anymore
  */
 void ScribbleArea::screenReleaseEvent(/*Points *point*/) {
-   
+
     if (scribbling == true) {
         scribbling = false;
 
@@ -429,6 +429,16 @@ Document * ScribbleArea::getDocument() {
 
 void ScribbleArea::setFilesOnServer(std::vector<std::string> filesOnServer) {
     this->filesOnServer = filesOnServer;
+}
+
+void ScribbleArea::addFileOnServer(std::string file)
+{
+    filesOnServer.push_back(file);
+}
+
+void ScribbleArea::clearFilesOnServer()
+{
+    filesOnServer.clear();
 }
 
 std::vector<std::string> ScribbleArea::getFilesOnServer() {

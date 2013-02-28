@@ -118,6 +118,8 @@ public:
         UPDATE_FILE_CONTENT = 13,
         DOWNLOAD_FILE_DONE = 14,
         CREATE_NEW_FILE = 15,
+        GET_FILE_LIST_CLEAR = 16,
+        GET_FILE_LIST_COMPLETE = 17,
     } protocol;
 
     static const std::string separator; // = "&";

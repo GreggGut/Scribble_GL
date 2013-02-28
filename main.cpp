@@ -112,10 +112,10 @@ void display() {
 
 void close() {
 
-    if (painter->getInterpreter()->getScribbleArea()->getOwnershipValue() == 0) {
-        painter->getInterpreter()->getScribbleArea()->getSender()->sendReleaseOwnership();
-        while (painter->getInterpreter()->getScribbleArea()->getOwnershipValue() != 2);
-    }
+//    if (painter->getInterpreter()->getScribbleArea()->getOwnershipValue() == 0) {
+//        painter->getInterpreter()->getScribbleArea()->getSender()->sendReleaseOwnership();
+//        while (painter->getInterpreter()->getScribbleArea()->getOwnershipValue() != 2);
+//    }
 
     delete sender;
     delete painter;

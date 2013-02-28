@@ -36,7 +36,7 @@ public:
 
     void enableScribbleArea(bool en);
     bool getEnabled();
-    
+
     void screenPressEvent(Point* point);
     void screenMoveEvent(Point* point);
     void screenReleaseEvent(/*Points *point*/);
@@ -84,6 +84,8 @@ public:
      * Used for networking Functions
      */
     void setFilesOnServer(std::vector<std::string> filesOnServer);
+    void addFileOnServer(std::string file);
+    void clearFilesOnServer();
     std::vector<std::string> getFilesOnServer();
 
     enum class NetworkActivity
@@ -96,7 +98,12 @@ public:
     NetworkActivity getNetworkActivity();
 
     int getOwnershipValue();
-    
+
+    enum Ownership
+    {
+        ME, TAKEN, FREE
+    };
+
 private:
 
     bool enable;
@@ -136,10 +143,7 @@ private:
     Path* mNetworkPath;
     std::vector<std::string> filesOnServer;
 
-    enum
-    {
-        ME, TAKEN, FREE
-    } ownership;
+    Ownership ownership;
 
     NetworkActivity networkActivity;
 };

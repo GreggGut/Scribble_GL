@@ -62,7 +62,7 @@ Login::Login(int x_, int y_, int w_, int h_) {
                 break;
             default:
                 type = MOMENTARY;
-                action = -1;
+                action = NULL;
                 btnx = 0;
                 btny = 0;
                 btnw = 0;

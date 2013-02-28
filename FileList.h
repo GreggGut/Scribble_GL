@@ -50,10 +50,10 @@ private:
     ScreenInterpreter *screenInterpreter;
     std::vector <std::string> fileList;
     std::vector <FileListCell *> *fileTable;
-    unsigned int start;
-    unsigned int size;
-    unsigned int numberOfPages;
-    unsigned int page;
+    uint start;
+    uint size;
+    uint numberOfPages;
+    uint page;
     
     void createTable();
 };

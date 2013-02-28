@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Scribble_GL
+PROJECTNAME=Scribble_GL_working_copy
 
 # Active Configuration
 DEFAULTCONF=Debug

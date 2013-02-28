@@ -192,7 +192,7 @@ bool PalmRejection::firstTryFindingPenAndPalm()
     {
         for ( int i = 0; i < 4; i++ )
         { 
-            for ( unsigned int j = 0; j < pointToAnalyze[pos[i]].size(); j++ )
+            for ( uint j = 0; j < pointToAnalyze[pos[i]].size(); j++ )
             {
                 if ( pointToAnalyze[pos[i]][j] != NULL )
                 {
@@ -734,7 +734,7 @@ void PalmRejection::updatePosition()
 {
     position = mod(++position);
 
-    for ( unsigned int i = 0; i < pointToAnalyze[position].size(); i++ )
+    for ( uint i = 0; i < pointToAnalyze[position].size(); i++ )
     {
         //Do not need to check for NULL since delete NULL has not effect
         delete pointToAnalyze[position][i];
@@ -817,9 +817,9 @@ void PalmRejection::findNextPoint()
  */
 void PalmRejection::flushPointBuffer()
 {
-    for ( unsigned int i = 0; i < ANALYZE_BUFFER; i++ )
+    for ( uint i = 0; i < ANALYZE_BUFFER; i++ )
     {
-        for ( unsigned int j = 0; j < pointToAnalyze[i].size(); j++ )
+        for ( uint j = 0; j < pointToAnalyze[i].size(); j++ )
         {
             delete pointToAnalyze[i][j];
         }

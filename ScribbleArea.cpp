@@ -283,7 +283,7 @@ void ScribbleArea::undo(int page) {
         if (!redoVector.at(page).empty()) {
             if (pathsOnPage.at(page).back()->getPathID() > redoVector.at(page).back()->getPathID()) {
 
-                for (unsigned int i = 0; i < redoVector.at(page).size(); i++) {
+                for (uint i = 0; i < redoVector.at(page).size(); i++) {
                     delete redoVector.at(page).at(i);
                 }
 
@@ -312,7 +312,7 @@ void ScribbleArea::redo(int page) {
         if (!pathsOnPage.at(page).empty()) {
             if (pathsOnPage.at(page).back()->getPathID() > redoVector.at(page).back()->getPathID()) {
 
-                for (unsigned int i = 0; i < redoVector.at(page).size(); i++) {
+                for (uint i = 0; i < redoVector.at(page).size(); i++) {
                     delete redoVector.at(page).at(i);
                 }
 
@@ -339,7 +339,7 @@ void ScribbleArea::clearAll(int page) {
 
     if (!pathsOnPage.at(page).empty()) {
 
-        for (unsigned int j = 0; j < pathsOnPage.at(page).size(); j++) {
+        for (uint j = 0; j < pathsOnPage.at(page).size(); j++) {
             delete pathsOnPage.at(page).at(j);
         }
 
@@ -348,7 +348,7 @@ void ScribbleArea::clearAll(int page) {
 
     if (!redoVector.at(page).empty()) {
 
-        for (unsigned int i = 0; i < redoVector.at(page).size(); i++) {
+        for (uint i = 0; i < redoVector.at(page).size(); i++) {
             delete redoVector.at(page).at(i);
         }
 

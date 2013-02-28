@@ -62,9 +62,6 @@ void key(unsigned char key, int x, int y) {
             painter->getLogin()->setUserName("greg");
             painter->getLogin()->setPassword("pass");
             break;
-        case '3':
-            painter->getLogin()->setUserName("scribble");
-            painter->getLogin()->setPassword("app1234");
         default:
             break;
     }

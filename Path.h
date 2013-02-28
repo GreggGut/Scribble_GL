@@ -1,4 +1,4 @@
-/*!  
+/*!
  * File:   Path.h
  * Author: greg
  *
@@ -9,7 +9,7 @@
 #define	PATH_H
 
 #include <vector>
-#include "Point.h" 
+#include "Point.h"
 #include "Color.h"
 #include "defines.h"
 #include "ScreenAreas.h"
@@ -19,7 +19,7 @@
 class Path
 {
 public:
-    Path(Point* point, int mode, Color color, int width, int ID, bool final=false/*, bool active = true*/);
+    Path(Point* point, int mode, Color color, int width, int ID, bool _final=false/*, bool active = true*/);
     Path(int mode, Color color, int width, int ID);//, bool active);
     Path(const Path& orig);
     virtual ~Path();
@@ -44,7 +44,7 @@ public:
 
     int getPointsCount();
     int *pointsArray();
-    
+
 private:
     int sqrt(const int x);
 
@@ -55,7 +55,7 @@ private:
     int ID;
     bool active;
     /*! Used to determine if the path is really what the user wanted to write or not*/
-    bool final;
+    bool _final;
     int totalLength;
     int mX;
     int mY;

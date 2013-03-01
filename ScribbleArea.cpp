@@ -41,9 +41,9 @@ ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1)
 
     document = new Document(x, y, width, height);
 
-    std::string fileName = "./Files/test.pdf";
+    //std::string fileName = "./Files/test.pdf";
 
-    loadFile(fileName);
+    //loadFile(fileName);
 }
 
 ScribbleArea::ScribbleArea(const ScribbleArea& orig)

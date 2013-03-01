@@ -35,7 +35,7 @@ ScribbleArea::ScribbleArea(int x_, int y_, int w_, int h_) : networkPathPage(-1)
     height = h_;
 
     penColor = Color();
-    penSize = 1.0;
+    penSize = 2.0;
 
     mTempPath = NULL;
 

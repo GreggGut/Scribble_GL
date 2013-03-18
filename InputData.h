@@ -33,7 +33,11 @@ public:
     void run();
     void stop();
     void endReader();
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> parent of c631025... started changes to input data to make it work better but it shouldnt matter for the demo. 
 private:
     void initialise_port(int fd);
     int open_port();
@@ -51,12 +55,6 @@ private:
     
     PalmRejection palm;
     
-    bool event;
-    int number_of_points;
-    int char_from_serial;
-
-    int start_bit_1;
-    int start_bit_2;
     
 };
 

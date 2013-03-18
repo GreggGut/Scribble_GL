@@ -79,7 +79,6 @@ void InputData::stop()
  *
  * ** Need to be implemented properly. The issue now is that the reading from the port is blocking and wait until something occurs at the USB port.
  */
-
 void InputData::run()
 {
     fd = open_port();
@@ -101,6 +100,10 @@ void InputData::run()
     }
 
     fcntl(fd, F_SETFL, 0); //FASYNC);//0);
+    int char_from_serial;
+
+    int start_bit_1;
+    int start_bit_2;
 
     mPointsQueue = new queue<Point* >;
 
@@ -110,7 +113,8 @@ void InputData::run()
      * 1 - Move event
      * 2 - Up event
      */
-    event = false;
+    bool event = false;
+    int number_of_points;
 
     while (!stop_request)
     {

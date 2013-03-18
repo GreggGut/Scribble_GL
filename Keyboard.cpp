@@ -24,7 +24,7 @@ Keyboard::Keyboard(int x_, int y_, int w_, int h_) {
     //Color *white = new Color(WHITE);
     //Color *green = new Color(GREEN);
 
-    buttonArray = new std::vector<KeyboardButton *>;
+    /*buttonArray = new std::vector<KeyboardButton *>;
 
     for (int i = 0; i < 1; ++i) {
 
@@ -63,7 +63,7 @@ Keyboard::Keyboard(int x_, int y_, int w_, int h_) {
         KeyboardButton *btn = new KeyboardButton(btnx, btny, btnw, btnh, type, action, NULL, NULL, NULL, NULL, imagePath, i);
         buttonArray->push_back(btn);
 
-    }
+    }*/
 }
 
 Keyboard::Keyboard(const Keyboard& orig) {
@@ -71,19 +71,19 @@ Keyboard::Keyboard(const Keyboard& orig) {
 
 Keyboard::~Keyboard() {
 
-    for (uint i = 0; i < buttonArray->size(); i++) {
+    /*for (uint i = 0; i < buttonArray->size(); i++) {
         delete buttonArray->at(i);
     }
 
     buttonArray->clear();
 
     delete buttonArray;
-
+     */
 }
 
-std::vector <KeyboardButton *> * Keyboard::getButtonArray() {
+/*std::vector <KeyboardButton *> * Keyboard::getButtonArray() {
     return buttonArray;
-}
+}*/
 
 int Keyboard::getX() {
     return x;
@@ -123,7 +123,7 @@ void Keyboard::screenPressEvent(Point* point) {
         return;
     }
 
-    for (int i = 0; i < buttonArray->size(); ++i) {
+    /*for (int i = 0; i < buttonArray->size(); ++i) {
 
         if (buttonArray->at(i)->pointInsideArea(point) == 1) {
 
@@ -142,7 +142,7 @@ void Keyboard::screenPressEvent(Point* point) {
 
         }
     }
-
+    */
     delete point;
     point = NULL;
 }
@@ -184,14 +184,14 @@ void Keyboard::screenReleaseEvent(/*Points *point*/) {
 
 void Keyboard::callAction(int action) {
 
-    switch (action) {
+    /*switch (action) {
         case Q:
           
             break;
     
         default:
             break;
-    }
+    }*/
 
 }
 

@@ -8,7 +8,7 @@
 #ifndef KEYBOARD_H
 #define	KEYBOARD_H
 #include "Point.h"
-#include <KeyboardButton.h>
+//#include <KeyboardButton.h>
 #include <vector>
 #include "defines.h"
 #include <string>
@@ -25,7 +25,7 @@ public:
     void screenPressEvent(Point* point);
     void screenMoveEvent(Point* point);
     void screenReleaseEvent();
-    std::vector <KeyboardButton *> * getButtonArray();
+    //std::vector <KeyboardButton *> * getButtonArray();
     int getX();
     int getY();
     int getWidth();
@@ -40,7 +40,7 @@ private:
     int y;
     int width;
     int height;
-    std::vector <KeyboardButton *> *buttonArray;
+    //std::vector <KeyboardButton *> *buttonArray;
     ScreenInterpreter *screenInterpreter;
     std::string background;
 

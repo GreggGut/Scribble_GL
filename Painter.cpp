@@ -63,29 +63,43 @@ ScreenInterpreter* Painter::getInterpreter() {
 
 void Painter::Draw() {
 
-    if (interpreter->getShowAlert() == 1) {
-        drawAlert();
-    } else if (interpreter->getShowLogin() == 1) {
-        drawLogin();
-    } else if (interpreter->getShowFile() == 1) {
-        drawFileList();
-    } else {
-        drawPDF();
+    try {
+        if (interpreter->getShowAlert() == 1) {
 
-        glEnable(GL_BLEND);
-        glEnable(GL_LINE_SMOOTH);
+            drawAlert();
 
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        } else if (interpreter->getShowLogin() == 1) {
 
-        drawPaths();
+            drawLogin();
 
-        glDisable(GL_LINE_SMOOTH);
-        glDisable(GL_BLEND);
+        } else if (interpreter->getShowFile() == 1) {
 
-        drawMenu();
+            drawFileList();
 
-    }
+        } else {
+
+            drawPDF();
+
+
+            glEnable(GL_BLEND);
+            glEnable(GL_LINE_SMOOTH);
+
+            glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+
+            drawPaths();
+
+            glDisable(GL_LINE_SMOOTH);
+            glDisable(GL_BLEND);
+
+
+            drawMenu();
+
+        }
+} catch (const std::out_of_range& oor) {
+    std::cout << "\ntest paths\n";
+}
 }
 
 void Painter::drawPaths() {
@@ -105,11 +119,13 @@ void Painter::drawPaths() {
          */
 
         glBegin(GL_LINE_STRIP);
+
         for (int j = 0; j < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().size(); ++j) {
 
             glVertex3f(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getX(), scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getY(), 0.0f);
         }
         glEnd();
+
     }
 
     scribbleArea->setLockForPath(0);
@@ -128,6 +144,7 @@ void Painter::drawPaths() {
 
         glEnd();
     }
+
     scribbleArea->setLockForTempPath(0);
     //Path that is being received through the network
     scribbleArea->setLockForNetworkPath(1);
@@ -146,7 +163,6 @@ void Painter::drawPaths() {
         glEnd();
     }
     scribbleArea->setLockForNetworkPath(0);
-
 }
 
 void Painter::drawMenu() {
@@ -154,16 +170,14 @@ void Painter::drawMenu() {
     glRasterPos2i(menu->getX(), menu->getY());
     getPNG(menu->getBackground());
 
-    int size = menu->getButtonArray()->size();
-    
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < menu->getButtonArray()->size(); ++i) {
 
         glRasterPos2i(menu->getButtonArray()->at(i)->getX(), menu->getButtonArray()->at(i)->getY());
         getPNG(menu->getButtonArray()->at(i)->getImagePath());
     }
 
     std::string ownershipImage;
-    
+
     int ownership = scribbleArea->getOwnershipValue();
 
     if (ownership == 0) { //ME
@@ -176,16 +190,16 @@ void Painter::drawMenu() {
     } else if (ownership == 2) { //Free
         //send to get it
         ownershipImage = "GetOwnership.png";
-        
+
     } else {
         std::cout << "ERROR WITH OWNERSHIP\n";
     }
-    
-     ownershipImage.insert(0, IMAGE_PATH);
-     menu->getOwnershipBTN()->setImagePath(ownershipImage);
-     
-     glRasterPos2i(menu->getOwnershipBTN()->getX(), menu->getOwnershipBTN()->getY());
-     getPNG(menu->getOwnershipBTN()->getImagePath());
+
+    ownershipImage.insert(0, IMAGE_PATH);
+    menu->getOwnershipBTN()->setImagePath(ownershipImage);
+
+    glRasterPos2i(menu->getOwnershipBTN()->getX(), menu->getOwnershipBTN()->getY());
+    getPNG(menu->getOwnershipBTN()->getImagePath());
 }
 
 void Painter::drawPDF() {
@@ -203,7 +217,7 @@ void Painter::drawLogin() {
     glRasterPos2i(login->getX(), login->getY());
 
     getPNG(login->getImagePath());
-       
+
     drawText(login->getUserName(), 35, login->getX() + 78, login->getY() + 128, Color(DARK_GRAY));
     drawText(login->getPassword(), 35, login->getX() + 78, login->getY() + 205, Color(DARK_GRAY));
 }
@@ -213,39 +227,35 @@ void Painter::drawKeyboard() {
 }
 
 void Painter::drawFileList() {
-    
+
     glRasterPos2i(filelist->getX(), filelist->getY());
 
     getPNG(filelist->getImagePath());
 
-    int buttonSize = filelist->getButtonArray()->size();
-    
-    for (int i = 0; i < buttonSize; ++i) {
+    for (int i = 0; i < filelist->getButtonArray()->size(); ++i) {
 
         int x = filelist->getButtonArray()->at(i)->getX();
         int y = filelist->getButtonArray()->at(i)->getY();
-        
-        glRasterPos2i(x,y);
+
+        glRasterPos2i(x, y);
         getPNG(filelist->getButtonArray()->at(i)->getImagePath());
- 
+
     }
 
-    int fileSize = filelist->getFileListTable()->size();
-    
-    for (int i = 0; i < fileSize; ++i) {
-        
+    for (int i = 0; i < filelist->getFileListTable()->size(); ++i) {
+
         int x = filelist->getFileListTable()->at(i)->getX();
         int y = filelist->getFileListTable()->at(i)->getY();
-        
-        glRasterPos2i(x,y);
+
+        glRasterPos2i(x, y);
         getPNG(filelist->getFileListTable()->at(i)->getImagePath());
-               
+
         drawText(filelist->getFileListTable()->at(i)->getFileName(), 25, x + 56, y + 20, Color(DARK_GRAY));
     }
-    
+
     std::string page;
     page = "Page " + filelist->getCurrentPage() + "/" + filelist->getNumberOfPages();
-    
+
     drawText(page, 35, filelist->getX() + 18, filelist->getY() + 690, Color(GREEN));
 }
 
@@ -271,10 +281,10 @@ void Painter::getPNG(std::string imagePath) {
 }
 
 void Painter::drawText(std::string text, int size, int x, int y, Color color) {
-    
+
     glColor3f(color.getRed(), color.getGreen(), color.getBlue());
     glPixelZoom(1.0, 1.0);
-    glRasterPos2i(x, y+size-5);
+    glRasterPos2i(x, y + size - 5);
     // Create a pixmap font from a TrueType file.
     FTGLPixmapFont font("./resources/fonts/century_gothic.ttf");
 

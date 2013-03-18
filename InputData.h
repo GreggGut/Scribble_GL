@@ -33,8 +33,6 @@ public:
     void run();
     void stop();
     void endReader();
-    void getData();
-    void openScreen();
     
 private:
     void initialise_port(int fd);

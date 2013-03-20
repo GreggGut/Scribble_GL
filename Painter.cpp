@@ -154,9 +154,7 @@ void Painter::drawMenu() {
     glRasterPos2i(menu->getX(), menu->getY());
     getPNG(menu->getBackground());
 
-    int size = menu->getButtonArray()->size();
-    
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < menu->getButtonArray()->size(); ++i) {
 
         glRasterPos2i(menu->getButtonArray()->at(i)->getX(), menu->getButtonArray()->at(i)->getY());
         getPNG(menu->getButtonArray()->at(i)->getImagePath());
@@ -213,14 +211,11 @@ void Painter::drawKeyboard() {
 }
 
 void Painter::drawFileList() {
-    
     glRasterPos2i(filelist->getX(), filelist->getY());
 
     getPNG(filelist->getImagePath());
 
-    int buttonSize = filelist->getButtonArray()->size();
-    
-    for (int i = 0; i < buttonSize; ++i) {
+    for (int i = 0; i < filelist->getButtonArray()->size(); ++i) {
 
         int x = filelist->getButtonArray()->at(i)->getX();
         int y = filelist->getButtonArray()->at(i)->getY();
@@ -230,9 +225,9 @@ void Painter::drawFileList() {
  
     }
 
-    int fileSize = filelist->getFileListTable()->size();
+    fileListLock.lock();
     
-    for (int i = 0; i < fileSize; ++i) {
+    for (int i = 0; i < filelist->getFileListTable()->size(); ++i) {
         
         int x = filelist->getFileListTable()->at(i)->getX();
         int y = filelist->getFileListTable()->at(i)->getY();
@@ -242,6 +237,8 @@ void Painter::drawFileList() {
                
         drawText(filelist->getFileListTable()->at(i)->getFileName(), 25, x + 56, y + 20, Color(DARK_GRAY));
     }
+    
+    fileListLock.unlock();
     
     std::string page;
     page = "Page " + filelist->getCurrentPage() + "/" + filelist->getNumberOfPages();

@@ -47,7 +47,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/Color.o \
 	${OBJECTDIR}/Login.o \
 	${OBJECTDIR}/ScreenInterpreter.o \
-	${OBJECTDIR}/KeyboardButton.o \
 	${OBJECTDIR}/PalmRejection.o \
 	${OBJECTDIR}/Menu.o \
 	${OBJECTDIR}/FileListButton.o \
@@ -146,11 +145,6 @@ ${OBJECTDIR}/ScreenInterpreter.o: ScreenInterpreter.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScreenInterpreter.o ScreenInterpreter.cpp
-
-${OBJECTDIR}/KeyboardButton.o: KeyboardButton.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/KeyboardButton.o KeyboardButton.cpp
 
 ${OBJECTDIR}/PalmRejection.o: PalmRejection.cpp 
 	${MKDIR} -p ${OBJECTDIR}

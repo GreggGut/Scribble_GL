@@ -65,7 +65,6 @@ void key(unsigned char key, int x, int y) {
         case '3':
             painter->getLogin()->setUserName("scribble");
             painter->getLogin()->setPassword("app1234");
-            break;
         default:
             break;
     }
@@ -97,11 +96,9 @@ void mouseCoords(int x, int y) {
     if (painter->getInterpreter()->getScribbleArea()->getScribbling() == true) {
         painter->getInterpreter()->screenMoveEvent(new Point(x, y));
     }
-    glutPostRedisplay();
 }
 
 void idle() {
-    
     glutPostRedisplay();
 }
 
@@ -109,9 +106,9 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glLoadIdentity();
-     
+
     painter->Draw();
-    
+
     glutSwapBuffers();
     glFlush();
 }
@@ -134,7 +131,7 @@ int main(int argc, char *argv[]) {
 
     painter = new Painter();
     inputData = new InputData(painter->getInterpreter());
-    
+
     getInput = boost::thread(&InputData::run, inputData);
 
     sender = new Sender(painter->getScribbleArea());

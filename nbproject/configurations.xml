@@ -11,7 +11,6 @@
       <itemPath>FileListCell.h</itemPath>
       <itemPath>InputData.h</itemPath>
       <itemPath>Keyboard.h</itemPath>
-      <itemPath>KeyboardButton.h</itemPath>
       <itemPath>Login.h</itemPath>
       <itemPath>LoginButton.h</itemPath>
       <itemPath>Menu.h</itemPath>
@@ -42,7 +41,6 @@
       <itemPath>FileListCell.cpp</itemPath>
       <itemPath>InputData.cpp</itemPath>
       <itemPath>Keyboard.cpp</itemPath>
-      <itemPath>KeyboardButton.cpp</itemPath>
       <itemPath>Login.cpp</itemPath>
       <itemPath>LoginButton.cpp</itemPath>
       <itemPath>Menu.cpp</itemPath>

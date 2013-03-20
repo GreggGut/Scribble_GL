@@ -289,6 +289,160 @@ Point* InputData::read_data_from_file(int fd)
     return NULL;
 }
 
+void InputData::openScreen(){
+    fd = open_port();
+
+    if (fd != -1)
+    {
+        initialise_port(fd);
+        fcntl(fd, F_SETFL, FNDELAY);
+    } else
+    {
+        std::cout << "Cannot open input port..." << std::endl;
+        return;
+        //exit(CANNOT_OPEN_PORT);
+        // return; // (int*) - 1;
+    }
+
+    fcntl(fd, F_SETFL, 0); //FASYNC);//0);
+
+    mPointsQueue = new queue<Point* >;
+
+    /*
+     * Events:
+     * 0 - Touch event
+     * 1 - Move event
+     * 2 - Up event
+     */
+    event = false;
+}
+
+void InputData::getData(){
+    
+    if(!stop_request){
+        //std::cout<<"running..."<<std::endl;
+        read(fd, &start_bit_1, sizeof (char));
+        start_bit_1 = start_bit_1 & CROP;
+
+        //This look makes sure we are synchronized with the input data stream
+        while (!stop_request)
+        {
+            read(fd, &start_bit_2, sizeof (char));
+            start_bit_2 = start_bit_2 & CROP;
+
+            //std::cout<<"start bit 1 = "<<start_bit_1<< "\n start bit 2 = "<<start_bit_2<<"\n";
+
+            if ((start_bit_1 == 0xc0) && start_bit_2 == 0xf0)
+            {
+                break;
+            }
+            start_bit_1 = start_bit_2;
+            std::cout << "synchronizing start bits" << std::endl;
+        }
+
+        number_of_points = 0;
+        /*int c = */read(fd, &number_of_points, sizeof (char));
+
+        if (number_of_points == 0)
+        {
+            //action_Point = NULL;
+            palm.eventRelease();
+            //scribbleAreaAccess->eventRelease(/*action_Point*/);
+            event = false;
+        } else
+        {
+            //Getting the first Press event
+            Point* action_Point = read_data_from_file(fd);
+            if (action_Point != NULL)
+            {
+                mPointsQueue->push(action_Point);
+            }
+
+            //std::cout << "x: " << action_Point->getX() << " y: " << action_Point->getY() << " Cx: " << action_Point->getColumn() << " Rx: " << action_Point->getRow() << std::endl;
+            //if (action_Point != NULL)
+            {
+                //std::cout << "x: " << action_Point->getX() << " y: " << action_Point->getY() << " Cx: " << action_Point->getColumn() << " Rx: " << action_Point->getRow() << std::endl;
+
+            }
+            //For multi-touch, all points ignored for now
+            for (int i = 1; i < number_of_points; i++)
+            {
+                //Get point and ignore it
+                action_Point = read_data_from_file(fd);
+                if (action_Point != NULL)
+                {
+                    mPointsQueue->push(action_Point);
+                }
+                //if (action_Point != NULL)
+                //{
+                //    delete action_Point;
+                //}
+                //std::cout<<"Multiple touch x:"<<action_Point.getX()<<std::endl;
+            }
+        }
+
+        char_from_serial = 0;
+        read(fd, &char_from_serial, sizeof (char));
+        char_from_serial = char_from_serial & 0xff;
+        if (char_from_serial == 0xf0)
+        {
+            char_from_serial = 0;
+            read(fd, &char_from_serial, sizeof (char));
+            char_from_serial = char_from_serial & 0xff;
+            if (char_from_serial == 0xc0)
+            {
+                //send point to be drawn only after receiving the termination bits (0xF0 0xC0)
+                while (mPointsQueue->size() > 0)
+                {
+                    if (event)
+                    {
+                        //std::cout << "Case 1" << std::endl;
+                        palm.eventMove(mPointsQueue);
+                        //scribbleAreaAccess->screenPressEvent(mPointsQueue.front());
+                        while (!mPointsQueue->empty())
+                        {
+                            mPointsQueue->pop();
+                        }
+                        //scribbleAreaAccess->screenMoveEvent(mPointsQueue.front());
+                        //mPointsQueue.pop();
+                        //std::cout << " Move event" << std::endl;
+
+                    } else
+                    {
+                        //std::cout << "Case 0" << std::endl;
+                        palm.eventTouch(mPointsQueue);
+                        //scribbleAreaAccess->screenPressEvent(mPointsQueue.front());
+                        while (!mPointsQueue->empty())
+                        {
+                            mPointsQueue->pop();
+                        }
+                        event = true;
+                        //std::cout << " Touch event" << std::endl;
+                    }
+                }
+                return;
+            } else
+            {
+                while (mPointsQueue->size() > 0)
+                {
+                    mPointsQueue->pop();
+                }
+                return;
+            }
+        } else
+        {
+            while (mPointsQueue->size() > 0)
+            {
+                mPointsQueue->pop();
+            }
+            return;
+        }
+        char_from_serial = 0;       
+    }
+    
+    delete mPointsQueue;
+}
+
 /*! Initialize the USB port
  *
  * \param fd The file descriptor corresponding to the open USB port

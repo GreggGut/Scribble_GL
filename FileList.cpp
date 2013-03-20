@@ -258,8 +258,15 @@ std::vector <std::string> FileList::getFileList() {
 
 void FileList::setFileList(std::vector <std::string> fl) {
     fileList = fl;
-
-    numberOfPages = (fileList.size() / 10) + 1;
+    
+    if (fileList.size()%10 == 0){
+        numberOfPages = (fileList.size()/10);
+    }
+    
+    else {
+        numberOfPages = (fileList.size() / 10) + 1;
+    }
+    
     std::cout<<fileList.size();
     
     if (fileList.size() <= 10) {

@@ -5,7 +5,7 @@
  * Created on October 24, 2012, 10:15 AM
  */
 
-#include <FTGL/FTGLPixmapFont.h>
+//#include <FTGL/FTGLPixmapFont.h>
 
 #include "Painter.h"
 
@@ -80,7 +80,7 @@ void Painter::Draw() {
 
         drawPaths();
 
-        glDisable(GL_LINE_SMOOTH);
+       glDisable(GL_LINE_SMOOTH);
         glDisable(GL_BLEND);
 
         drawMenu();
@@ -226,6 +226,8 @@ void Painter::drawPDF() {
       glTexCoord2d(u3, v3); glVertex2f(width + _x, height + _y);
       glTexCoord2d( 0, v3); glVertex2f(   _x , height + _y);
     glEnd();
+    
+    glDisable(GL_TEXTURE_2D);
 }
 
 void Painter::drawLogin() {
@@ -285,6 +287,10 @@ void Painter::getPNG(std::string imagePath, int _x, int _y) {
 
     unsigned error = lodepng::decode(image, width, height, imagePath);
 
+    if(error){
+        return;
+    }
+    
     drawPixels(_x,_y,width,height, image);
 }
 
@@ -320,6 +326,8 @@ void Painter::drawPixels(int _x, int _y, int width, int height, std::vector<unsi
       glTexCoord2d(u3, v3); glVertex2f(width + _x, height + _y);
       glTexCoord2d( 0, v3); glVertex2f(   _x , height + _y);
     glEnd();
+    
+    glDisable(GL_TEXTURE_2D);
 }
 
 void Painter::drawText(std::string text, int size, int x, int y, Color color) {

@@ -27,8 +27,8 @@ void glInit(int argc, char** argv) {
   glDisable(GL_DEPTH_TEST);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_BLEND);
-  glDisable(GL_ALPHA_TEST);*/
-  
+  glDisable(GL_ALPHA_TEST);
+  */
   
     glutReshapeFunc(resize);
     glutDisplayFunc(display);

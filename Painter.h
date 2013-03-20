@@ -54,8 +54,9 @@ private:
     void drawFileList();
     void drawAlert();
     
-    void getPNG(std::string imagePath);
+    void getPNG(std::string imagePath, int _x, int _y);
     void drawText(std::string text, int size, int x, int y, Color color);
+    void drawPixels(int _x, int _y, int width, int height, std::vector<unsigned char> _image);
 };
 
 #endif	/* PAINTER_H */

@@ -33,8 +33,8 @@ Painter::~Painter() {
     delete menu;
     delete login;
     delete interpreter;
-    delete keyboard;
-    delete alert;
+    //delete keyboard;
+    //delete alert;
 }
 
 ScribbleArea* Painter::getScribbleArea() {
@@ -151,13 +151,13 @@ void Painter::drawPaths() {
 
 void Painter::drawMenu() {
 
-    glRasterPos2i(menu->getX(), menu->getY());
-    getPNG(menu->getBackground());
+    getPNG(menu->getBackground(),menu->getX(), menu->getY());
 
     for (int i = 0; i < menu->getButtonArray()->size(); ++i) {
-
-        glRasterPos2i(menu->getButtonArray()->at(i)->getX(), menu->getButtonArray()->at(i)->getY());
-        getPNG(menu->getButtonArray()->at(i)->getImagePath());
+        int btnx = menu->getX() + menu->getButtonArray()->at(i)->getX();
+        int btny = menu->getY() + menu->getButtonArray()->at(i)->getY();
+        
+        getPNG(menu->getButtonArray()->at(i)->getImagePath(),btnx,btny);
     }
 
     std::string ownershipImage;
@@ -181,26 +181,56 @@ void Painter::drawMenu() {
     
      ownershipImage.insert(0, IMAGE_PATH);
      menu->getOwnershipBTN()->setImagePath(ownershipImage);
-     
-     glRasterPos2i(menu->getOwnershipBTN()->getX(), menu->getOwnershipBTN()->getY());
-     getPNG(menu->getOwnershipBTN()->getImagePath());
+
+     getPNG(menu->getOwnershipBTN()->getImagePath(),menu->getOwnershipBTN()->getX(),menu->getOwnershipBTN()->getY());
 }
 
 void Painter::drawPDF() {
 
     //#warning //add centering and scaling
-    glRasterPos2i(scribbleArea->getDocument()->getX(), scribbleArea->getDocument()->getY());
+ 
     glPixelZoom(1.0, -1.0);
+   
+    char *_image = scribbleArea->getDocument()->getImage()->data();
+    int _x = scribbleArea->getDocument()->getX();
+    int _y = scribbleArea->getDocument()->getY();
+    int width = scribbleArea->getDocument()->getImage()->width();
+    int height = scribbleArea->getDocument()->getImage()->height();
+       // Texture size must be power of two for the primitive OpenGL version this is written for. Find next power of two.
+  size_t u2 = 1; while(u2 < width) u2 *= 2;
+  size_t v2 = 1; while(v2 < height) v2 *= 2;
+  // Ratio for power of two version compared to actual version, to render the non power of two image with proper size.
+  double u3 = (double)width / u2;
+  double v3 = (double)height / v2;
 
-    glDrawPixels(scribbleArea->getDocument()->getImage()->width(), scribbleArea->getDocument()->getImage()->height(), GL_BGRA, GL_UNSIGNED_BYTE, scribbleArea->getDocument()->getImage()->data());
-    // glScalef(1.2,1.2,0);
+  // Make power of two version of the image.
+  std::vector<unsigned char> image2(u2 * v2 * 4);
+  for(size_t y = 0; y < height; y++)
+  for(size_t x = 0; x < width; x++)
+  for(size_t c = 0; c < 4; c++)
+  {
+    image2[4 * u2 * y + 4 * x + c] = _image[4 * width * y + 4 * x + c];
+  }
+  
+  glColor3f(1.0,1.0,1.0);
+  // Enable the texture for OpenGL.
+  glEnable(GL_TEXTURE_2D);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_NEAREST = no smoothing
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexImage2D(GL_TEXTURE_2D, 0, 4, u2, v2, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image2[0]);
+  
+  // Draw the texture on a quad, using u3 and v3 to correct non power of two texture size.
+    glBegin(GL_QUADS);
+      glTexCoord2d( 0,  0); glVertex2f(    _x,      _y);
+      glTexCoord2d(u3,  0); glVertex2f(width + _x,      _y);
+      glTexCoord2d(u3, v3); glVertex2f(width + _x, height + _y);
+      glTexCoord2d( 0, v3); glVertex2f(   _x , height + _y);
+    glEnd();
 }
 
 void Painter::drawLogin() {
 
-    glRasterPos2i(login->getX(), login->getY());
-
-    getPNG(login->getImagePath());
+    getPNG(login->getImagePath(),login->getX(), login->getY());
        
     drawText(login->getUserName(), 35, login->getX() + 78, login->getY() + 128, Color(DARK_GRAY));
     drawText(login->getPassword(), 35, login->getX() + 78, login->getY() + 205, Color(DARK_GRAY));
@@ -211,9 +241,8 @@ void Painter::drawKeyboard() {
 }
 
 void Painter::drawFileList() {
-    glRasterPos2i(filelist->getX(), filelist->getY());
 
-    getPNG(filelist->getImagePath());
+    getPNG(filelist->getImagePath(),filelist->getX(), filelist->getY());
 
     for (int i = 0; i < filelist->getButtonArray()->size(); ++i) {
 
@@ -221,7 +250,7 @@ void Painter::drawFileList() {
         int y = filelist->getButtonArray()->at(i)->getY();
         
         glRasterPos2i(x,y);
-        getPNG(filelist->getButtonArray()->at(i)->getImagePath());
+        getPNG(filelist->getButtonArray()->at(i)->getImagePath(), x, y);
  
     }
 
@@ -231,7 +260,7 @@ void Painter::drawFileList() {
         int y = filelist->getFileListTable()->at(i)->getY();
         
         glRasterPos2i(x,y);
-        getPNG(filelist->getFileListTable()->at(i)->getImagePath());
+        getPNG(filelist->getFileListTable()->at(i)->getImagePath(), x, y);
                
         drawText(filelist->getFileListTable()->at(i)->getFileName(), 25, x + 56, y + 20, Color(DARK_GRAY));
     }
@@ -247,7 +276,7 @@ void Painter::drawAlert() {
 
 }
 
-void Painter::getPNG(std::string imagePath) {
+void Painter::getPNG(std::string imagePath, int _x, int _y) {
     //decode
     glPixelZoom(1.0, -1.0);
 
@@ -256,12 +285,41 @@ void Painter::getPNG(std::string imagePath) {
 
     unsigned error = lodepng::decode(image, width, height, imagePath);
 
-    //if there's an error, display it
-    //if (error) std::cout << "decoder error " << error << ": " << lodepng_error_text(error) << std::endl;
+    drawPixels(_x,_y,width,height, image);
+}
 
-    //the pixels are now in the vector "image", 4 bytes per pixel, ordered RGBARGBA..., use it as texture, draw it, ...
-    glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
+void Painter::drawPixels(int _x, int _y, int width, int height, std::vector<unsigned char> _image){
+    
+     // Texture size must be power of two for the primitive OpenGL version this is written for. Find next power of two.
+  size_t u2 = 1; while(u2 < width) u2 *= 2;
+  size_t v2 = 1; while(v2 < height) v2 *= 2;
+  // Ratio for power of two version compared to actual version, to render the non power of two image with proper size.
+  double u3 = (double)width / u2;
+  double v3 = (double)height / v2;
 
+  // Make power of two version of the image.
+  std::vector<unsigned char> image2(u2 * v2 * 4);
+  for(size_t y = 0; y < height; y++)
+  for(size_t x = 0; x < width; x++)
+  for(size_t c = 0; c < 4; c++)
+  {
+    image2[4 * u2 * y + 4 * x + c] = _image[4 * width * y + 4 * x + c];
+  }
+  
+  glColor3f(1.0,1.0,1.0);
+  // Enable the texture for OpenGL.
+  glEnable(GL_TEXTURE_2D);
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_NEAREST = no smoothing
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  glTexImage2D(GL_TEXTURE_2D, 0, 4, u2, v2, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image2[0]);
+  
+  // Draw the texture on a quad, using u3 and v3 to correct non power of two texture size.
+    glBegin(GL_QUADS);
+      glTexCoord2d( 0,  0); glVertex2f(    _x,      _y);
+      glTexCoord2d(u3,  0); glVertex2f(width + _x,      _y);
+      glTexCoord2d(u3, v3); glVertex2f(width + _x, height + _y);
+      glTexCoord2d( 0, v3); glVertex2f(   _x , height + _y);
+    glEnd();
 }
 
 void Painter::drawText(std::string text, int size, int x, int y, Color color) {

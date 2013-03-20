@@ -10,7 +10,6 @@
 
 #include <GL/glu.h>
 #include <poppler/cpp/poppler-image.h>
-#include <boost/thread/mutex.hpp>
 #include "ScribbleArea.h"
 #include "Menu.h"
 #include "Login.h"
@@ -47,7 +46,6 @@ private:
     Alert *alert;
     FileList *filelist;
     
-    boost::mutex fileListLock;
     void drawPaths();
     void drawMenu();
     void drawPDF();

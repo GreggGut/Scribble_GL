@@ -225,8 +225,6 @@ void Painter::drawFileList() {
  
     }
 
-    fileListLock.lock();
-    
     for (int i = 0; i < filelist->getFileListTable()->size(); ++i) {
         
         int x = filelist->getFileListTable()->at(i)->getX();
@@ -238,7 +236,6 @@ void Painter::drawFileList() {
         drawText(filelist->getFileListTable()->at(i)->getFileName(), 25, x + 56, y + 20, Color(DARK_GRAY));
     }
     
-    fileListLock.unlock();
     
     std::string page;
     page = "Page " + filelist->getCurrentPage() + "/" + filelist->getNumberOfPages();

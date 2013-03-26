@@ -37,12 +37,10 @@ Path::Path(Point* point, int mode, Color color, int width, int id, bool fin/*, b
     area->set(point->getColumn(), point->getRow());
 
     if (mode == WRITE){
-        //std::cout << "WRITE";
         myPenColor = color;
     }
 
     else if (mode == ERASE){
-        ///std::cout << "ERASE";
         myPenColor = Color(255.0,255.0,255.0);
     }
 }
@@ -54,12 +52,10 @@ Path::Path(int mode, Color color, int width, int ID/*, bool active*/) : WriteEra
     mY = 0;
 
     if (mode == WRITE){
-        std::cout << "WRITE";
         myPenColor = color;
     }
 
     else if (mode == ERASE){
-        std::cout << "ERASE";
         myPenColor = Color(255.0,255.0,255.0);
     }
     //?@?@?@?@?@?

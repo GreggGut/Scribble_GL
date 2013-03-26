@@ -184,32 +184,38 @@ void Login::callAction(int action) {
 
 void Login::login() {
 
-#warning //show download alert
-
     if (screenInterpreter->getScribbleArea()->getSender()->connectToServer()) {
         screenInterpreter->getScribbleArea()->getSender()->sendLogin(username, password);
-        while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_LOGIN);
-        
+
         screenInterpreter->showLoading(1);
-        
+
+        while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_LOGIN);
+
+
         if (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::LOGIN_FAILED) {
-            std::cout << "Login Failed!!!\n";
+
+            screenInterpreter->getAlert()->setAlert("Login Failed", "Do you want to retry?", LOGIN_FAILED_ALERT);
+            screenInterpreter->showLoading(0);
+            screenInterpreter->showAlert(1);
             return;
         }
-
 
         screenInterpreter->getScribbleArea()->getSender()->sendGetFilesList();
         while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_FOR_FILE_LIST);
 
         if (screenInterpreter->getScribbleArea()->getFilesOnServer().size() > 0) {
             screenInterpreter->showLogin(0);
+            screenInterpreter->showLoading(0);
             screenInterpreter->getFileList()->setFileList(screenInterpreter->getScribbleArea()->getFilesOnServer());
             screenInterpreter->showFilelist(1);
         } else {
             std::cout << "ERROR: No files on server\n";
         }
     } else {
-        std::cout << "Failed connecting" << std::endl;
+        screenInterpreter->getAlert()->setAlert("Login Failed", "Do you want to retry?", LOGIN_FAILED_ALERT);
+        screenInterpreter->showLoading(0);
+        screenInterpreter->showAlert(1);
+        return;
     }
 }
 

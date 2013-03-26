@@ -313,3 +313,7 @@ Menu * ScreenInterpreter::getMenu() {
 Alert *ScreenInterpreter::getAlert() {
     return alert;
 }
+
+Login *ScreenInterpreter::getLogin(){
+    return login;
+}

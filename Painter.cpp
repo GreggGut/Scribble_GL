@@ -20,9 +20,9 @@ Painter::Painter() {
     filelist = new FileList(WIDTH / 2 - 656 / 2, HEIGHT / 2 - 738 / 2, 656, 738);
     colorPicker = new ColorPicker(168, 44, 253, 121);
     sizePicker = new SizePicker(124, 44, 253, 121);
-    alert = new Alert("","",-1);
+    alert = new Alert("", "", -1);
     loading = new Loading();
-    
+
     interpreter = new ScreenInterpreter(scribbleArea, menu, login, filelist, colorPicker, sizePicker, alert);
 
     menu->setScreenInterpreter(interpreter);
@@ -76,6 +76,8 @@ void Painter::Draw() {
 
     try {
 
+         glEnable(GL_BLEND);
+          glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         if (interpreter->getShowLogin() == 1) {
             drawLogin();
         } else if (interpreter->getShowFile() == 1) {
@@ -85,12 +87,12 @@ void Painter::Draw() {
 
             drawPDF();
 
-            glEnable(GL_BLEND);
+           
             glEnable(GL_LINE_SMOOTH);
             glEnable(GL_POINT_SMOOTH);
 
             glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+           
 
             drawPaths();
 
@@ -106,17 +108,18 @@ void Painter::Draw() {
 
             glDisable(GL_LINE_SMOOTH);
             glDisable(GL_POINT_SMOOTH);
-            glDisable(GL_BLEND);
+           
         }
 
         if (interpreter->getShowAlert() == 1) {
             drawAlert();
         }
-        
-        if (interpreter->getShowLoading() == 1){
+
+        if (interpreter->getShowLoading() == 1) {
             drawLoading();
         }
-        
+           glDisable(GL_BLEND);
+
     } catch (...) {
         return;
     }
@@ -289,7 +292,7 @@ void Painter::drawAlert() {
     glPixelZoom(1.0, 1.0);
 
     FTPixmapFont *font = new FTPixmapFont("./resources/fonts/century_gothic.ttf");
-    
+
     // If something went wrong, bail out.
     if (font->Error())
         std::cout << "ERROR: FONT WAS NOT LOADED\n";
@@ -300,21 +303,21 @@ void Painter::drawAlert() {
     float width = font->Advance(alert->getTitle().c_str(), -1, FTPoint());
     float height = font->LineHeight();
 
-    glRasterPos2i((alert->getX() + alert->getWidth()/2)-(width/2), alert->getY() + height - 5);
+    glRasterPos2i((alert->getX() + alert->getWidth() / 2)-(width / 2), alert->getY() + height - 5);
 
     font->Render(alert->getTitle().c_str(), -1, FTPoint(), FTPoint(), FTGL::RENDER_ALL);
 
     FTSimpleLayout layout;
-    
+
     layout.SetFont(font);
     layout.SetAlignment(FTGL::ALIGN_CENTER);
     layout.SetLineLength(500);
-    
-    glRasterPos2i((alert->getX() + alert->getWidth()/2)-(layout.GetLineLength()/2), alert->getY() + 140/2 + layout.GetFont()->LineHeight());
-    
-    layout.Render(alert->getMessage().c_str(),-1,FTPoint(),FTGL::RENDER_ALL);
-      // Set the font size and render a small text.
-    
+
+    glRasterPos2i((alert->getX() + alert->getWidth() / 2)-(layout.GetLineLength() / 2), alert->getY() + 140 / 2 + layout.GetFont()->LineHeight());
+
+    layout.Render(alert->getMessage().c_str(), -1, FTPoint(), FTGL::RENDER_ALL);
+    // Set the font size and render a small text.
+
     delete font;
 }
 
@@ -452,7 +455,6 @@ void Painter::getPNG(std::string imagePath, int _x, int _y) {
 
 void Painter::drawPixels(int _x, int _y, int width, int height, std::vector<unsigned char> _image) {
 
-
     // Texture size must be power of two for the primitive OpenGL version this is written for. Find next power of two.
     size_t u2 = 1;
     while (u2 < width) u2 *= 2;
@@ -509,9 +511,43 @@ void Painter::drawText(std::string text, int size, int x, int y, Color color) {
     font.Render(text.c_str(), -1, FTPoint(), FTPoint(), FTGL::RENDER_ALL);
 }
 
-void Painter::drawLoading(){
+void Painter::drawLoading() {
+
+    getPNG(loading->getBackground(), (WIDTH / 2) - (150 / 2), (HEIGHT / 2) - (150 / 2));
+
+    int x = (WIDTH / 2) - (90 / 2);
+    int y = (HEIGHT / 2) - (90 / 2);
     
-     getPNG(loading->getBackground(), (WIDTH/2) - (150/2), (HEIGHT/2) - (150/2));
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+  
+    glTranslatef((WIDTH/2),(HEIGHT/2),0.0);
+    
+    glRotatef(loading->getTopAngle(), 0.0, 0.0, 1.0);
+    
+    glTranslatef(-(WIDTH/2),-(HEIGHT/2), 0.0);
+    
+    getPNG(loading->getTopRing(),x,y);
      
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+  
+    glTranslatef((WIDTH/2),(HEIGHT/2),0.0);
+    
+    glRotatef(loading->getBottomAngle(), 0.0, 0.0, 1.0);
+    
+    glTranslatef(-(WIDTH/2),-(HEIGHT/2), 0.0);
+    
+    getPNG(loading->getBottomRing(),x,y);
      
+    glPopMatrix();
+    glMatrixMode(GL_MODELVIEW);
+    
+    loading->setTopAngle();
+    loading->setBottomAngle();
 }

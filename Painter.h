@@ -23,6 +23,8 @@
 #include <FTGL/ftgl.h>
 #include "Color.h"
 #include "Loading.h"
+#include <math.h>
+
 
 class Painter {
    

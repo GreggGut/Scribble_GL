@@ -204,18 +204,21 @@ void Alert::callAction(int action) {
                 if (NETWORK == 1) {
                     screenInterpreter->getScribbleArea()->getSender()->sendCleanAll(screenInterpreter->getScribbleArea()->getCurrentPage());
                 }
-           
+                
                 screenInterpreter->showAlert(0);
+            }
+            
+            if (type == LOGIN_FAILED_ALERT){
+                screenInterpreter->showAlert(0);
+                
+                screenInterpreter->getLogin()->callAction(LOGIN_C);
             }
             
             break;
             
         case CANCEL_ALERT:
-            
-             if(type == CLEAR_ALL_ALERT){
+         
                 screenInterpreter->showAlert(0);
-            }
-            
              
             break;
         default:

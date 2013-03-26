@@ -119,6 +119,7 @@ void display() {
 
     glutSwapBuffers();
     glFlush();
+    
 }
 
 void close() {

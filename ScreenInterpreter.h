@@ -48,6 +48,8 @@ public:
     FileList *getFileList();
     Menu *getMenu();
     Alert *getAlert();
+    Login *getLogin();
+    
 private:
     ScribbleArea *scribbleArea;
     Menu *menu;

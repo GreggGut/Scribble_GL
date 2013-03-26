@@ -3,7 +3,6 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f2" displayName="Header Files" projectFiles="true">
       <itemPath>Alert.h</itemPath>
-      <itemPath>AlertButton.cpp</itemPath>
       <itemPath>AlertButton.h</itemPath>
       <itemPath>Button.h</itemPath>
       <itemPath>Color.h</itemPath>
@@ -14,6 +13,7 @@
       <itemPath>FileListCell.h</itemPath>
       <itemPath>InputData.h</itemPath>
       <itemPath>Keyboard.h</itemPath>
+      <itemPath>Loading.h</itemPath>
       <itemPath>Login.h</itemPath>
       <itemPath>LoginButton.h</itemPath>
       <itemPath>Menu.h</itemPath>
@@ -38,6 +38,7 @@
     </logicalFolder>
     <logicalFolder name="f1" displayName="Source Files" projectFiles="true">
       <itemPath>Alert.cpp</itemPath>
+      <itemPath>AlertButton.cpp</itemPath>
       <itemPath>Button.cpp</itemPath>
       <itemPath>Color.cpp</itemPath>
       <itemPath>ColorPicker.cpp</itemPath>
@@ -48,7 +49,6 @@
       <itemPath>InputData.cpp</itemPath>
       <itemPath>Keyboard.cpp</itemPath>
       <itemPath>Loading.cpp</itemPath>
-      <itemPath>Loading.h</itemPath>
       <itemPath>Login.cpp</itemPath>
       <itemPath>LoginButton.cpp</itemPath>
       <itemPath>Menu.cpp</itemPath>

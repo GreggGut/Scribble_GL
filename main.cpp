@@ -28,6 +28,7 @@ void glInit(int argc, char** argv) {
     glutMouseFunc(mouse);
     glutMotionFunc(mouseCoords);
     glutIdleFunc(idle);
+    glutSpecialFunc(specialKey);
     glutCloseFunc(close);
 }
 
@@ -43,35 +44,35 @@ void resize(int width, int height) {
     glLoadIdentity();
 }
 
+
 void key(unsigned char key, int x, int y) {
-    switch (key) {
-        case 27:
-            exit(0);
-            break;
-        case 'f':
-            glutFullScreenToggle();
-            break;
-        case 'F':
-            glutFullScreenToggle();
-            break;
-        case '1':
+
+
+}
+
+void specialKey(int key, int x, int y){
+    switch (key){
+         case GLUT_KEY_F1:
             painter->getLogin()->setUserName("user");
             painter->getLogin()->setPassword("Password");
             break;
-        case '2':
+        case GLUT_KEY_F2:
             painter->getLogin()->setUserName("greg");
             painter->getLogin()->setPassword("pass");
             break;
-        case '3':
+        case GLUT_KEY_F3:
             painter->getLogin()->setUserName("scribble");
             painter->getLogin()->setPassword("app1234");
             break;
-
+        case GLUT_KEY_F10:
+            glutFullScreenToggle();
+            break;
+        case GLUT_KEY_F12:
+            exit(0);
+            break;
         default:
             break;
     }
-
-    glutPostRedisplay();
 }
 
 void mouse(int button, int state, int x, int y) {
@@ -90,7 +91,7 @@ void mouse(int button, int state, int x, int y) {
         painter->getInterpreter()->screenReleaseEvent();
 
     }
-    glutPostRedisplay();
+
 }
 
 void mouseCoords(int x, int y) {
@@ -113,8 +114,6 @@ void display() {
 
     glutSwapBuffers();
     glFlush();
-    
-    glutPostRedisplay();
 }
 
 void close() {

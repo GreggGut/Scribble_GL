@@ -35,6 +35,8 @@ void resize(int width, int height);
 
 void key(unsigned char key, int x, int y);
 
+void specialKey(int key, int x, int y);
+
 void mouse(int button, int state, int x, int y);
 
 void idle(void);

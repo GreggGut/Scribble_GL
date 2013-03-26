@@ -43,5 +43,7 @@
 #define N_COLUMN                10
 #define IMAGE_PATH              "./resources/images/"
 #define NETWORK 1
+#define GL_FUCKUP 0
+
 #endif	/* DEFINES_H */
 

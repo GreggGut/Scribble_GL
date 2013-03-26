@@ -76,23 +76,21 @@ void Painter::Draw() {
 
     try {
 
-         glEnable(GL_BLEND);
-          glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         if (interpreter->getShowLogin() == 1) {
             drawLogin();
         } else if (interpreter->getShowFile() == 1) {
             drawFileList();
         } else {
 
-
             drawPDF();
 
-           
             glEnable(GL_LINE_SMOOTH);
             glEnable(GL_POINT_SMOOTH);
 
             glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-           
 
             drawPaths();
 
@@ -108,7 +106,7 @@ void Painter::Draw() {
 
             glDisable(GL_LINE_SMOOTH);
             glDisable(GL_POINT_SMOOTH);
-           
+
         }
 
         if (interpreter->getShowAlert() == 1) {
@@ -118,7 +116,7 @@ void Painter::Draw() {
         if (interpreter->getShowLoading() == 1) {
             drawLoading();
         }
-           glDisable(GL_BLEND);
+        glDisable(GL_BLEND);
 
     } catch (...) {
         return;
@@ -332,43 +330,13 @@ void Painter::drawPDF() {
     int _y = scribbleArea->getDocument()->getY();
     int width = scribbleArea->getDocument()->getImage()->width();
     int height = scribbleArea->getDocument()->getImage()->height();
-    // Texture size must be power of two for the primitive OpenGL version this is written for. Find next power of two.
-    size_t u2 = 1;
-    while (u2 < width) u2 *= 2;
-    size_t v2 = 1;
-    while (v2 < height) v2 *= 2;
-    // Ratio for power of two version compared to actual version, to render the non power of two image with proper size.
-    double u3 = (double) width / u2;
-    double v3 = (double) height / v2;
 
-    // Make power of two version of the image.
-    std::vector<unsigned char> image2(u2 * v2 * 4);
-    for (size_t y = 0; y < height; y++)
-        for (size_t x = 0; x < width; x++)
-            for (size_t c = 0; c < 4; c++) {
-                image2[4 * u2 * y + 4 * x + c] = _image[4 * width * y + 4 * x + c];
-            }
-
-    glColor3f(1.0, 1.0, 1.0);
-    // Enable the texture for OpenGL.
-    glEnable(GL_TEXTURE_2D);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_NEAREST = no smoothing
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, 4, u2, v2, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image2[0]);
-
-    // Draw the texture on a quad, using u3 and v3 to correct non power of two texture size.
-    glBegin(GL_QUADS);
-    glTexCoord2d(0, 0);
-    glVertex2f(_x, _y);
-    glTexCoord2d(u3, 0);
-    glVertex2f(width + _x, _y);
-    glTexCoord2d(u3, v3);
-    glVertex2f(width + _x, height + _y);
-    glTexCoord2d(0, v3);
-    glVertex2f(_x, height + _y);
-    glEnd();
-
-    glDisable(GL_TEXTURE_2D);
+    if (GL_FUCKUP == 0) {
+        glRasterPos2f(_x, _y);
+        glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, &_image[0]);
+    } else {
+        drawPixels(_x, _y, width, height, _image);
+    }
 }
 
 void Painter::drawLogin() {
@@ -439,6 +407,7 @@ void Painter::drawSizePicker() {
 
 void Painter::getPNG(std::string imagePath, int _x, int _y) {
     //decode
+
     glPixelZoom(1.0, -1.0);
 
     std::vector<unsigned char> image; //the raw pixels
@@ -450,7 +419,15 @@ void Painter::getPNG(std::string imagePath, int _x, int _y) {
         return;
     }
 
-    drawPixels(_x, _y, width, height, image);
+    if (GL_FUCKUP == 0) {
+
+        glRasterPos2i(_x, _y);
+        glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
+
+    }
+    else {
+        drawPixels(_x, _y, width, height, image);
+    }
 }
 
 void Painter::drawPixels(int _x, int _y, int width, int height, std::vector<unsigned char> _image) {
@@ -466,11 +443,62 @@ void Painter::drawPixels(int _x, int _y, int width, int height, std::vector<unsi
 
     // Make power of two version of the image.
     std::vector<unsigned char> image2(u2 * v2 * 4);
-    for (size_t y = 0; y < height; y++)
-        for (size_t x = 0; x < width; x++)
-            for (size_t c = 0; c < 4; c++) {
-                image2[4 * u2 * y + 4 * x + c] = _image[4 * width * y + 4 * x + c];
-            }
+    for (size_t y = 0; y < height; ++y) {
+        for (size_t x = 0; x < width; ++x) {
+
+            image2[4 * u2 * y + 4 * x + 0] = _image[4 * width * y + 4 * x + 0];
+            image2[4 * u2 * y + 4 * x + 1] = _image[4 * width * y + 4 * x + 1];
+            image2[4 * u2 * y + 4 * x + 2] = _image[4 * width * y + 4 * x + 2];
+            image2[4 * u2 * y + 4 * x + 3] = _image[4 * width * y + 4 * x + 3];
+
+        }
+    }
+
+    glColor3f(1.0, 1.0, 1.0);
+    // Enable the texture for OpenGL.
+    glEnable(GL_TEXTURE_2D);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_NEAREST = no smoothing
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, 4, u2, v2, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image2[0]);
+
+    // Draw the texture on a quad, using u3 and v3 to correct non power of two texture size.
+    glBegin(GL_QUADS);
+    glTexCoord2d(0, 0);
+    glVertex2f(_x, _y);
+    glTexCoord2d(u3, 0);
+    glVertex2f(width + _x, _y);
+    glTexCoord2d(u3, v3);
+    glVertex2f(width + _x, height + _y);
+    glTexCoord2d(0, v3);
+    glVertex2f(_x, height + _y);
+    glEnd();
+
+    glDisable(GL_TEXTURE_2D);
+}
+
+void Painter::drawPixels(int _x, int _y, int width, int height, char* _image) {
+
+    // Texture size must be power of two for the primitive OpenGL version this is written for. Find next power of two.
+    size_t u2 = 1;
+    while (u2 < width) u2 *= 2;
+    size_t v2 = 1;
+    while (v2 < height) v2 *= 2;
+    // Ratio for power of two version compared to actual version, to render the non power of two image with proper size.
+    double u3 = (double) width / u2;
+    double v3 = (double) height / v2;
+
+    // Make power of two version of the image.
+    std::vector<unsigned char> image2(u2 * v2 * 4);
+    for (size_t y = 0; y < height; ++y) {
+        for (size_t x = 0; x < width; ++x) {
+
+            image2[4 * u2 * y + 4 * x + 0] = _image[4 * width * y + 4 * x + 0];
+            image2[4 * u2 * y + 4 * x + 1] = _image[4 * width * y + 4 * x + 1];
+            image2[4 * u2 * y + 4 * x + 2] = _image[4 * width * y + 4 * x + 2];
+            image2[4 * u2 * y + 4 * x + 3] = _image[4 * width * y + 4 * x + 3];
+
+        }
+    }
 
     glColor3f(1.0, 1.0, 1.0);
     // Enable the texture for OpenGL.
@@ -517,37 +545,37 @@ void Painter::drawLoading() {
 
     int x = (WIDTH / 2) - (90 / 2);
     int y = (HEIGHT / 2) - (90 / 2);
-    
+
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
-  
-    glTranslatef((WIDTH/2),(HEIGHT/2),0.0);
-    
+
+    glTranslatef((WIDTH / 2), (HEIGHT / 2), 0.0);
+
     glRotatef(loading->getTopAngle(), 0.0, 0.0, 1.0);
-    
-    glTranslatef(-(WIDTH/2),-(HEIGHT/2), 0.0);
-    
-    getPNG(loading->getTopRing(),x,y);
-     
+
+    glTranslatef(-(WIDTH / 2), -(HEIGHT / 2), 0.0);
+
+    getPNG(loading->getTopRing(), x, y);
+
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
-    
+
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
-  
-    glTranslatef((WIDTH/2),(HEIGHT/2),0.0);
-    
+
+    glTranslatef((WIDTH / 2), (HEIGHT / 2), 0.0);
+
     glRotatef(loading->getBottomAngle(), 0.0, 0.0, 1.0);
-    
-    glTranslatef(-(WIDTH/2),-(HEIGHT/2), 0.0);
-    
-    getPNG(loading->getBottomRing(),x,y);
-     
+
+    glTranslatef(-(WIDTH / 2), -(HEIGHT / 2), 0.0);
+
+    getPNG(loading->getBottomRing(), x, y);
+
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
-    
+
     loading->setTopAngle();
     loading->setBottomAngle();
 }

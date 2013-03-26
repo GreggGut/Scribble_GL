@@ -25,10 +25,10 @@
 #include "Loading.h"
 #include <math.h>
 
-
 class Painter {
    
 public:
+   
     Painter();
     Painter(const Painter& orig);
     virtual ~Painter();
@@ -55,7 +55,7 @@ private:
     ColorPicker *colorPicker;
     SizePicker *sizePicker;
     Loading *loading;
-    
+   
     void drawPaths();
     void drawMenu();
     void drawPDF();
@@ -70,6 +70,7 @@ private:
     void getPNG(std::string imagePath, int _x, int _y);
     void drawText(std::string text, int size, int x, int y, Color color);
     void drawPixels(int _x, int _y, int width, int height, std::vector<unsigned char> _image);
+    void drawPixels(int _x, int _y, int width, int height, char* _image);
 };
 
 #endif	/* PAINTER_H */

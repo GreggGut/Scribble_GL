@@ -147,10 +147,9 @@ Color Path::getPenColor() const
 
 int Path::getPenColorInt()
 {
-    int rgb = myPenColor.getRed();
-    rgb = ( rgb << 8 ) + myPenColor.getGreen();
-    rgb = ( rgb << 8 ) + myPenColor.getBlue();
-
+    int rgb = myPenColor.getRed()*255;
+    rgb = ( rgb << 8 ) + myPenColor.getGreen()*255;
+    rgb = ( rgb << 8 ) + myPenColor.getBlue()*255;
     return rgb;
 }
 

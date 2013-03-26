@@ -10,7 +10,7 @@
 Loading::Loading() {
 
     topAngle = 0;
-    bottomAngle = 720;
+    bottomAngle = 360;
 
 
     std::string bgImage = "LoadingBG.png";
@@ -51,25 +51,25 @@ int Loading::getBottomAngle() {
 
 void Loading::setTopAngle() {
 
-    if (topAngle == 720) {
+    if (topAngle == 360) {
         topAngle = 0;
     }
     else {
-        topAngle = topAngle + 45;
+        topAngle = topAngle + 15;
     }
 }
 
 void Loading::setBottomAngle() {
     if (bottomAngle == 0) {
-        bottomAngle = 720;
+        bottomAngle = 360;
     }
     else {
-        bottomAngle = bottomAngle - 45;
+        bottomAngle = bottomAngle - 15;
     }
 }
 
 void Loading::reset(){
  
-    bottomAngle = 720;
+    bottomAngle = 360;
     topAngle = 0;
 }

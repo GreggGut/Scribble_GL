@@ -119,7 +119,11 @@ void Painter::Draw() {
         glDisable(GL_BLEND);
 
     } catch (...) {
-        return;
+        std::cout<<"ERROR";
+        scribbleArea->setLockForNetworkPath(0);
+        scribbleArea->setLockForPath(0);
+        scribbleArea->setLockForTempPath(0);
+        //return;
     }
 }
 
@@ -556,8 +560,20 @@ void Painter::drawLoading() {
 
     glTranslatef(-(WIDTH / 2), -(HEIGHT / 2), 0.0);
 
-    getPNG(loading->getTopRing(), x, y);
+    //getPNG(loading->getTopRing(), x, y);
+    glPixelZoom(1.0, -1.0);
 
+    std::vector<unsigned char> image_1; //the raw pixels
+    unsigned width_1, height_1;
+
+    unsigned error1 = lodepng::decode(image_1, width_1, height_1, loading->getTopRing());
+
+    if (error1) {
+        return;
+    }
+
+    drawPixels(x, y, width_1, height_1, image_1);
+    
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
 
@@ -571,8 +587,21 @@ void Painter::drawLoading() {
 
     glTranslatef(-(WIDTH / 2), -(HEIGHT / 2), 0.0);
 
-    getPNG(loading->getBottomRing(), x, y);
+    //getPNG(loading->getBottomRing(), x, y);
 
+    glPixelZoom(1.0, -1.0);
+
+    std::vector<unsigned char> image_2; //the raw pixels
+    unsigned width_2, height_2;
+
+    unsigned error2 = lodepng::decode(image_2, width_2, height_2, loading->getBottomRing());
+
+    if (error2) {
+        return;
+    }
+
+    drawPixels(x, y, width_2, height_2, image_2);
+    
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
 

@@ -21,8 +21,8 @@
 Point::Point(int column_, int row_, int x_, int y_)
 {
     //x(WIDTH-x-15), y(y-21), column(Column), row(Row
-    
-    x = WIDTH-x_;
+#warning //add for old screen
+    x = WIDTH-x_-15;
     y = y_;
     column = column_;
     row = row_;

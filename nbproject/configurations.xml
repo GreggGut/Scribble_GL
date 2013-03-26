@@ -35,6 +35,8 @@
       <itemPath>Alert.cpp</itemPath>
       <itemPath>Button.cpp</itemPath>
       <itemPath>Color.cpp</itemPath>
+      <itemPath>ColorPicker.cpp</itemPath>
+      <itemPath>ColorPicker.h</itemPath>
       <itemPath>Document.cpp</itemPath>
       <itemPath>FileList.cpp</itemPath>
       <itemPath>FileListButton.cpp</itemPath>
@@ -49,12 +51,16 @@
       <itemPath>Painter.cpp</itemPath>
       <itemPath>PalmRejection.cpp</itemPath>
       <itemPath>Path.cpp</itemPath>
+      <itemPath>Picker.cpp</itemPath>
+      <itemPath>Picker.h</itemPath>
       <itemPath>Point.cpp</itemPath>
       <itemPath>RequestMessage.cpp</itemPath>
       <itemPath>ScreenAreas.cpp</itemPath>
       <itemPath>ScreenInterpreter.cpp</itemPath>
       <itemPath>ScribbleArea.cpp</itemPath>
       <itemPath>Sender.cpp</itemPath>
+      <itemPath>SizePicker.cpp</itemPath>
+      <itemPath>SizePicker.h</itemPath>
       <itemPath>lodepng.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>

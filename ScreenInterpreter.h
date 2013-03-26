@@ -13,6 +13,9 @@
 #include "Keyboard.h"
 #include "Alert.h"
 #include "FileList.h"
+#include "Menu.h"
+#include "ColorPicker.h"
+#include "SizePicker.h"
 
 class Menu;
 class Login;
@@ -20,7 +23,7 @@ class Login;
 class ScreenInterpreter {
 public:
     ScreenInterpreter();
-    ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l, FileList *fl);
+    ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l, FileList *fl,ColorPicker *cp, SizePicker *sp);
     ScreenInterpreter(const ScreenInterpreter& orig);
     virtual ~ScreenInterpreter();
     void screenPressEvent(Point* point);
@@ -31,12 +34,17 @@ public:
     void showLogin(bool show);
     void showFilelist(bool show);
     void showAlert(bool show);
-  
+    void showColorPicker(bool show);
+    void showSizePicker(bool show);
+    
     bool getShowLogin();
     bool getShowFile();
     bool getShowAlert();
+    bool getShowColorPicker();
+    bool getShowSizePicker();
     
     FileList *getFileList();
+    Menu *getMenu();
     
 private:
     ScribbleArea *scribbleArea;
@@ -45,6 +53,8 @@ private:
     Keyboard *keyboard;
     Alert *alert;
     FileList *filelist;
+    ColorPicker *colorPicker;
+    SizePicker *sizePicker;
     
     int menuState;
     int scribbleState;
@@ -61,9 +71,19 @@ private:
     void filelistMove(Point *point);
     void filelistRelease();
     
+    void colorPickerPress(Point *point);
+    void colorPickerMove(Point *point);
+    void colorPickerRelease();
+    
+    void sizePickerPress(Point *point);
+    void sizePickerMove(Point *point);
+    void sizePickerRelease();
+    
     bool loginShown;
     bool filelistShown;
     bool alertShown;
+    bool colorpickerShown;
+    bool sizepickerShown;
 };
 
 #endif	/* SCREENINTERPRETER_H */

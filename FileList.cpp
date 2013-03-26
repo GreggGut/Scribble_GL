@@ -168,8 +168,10 @@ void FileList::screenPressEvent(Point* point) {
 
             while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_FOR_FILE_DOWNLOAD);
 
+            screenInterpreter->getMenu()->setPageIndicator();
+            
             screenInterpreter->showFilelist(0);
-
+            
 #warning //show download alert
         }
     }

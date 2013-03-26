@@ -17,6 +17,8 @@
 #include "ScreenInterpreter.h"
 #include "Alert.h"
 #include "FileList.h"
+#include "ColorPicker.h"
+#include "SizePicker.h"
 #include "lodepng.h"
 #include <FTGL/ftgl.h>
 #include "Color.h"
@@ -34,6 +36,8 @@ public:
     Keyboard *getKeyboard();
     Alert *getAlert();
     FileList *getFileList();
+    ColorPicker *getColorPicker();
+    SizePicker *getSizePicker();
     ScreenInterpreter *getInterpreter();
     
 private:
@@ -45,6 +49,8 @@ private:
     Login *login;
     Alert *alert;
     FileList *filelist;
+    ColorPicker *colorPicker;
+    SizePicker *sizePicker;
     
     void drawPaths();
     void drawMenu();
@@ -53,6 +59,8 @@ private:
     void drawKeyboard();
     void drawFileList();
     void drawAlert();
+    void drawColorPicker();
+    void drawSizePicker();
     
     void getPNG(std::string imagePath, int _x, int _y);
     void drawText(std::string text, int size, int x, int y, Color color);

@@ -16,11 +16,13 @@ ScreenInterpreter::ScreenInterpreter() {
 
 }
 
-ScreenInterpreter::ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l, FileList *fl) {
+ScreenInterpreter::ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l, FileList *fl, ColorPicker *cp, SizePicker *sp) {
 
     loginShown = 0;
     filelistShown = 0;
     alertShown = 0;
+    colorpickerShown = 0;
+    sizepickerShown = 0;
 
     scribbleArea = s;
     menu = m;
@@ -28,6 +30,8 @@ ScreenInterpreter::ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l, FileLis
     //keyboard = p->getKeyboard();
     //alert = p->getAlert();
     filelist = fl;
+    colorPicker = cp;
+    sizePicker = sp;
 
     menuState = 0;
     scribbleState = 0;
@@ -46,161 +50,225 @@ void ScreenInterpreter::screenPressEvent(Point* point) {
 
     if (alertShown == 1) {
 
-    }
-    else if (loginShown == 1) {
+    } else if (loginShown == 1) {
         loginPress(point);
-    }
-    else if (filelistShown == 1) {
+    } else if (filelistShown == 1) {
         filelistPress(point);
-    }
-    else {
-        scribblePress(point);
+    } else {
+
+        if (colorpickerShown == 1 || sizepickerShown == 1) {
+            if (colorpickerShown == 1) {
+                colorPickerPress(point);
+            } else {
+                sizePickerPress(point);
+            } 
+        }
+        else {
+            scribblePress(point);
+        }
     }
 }
 
 void ScreenInterpreter::screenMoveEvent(Point* point) {
     if (alertShown == 1) {
 
-    }
-    else if (loginShown == 1) {
+    } else if (loginShown == 1) {
         loginMove(point);
-    }
-    else if (filelistShown == 1) {
+    } else if (filelistShown == 1) {
         filelistMove(point);
-    }
-    else {
-        scribbleMove(point);
-    }
-}
+    } else {
 
-void ScreenInterpreter::screenReleaseEvent() {
-    if (alertShown == 1) {
-
+        if (colorpickerShown == 1 || sizepickerShown == 1) {
+            if (colorpickerShown == 1) {
+                colorPickerMove(point);
+            } else {
+                sizePickerMove(point);
+            } 
+        }
+        else {
+                scribbleMove(point);
+            }
+        }
     }
-    else if (loginShown == 1) {
-        loginRelease();
+
+    void ScreenInterpreter::screenReleaseEvent() {
+        if (alertShown == 1) {
+
+        } else if (loginShown == 1) {
+            loginRelease();
+        } else if (filelistShown == 1) {
+            filelistRelease();
+        } else {
+            if (colorpickerShown == 1 || sizepickerShown == 1) {
+                if (colorpickerShown == 1) {
+                    colorPickerRelease();
+                } else {
+                    sizePickerRelease();
+                }
+            } 
+            else {
+                scribbleRelease();
+            }
+        }
     }
-    else if (filelistShown == 1) {
-        filelistRelease();
+
+    ScribbleArea * ScreenInterpreter::getScribbleArea() {
+        return scribbleArea;
     }
-    else {
-        scribbleRelease();
-    }
-}
 
-ScribbleArea* ScreenInterpreter::getScribbleArea() {
-    return scribbleArea;
-}
+    void ScreenInterpreter::scribblePress(Point * point) {
+        bool pointInMenu = menu->pointInsideArea(point);
+        bool pointInScribble = scribbleArea->pointInsideArea(point);
 
-void ScreenInterpreter::scribblePress(Point *point) {
-    bool pointInMenu = menu->pointInsideArea(point);
-    bool pointInScribble = scribbleArea->pointInsideArea(point);
+        if (pointInMenu == true && pointInScribble == true) {
+            //do screen event for both
+            menuState = 1;
+            scribbleState = 1;
+            scribbleArea->screenPressEvent(point);
+            menu->screenPressEvent(point);
 
-    if (pointInMenu == true && pointInScribble == true) {
-        //do screen event for both
-        menuState = 1;
-        scribbleState = 1;
-        scribbleArea->screenPressEvent(point);
-        menu->screenPressEvent(point);
+        } else if (pointInMenu == true && pointInScribble == false) {
+            //only menu action
+            menuState = 1;
+            menu->screenPressEvent(point);
 
-    } else if (pointInMenu == true && pointInScribble == false) {
-        //only menu action
-        menuState = 1;
-        menu->screenPressEvent(point);
-        
 #warning //can add hidding menu buttons here
-        
-    } else {
-        //only scribble area
-        scribbleState = 1;
-        scribbleArea->screenPressEvent(point);
-    }
-}
 
-void ScreenInterpreter::scribbleMove(Point *point) {
-    bool pointInMenu = menu->pointInsideArea(point);
-    bool pointInScribble = scribbleArea->pointInsideArea(point);
-
-    if (pointInMenu == true && pointInScribble == true) {
-        //do screen event for both
-        scribbleState = 2;
-        // menuState = 2;
-        scribbleArea->screenMoveEvent(point);
-        //menu->screenMoveEvent(point);
-    } else if (pointInMenu == true && scribbleArea->getScribbling() == true) {
-        //only menu action
-        // menuState = 2;
-        scribbleState = 0;
-        scribbleArea->screenReleaseEvent();
-        delete point;
-        // menu->screenMoveEvent(point);
-    } else {
-        //only scribble area
-        scribbleState = 2;
-        scribbleArea->screenMoveEvent(point);
-    }
-}
-
-void ScreenInterpreter::scribbleRelease() {
-    if (scribbleState != 1) {
-        scribbleState = 0;
-        scribbleArea->screenReleaseEvent();
+        } else {
+            //only scribble area
+            scribbleState = 1;
+            scribbleArea->screenPressEvent(point);
+        }
     }
 
-    if (menuState == 1) {
-        menuState = 0;
-        //menu->screenReleaseEvent();
+    void ScreenInterpreter::scribbleMove(Point * point) {
+        bool pointInMenu = menu->pointInsideArea(point);
+        bool pointInScribble = scribbleArea->pointInsideArea(point);
+
+        if (pointInMenu == true && pointInScribble == true) {
+            //do screen event for both
+            scribbleState = 2;
+            // menuState = 2;
+            scribbleArea->screenMoveEvent(point);
+            //menu->screenMoveEvent(point);
+        } else if (pointInMenu == true && scribbleArea->getScribbling() == true) {
+            //only menu action
+            // menuState = 2;
+            scribbleState = 0;
+            scribbleArea->screenReleaseEvent();
+            delete point;
+            // menu->screenMoveEvent(point);
+        } else {
+            //only scribble area
+            scribbleState = 2;
+            scribbleArea->screenMoveEvent(point);
+        }
     }
-}
 
-void ScreenInterpreter::loginPress(Point *point) {
-    login->screenPressEvent(point);
-}
+    void ScreenInterpreter::scribbleRelease() {
+        if (scribbleState != 1) {
+            scribbleState = 0;
+            scribbleArea->screenReleaseEvent();
+        }
 
-void ScreenInterpreter::loginMove(Point *point) {
-    //login->screenMoveEvent(point);
-}
+        if (menuState == 1) {
+            menuState = 0;
+            //menu->screenReleaseEvent();
+        }
+    }
 
-void ScreenInterpreter::loginRelease() {
-    //login->screenReleaseEvent();
-}
+    void ScreenInterpreter::loginPress(Point * point) {
+        login->screenPressEvent(point);
+    }
 
-void ScreenInterpreter::filelistPress(Point *point) {
-    filelist->screenPressEvent(point);
-}
+    void ScreenInterpreter::loginMove(Point * point) {
+        //login->screenMoveEvent(point);
+    }
 
-void ScreenInterpreter::filelistMove(Point *point) {
-    //login->screenMoveEvent(point);
-}
+    void ScreenInterpreter::loginRelease() {
+        //login->screenReleaseEvent();
+    }
 
-void ScreenInterpreter::filelistRelease() {
-    //login->screenReleaseEvent();
-}
+    void ScreenInterpreter::filelistPress(Point * point) {
+        filelist->screenPressEvent(point);
+    }
 
-void ScreenInterpreter::showLogin(bool show) {
-    loginShown = show;
-}
+    void ScreenInterpreter::filelistMove(Point * point) {
+        //login->screenMoveEvent(point);
+    }
 
-void ScreenInterpreter::showFilelist(bool show) {
-    filelistShown = show;
-}
+    void ScreenInterpreter::filelistRelease() {
+        //login->screenReleaseEvent();
+    }
 
-void ScreenInterpreter::showAlert(bool show) {
-    alertShown = show;
-}
+    void ScreenInterpreter::colorPickerPress(Point * point) {
+        colorPicker->screenPressEvent(point);
+    }
 
-bool ScreenInterpreter::getShowLogin() {
-    return loginShown;
-}
+    void ScreenInterpreter::colorPickerMove(Point * point) {
+        //login->screenMoveEvent(point);
+    }
 
-bool ScreenInterpreter::getShowFile() {
-    return filelistShown;
-}
+    void ScreenInterpreter::colorPickerRelease() {
+        //login->screenReleaseEvent();
+    }
 
-bool ScreenInterpreter::getShowAlert() {
-    return alertShown;
-}
+    void ScreenInterpreter::sizePickerPress(Point * point) {
+        sizePicker->screenPressEvent(point);
+    }
 
-FileList *ScreenInterpreter::getFileList(){
-    return filelist;
-}
+    void ScreenInterpreter::sizePickerMove(Point * point) {
+        //login->screenMoveEvent(point);
+    }
+
+    void ScreenInterpreter::sizePickerRelease() {
+        //login->screenReleaseEvent();
+    }
+
+    void ScreenInterpreter::showLogin(bool show) {
+        loginShown = show;
+    }
+
+    void ScreenInterpreter::showFilelist(bool show) {
+        filelistShown = show;
+    }
+
+    void ScreenInterpreter::showAlert(bool show) {
+        alertShown = show;
+    }
+
+    void ScreenInterpreter::showColorPicker(bool show) {
+        colorpickerShown = show;
+    }
+
+    void ScreenInterpreter::showSizePicker(bool show) {
+        sizepickerShown = show;
+    }
+
+    bool ScreenInterpreter::getShowSizePicker() {
+        return sizepickerShown;
+    }
+
+    bool ScreenInterpreter::getShowColorPicker() {
+        return colorpickerShown;
+    }
+
+    bool ScreenInterpreter::getShowLogin() {
+        return loginShown;
+    }
+
+    bool ScreenInterpreter::getShowFile() {
+        return filelistShown;
+    }
+
+    bool ScreenInterpreter::getShowAlert() {
+        return alertShown;
+    }
+
+    FileList * ScreenInterpreter::getFileList() {
+        return filelist;
+    }
+
+    Menu * ScreenInterpreter::getMenu() {
+        return menu;
+    }

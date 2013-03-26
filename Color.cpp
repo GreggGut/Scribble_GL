@@ -15,10 +15,10 @@ Color::Color() {
     blue = 0.0;
 }
 
-Color::Color(int color){
-    
-    switch(color){
-     
+Color::Color(int color) {
+
+    switch (color) {
+
         case GREEN:
             red = convertToFloat(102);
             green = convertToFloat(204);
@@ -39,6 +39,56 @@ Color::Color(int color){
             green = convertToFloat(255);
             blue = convertToFloat(255);
             break;
+        case PALETTE_BLACK:
+            red = convertToFloat(0);
+            green = convertToFloat(0);
+            blue = convertToFloat(0);
+            break;
+        case PALETTE_WHITE:
+            red = convertToFloat(255);
+            green = convertToFloat(255);
+            blue = convertToFloat(255);
+            break;
+        case PALETTE_GRAY:
+            red = convertToFloat(128);
+            green = convertToFloat(128);
+            blue = convertToFloat(128);
+            break;
+        case PALETTE_BLUE:
+            red = convertToFloat(0);
+            green = convertToFloat(0);
+            blue = convertToFloat(153);
+            break;
+        case PALETTE_GREEN:
+            red = convertToFloat(0);
+            green = convertToFloat(102);
+            blue = convertToFloat(0);
+            break;
+        case PALETTE_INDIGO:
+            red = convertToFloat(0);
+            green = convertToFloat(102);
+            blue = convertToFloat(102);
+            break;
+        case PALETTE_ORANGE:
+            red = convertToFloat(255);
+            green = convertToFloat(102);
+            blue = convertToFloat(0);
+            break;
+        case PALETTE_RED:
+            red = convertToFloat(204);
+            green = convertToFloat(0);
+            blue = convertToFloat(0);
+            break;
+        case PALETTE_VIOLET:
+            red = convertToFloat(153);
+            green = convertToFloat(0);
+            blue = convertToFloat(204);
+            break;
+        case PALETTE_YELLOW:
+            red = convertToFloat(255);
+            green = convertToFloat(204);
+            blue = convertToFloat(0);
+            break;
         default:
             red = convertToFloat(0);
             green = convertToFloat(0);
@@ -47,12 +97,12 @@ Color::Color(int color){
     }
 }
 //values from 0-255
+
 Color::Color(float r, float g, float b) {
     red = convertToFloat(r);
     green = convertToFloat(g);
     blue = convertToFloat(b);
 }
-
 
 Color::Color(const Color& orig) {
     red = orig.red;
@@ -63,19 +113,19 @@ Color::Color(const Color& orig) {
 Color::~Color() {
 }
 
-float Color::getRed(){
-     return red;
- }
- 
-float Color::getGreen(){
-     return green;
- }
+float Color::getRed() {
+    return red;
+}
 
-float Color::getBlue(){
-     return blue;
- }
+float Color::getGreen() {
+    return green;
+}
 
-void Color::setColor(int r, int g, int b){
+float Color::getBlue() {
+    return blue;
+}
+
+void Color::setColor(int r, int g, int b) {
     red = convertToFloat(r);
     green = convertToFloat(g);
     blue = convertToFloat(b);
@@ -88,7 +138,7 @@ void Color::setColor(int r, int g, int b){
     //blue = b;
 }*/
 
-float Color::convertToFloat(int x){
-    
-    return x/255.0;
+float Color::convertToFloat(int x) {
+
+    return x / 255.0;
 }

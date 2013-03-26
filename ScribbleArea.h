@@ -30,7 +30,7 @@ public:
 
     Color getPenColor();
     float getPenSize();
-    void setPenColor(Color &newColor);
+    void setPenColor(Color newColor);
     void setPenWidth(int newWidth);
     bool pointInsideArea(Point * point);
 

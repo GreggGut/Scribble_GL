@@ -161,7 +161,6 @@ void Login::callAction(int action) {
 
     switch (action) {
         case LOGIN_C:
-#warning //testing values only
 
             if (username == "" || password == "") {
                 std::cout << "ERROR: no username or password\n";

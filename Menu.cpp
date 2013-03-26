@@ -88,18 +88,18 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
                 btnh = 40;
                 break;
             case 5:
-                type = PICKER;
+                type = MOMENTARY;
                 action = SIZE_C;
-                buttonImage = "PenSize.png";
+                buttonImage = "2px.png";
                 btnx = 5 + (BTN_WIDTH + 5) * i;
                 btny = 5;
                 btnw = 40;
                 btnh = 40;
                 break;
             case 6:
-                type = PICKER;
+                type = MOMENTARY;
                 action = COLOUR_C;
-                buttonImage = "PenColour.png";
+                buttonImage = "Color_Black.png";
                 btnx = 5 + (BTN_WIDTH + 5) * i;
                 btny = 5;
                 btnw = 40;
@@ -127,7 +127,7 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
                 type = MOMENTARY;
                 action = FILE_LIST_C;
                 buttonImage = "FileList.png";
-                btnx = WIDTH - (BTN_WIDTH + 5)*2 - 5;
+                btnx = WIDTH - (BTN_WIDTH + 5)*2;
                 btny = 5;
                 btnw = 40;
                 btnh = 40;
@@ -153,7 +153,7 @@ Menu::Menu(int x_, int y_, int w_, int h_) {
 
     buttonArray->at(4)->setEnabled(0);
     buttonArray->at(3)->setEnabled(1);
-    
+
     std::string ownershipImage = "Write.png";
     ownershipImage.insert(0, IMAGE_PATH);
 
@@ -323,39 +323,41 @@ void Menu::callAction(int action) {
             }
             break;
         case ERASE_C:
-        
-            if (buttonArray->at(3)->getEnabled() != 0){
+
+            if (buttonArray->at(3)->getEnabled() != 0) {
                 buttonArray->at(3)->setSelectedImage(0);
                 buttonArray->at(4)->setSelectedImage(1);
             }
-            
+
             screenInterpreter->getScribbleArea()->setMode(ERASE);
             break;
         case WRITE_C:
-           
-            if (buttonArray->at(4)->getEnabled() != 0){
+
+            if (buttonArray->at(4)->getEnabled() != 0) {
                 buttonArray->at(4)->setSelectedImage(0);
                 buttonArray->at(3)->setSelectedImage(1);
             }
-     
+
             screenInterpreter->getScribbleArea()->setMode(WRITE);
             break;
         case PREVIOUS_PAGE_C:
             screenInterpreter->getScribbleArea()->previousPage();
+            setPageIndicator();
             break;
         case NEXT_PAGE_C:
             screenInterpreter->getScribbleArea()->nextPage();
+            setPageIndicator();
             break;
         case STATUS_C:
             handleOwnership();
             break;
         case FILE_LIST_C:
-    
-            if (buttonArray->at(4)->getEnabled() != 0){
+
+            if (buttonArray->at(4)->getEnabled() != 0) {
                 buttonArray->at(4)->setSelectedImage(0);
             }
-            
-            if (buttonArray->at(3)->getEnabled() != 1){
+
+            if (buttonArray->at(3)->getEnabled() != 1) {
                 buttonArray->at(3)->setSelectedImage(1);
             }
             screenInterpreter->getScribbleArea()->setMode(WRITE);
@@ -366,6 +368,13 @@ void Menu::callAction(int action) {
             }
 
             screenInterpreter->showFilelist(1);
+            break;
+        case COLOUR_C:
+            screenInterpreter->showColorPicker(1);
+            break;
+        case SIZE_C:
+            screenInterpreter->showSizePicker(1);
+            break;
         default:
             break;
     }
@@ -419,4 +428,18 @@ void Menu::getFilelist() {
     } else {
         std::cout << "ERROR: No files on server\n";
     }
+}
+
+std::string Menu::getPageIndicator() {
+    return pageIndicator;
+}
+
+void Menu::setPageIndicator() {
+    int current = screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage() + 1;
+    int total = screenInterpreter->getScribbleArea()->getDocument()->getNumberOfPages();
+
+    std::stringstream sstm;
+    sstm << "Page " << current << "/" << total;
+
+    pageIndicator = sstm.str();
 }

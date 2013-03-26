@@ -13,6 +13,7 @@
 #include <vector>
 #include "defines.h"
 #include <string>
+#include <sstream>
 
 class ScreenInterpreter;
 
@@ -37,6 +38,8 @@ public:
     void handleOwnership();
     MenuButton *getOwnershipBTN();
     void getFilelist();
+    std::string getPageIndicator();
+    void setPageIndicator();
     
 private:
     bool network;
@@ -44,10 +47,12 @@ private:
     int y;
     int width;
     int height;
+
     std::vector <MenuButton *> *buttonArray;
     ScreenInterpreter *screenInterpreter;
     std::string background;
     MenuButton *ownershipBTN;
+    std::string pageIndicator;
 };
 
 #endif	/* MENU_H */

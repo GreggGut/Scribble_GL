@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/SizePicker.o \
 	${OBJECTDIR}/Alert.o \
 	${OBJECTDIR}/InputData.o \
 	${OBJECTDIR}/Point.o \
@@ -43,6 +44,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/RequestMessage.o \
 	${OBJECTDIR}/Document.o \
 	${OBJECTDIR}/FileListCell.o \
+	${OBJECTDIR}/ColorPicker.o \
 	${OBJECTDIR}/Button.o \
 	${OBJECTDIR}/Color.o \
 	${OBJECTDIR}/Login.o \
@@ -53,6 +55,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/Keyboard.o \
 	${OBJECTDIR}/MenuButton.o \
 	${OBJECTDIR}/Path.o \
+	${OBJECTDIR}/Picker.o \
 	${OBJECTDIR}/FileList.o \
 	${OBJECTDIR}/lodepng.o \
 	${OBJECTDIR}/LoginButton.o \
@@ -85,6 +88,11 @@ LDLIBSOPTIONS=-L/usr/local/lib
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/scribble_gl ${OBJECTFILES} ${LDLIBSOPTIONS} 
+
+${OBJECTDIR}/SizePicker.o: SizePicker.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/SizePicker.o SizePicker.cpp
 
 ${OBJECTDIR}/Alert.o: Alert.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -125,6 +133,11 @@ ${OBJECTDIR}/FileListCell.o: FileListCell.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/FileListCell.o FileListCell.cpp
+
+${OBJECTDIR}/ColorPicker.o: ColorPicker.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ColorPicker.o ColorPicker.cpp
 
 ${OBJECTDIR}/Button.o: Button.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -175,6 +188,11 @@ ${OBJECTDIR}/Path.o: Path.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Path.o Path.cpp
+
+${OBJECTDIR}/Picker.o: Picker.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Picker.o Picker.cpp
 
 ${OBJECTDIR}/FileList.o: FileList.cpp 
 	${MKDIR} -p ${OBJECTDIR}

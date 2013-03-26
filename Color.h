@@ -12,6 +12,17 @@
 #define LIGHT_GRAY 1
 #define DARK_GRAY 2
 #define WHITE 3
+#define PALETTE_BLACK 4
+#define PALETTE_WHITE 5
+#define PALETTE_GRAY 6
+#define PALETTE_BLUE 7
+#define PALETTE_GREEN 8
+#define PALETTE_INDIGO 9
+#define PALETTE_ORANGE 10
+#define PALETTE_RED 11
+#define PALETTE_VIOLET 12
+#define PALETTE_YELLOW 13
+
 
 //add enum for common colors
 #include <string>

@@ -66,7 +66,7 @@ float ScribbleArea::getPenSize()
     return penSize;
 }
 
-void ScribbleArea::setPenColor(Color &newColor)
+void ScribbleArea::setPenColor(Color newColor)
 {
     penColor = newColor;
 }

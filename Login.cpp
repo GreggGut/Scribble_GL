@@ -184,10 +184,11 @@ void Login::callAction(int action) {
 
 void Login::login() {
 
+    screenInterpreter->showLoading(1);
+    
     if (screenInterpreter->getScribbleArea()->getSender()->connectToServer()) {
+        
         screenInterpreter->getScribbleArea()->getSender()->sendLogin(username, password);
-
-        screenInterpreter->showLoading(1);
 
         while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_LOGIN);
 

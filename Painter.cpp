@@ -8,6 +8,7 @@
 //#include <FTGL/FTGLPixmapFont.h>
 
 #include "Painter.h"
+#include "Loading.h"
 
 using namespace poppler;
 
@@ -19,15 +20,17 @@ Painter::Painter() {
     filelist = new FileList(WIDTH / 2 - 656 / 2, HEIGHT / 2 - 738 / 2, 656, 738);
     colorPicker = new ColorPicker(168, 44, 253, 121);
     sizePicker = new SizePicker(124, 44, 253, 121);
-
-    interpreter = new ScreenInterpreter(scribbleArea, menu, login, filelist, colorPicker, sizePicker);
+    alert = new Alert("","",-1);
+    loading = new Loading();
+    
+    interpreter = new ScreenInterpreter(scribbleArea, menu, login, filelist, colorPicker, sizePicker, alert);
 
     menu->setScreenInterpreter(interpreter);
     login->setScreenInterpreter(interpreter);
     filelist->setScreenInterpreter(interpreter);
     colorPicker->setScreenInterpreter(interpreter);
     sizePicker->setScreenInterpreter(interpreter);
-
+    alert ->setScreenInterpreter(interpreter);
 }
 
 Painter::Painter(const Painter& orig) {
@@ -40,8 +43,9 @@ Painter::~Painter() {
     delete login;
     delete interpreter;
     delete colorPicker;
+    delete sizePicker;
     //delete keyboard;
-    //delete alert;
+    delete alert;
 }
 
 ScribbleArea* Painter::getScribbleArea() {
@@ -70,39 +74,51 @@ ScreenInterpreter* Painter::getInterpreter() {
 
 void Painter::Draw() {
 
-    if (interpreter->getShowAlert() == 1) {
-        drawAlert();
-    } else if (interpreter->getShowLogin() == 1) {
-        drawLogin();
-    } else if (interpreter->getShowFile() == 1) {
-        drawFileList();
-    } else {
+    try {
+
+        if (interpreter->getShowLogin() == 1) {
+            drawLogin();
+        } else if (interpreter->getShowFile() == 1) {
+            drawFileList();
+        } else {
 
 
-        drawPDF();
+            drawPDF();
 
-        glEnable(GL_BLEND);
-        glEnable(GL_LINE_SMOOTH);
-        glEnable(GL_POINT_SMOOTH);
+            glEnable(GL_BLEND);
+            glEnable(GL_LINE_SMOOTH);
+            glEnable(GL_POINT_SMOOTH);
 
-        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        drawPaths();
+            drawPaths();
 
-        drawMenu();
+            drawMenu();
 
-        if (interpreter->getShowColorPicker() == 1) {
-            drawColorPicker();
+            if (interpreter->getShowColorPicker() == 1) {
+                drawColorPicker();
+            }
+
+            if (interpreter->getShowSizePicker() == 1) {
+                drawSizePicker();
+            }
+
+            glDisable(GL_LINE_SMOOTH);
+            glDisable(GL_POINT_SMOOTH);
+            glDisable(GL_BLEND);
         }
 
-        if (interpreter->getShowSizePicker() == 1) {
-            drawSizePicker();
+        if (interpreter->getShowAlert() == 1) {
+            drawAlert();
         }
-
-        glDisable(GL_LINE_SMOOTH);
-        glDisable(GL_POINT_SMOOTH);
-        glDisable(GL_BLEND);
+        
+        if (interpreter->getShowLoading() == 1){
+            drawLoading();
+        }
+        
+    } catch (...) {
+        return;
     }
 }
 
@@ -252,10 +268,54 @@ void Painter::drawMenu() {
     float width = font.Advance(menu->getPageIndicator().c_str(), -1, FTPoint());
     float height = font.LineHeight();
 
-    glRasterPos2i(WIDTH - width - (44+5)*2, height);
+    glRasterPos2i(WIDTH - width - (44 + 5)*2, height);
 
     font.Render(menu->getPageIndicator().c_str(), -1, FTPoint(), FTPoint(), FTGL::RENDER_ALL);
 
+}
+
+void Painter::drawAlert() {
+
+    getPNG(alert->getImagePath(), alert->getX(), alert->getY());
+
+    for (int i = 0; i < alert->getButtonArray()->size(); ++i) {
+        int btnx = alert->getButtonArray()->at(i)->getX();
+        int btny = alert->getButtonArray()->at(i)->getY();
+
+        getPNG(alert->getButtonArray()->at(i)->getImagePath(), btnx, btny);
+    }
+
+    glColor3f(Color(DARK_GRAY).getRed(), Color(DARK_GRAY).getGreen(), Color(DARK_GRAY).getBlue());
+    glPixelZoom(1.0, 1.0);
+
+    FTPixmapFont *font = new FTPixmapFont("./resources/fonts/century_gothic.ttf");
+    
+    // If something went wrong, bail out.
+    if (font->Error())
+        std::cout << "ERROR: FONT WAS NOT LOADED\n";
+
+    // Set the font size and render a small text.
+    font->FaceSize(35);
+
+    float width = font->Advance(alert->getTitle().c_str(), -1, FTPoint());
+    float height = font->LineHeight();
+
+    glRasterPos2i((alert->getX() + alert->getWidth()/2)-(width/2), alert->getY() + height - 5);
+
+    font->Render(alert->getTitle().c_str(), -1, FTPoint(), FTPoint(), FTGL::RENDER_ALL);
+
+    FTSimpleLayout layout;
+    
+    layout.SetFont(font);
+    layout.SetAlignment(FTGL::ALIGN_CENTER);
+    layout.SetLineLength(500);
+    
+    glRasterPos2i((alert->getX() + alert->getWidth()/2)-(layout.GetLineLength()/2), alert->getY() + 140/2 + layout.GetFont()->LineHeight());
+    
+    layout.Render(alert->getMessage().c_str(),-1,FTPoint(),FTGL::RENDER_ALL);
+      // Set the font size and render a small text.
+    
+    delete font;
 }
 
 void Painter::drawPDF() {
@@ -350,10 +410,6 @@ void Painter::drawFileList() {
     page = "Page " + filelist->getCurrentPage() + "/" + filelist->getNumberOfPages();
 
     drawText(page, 35, filelist->getX() + 18, filelist->getY() + 690, Color(GREEN));
-}
-
-void Painter::drawAlert() {
-
 }
 
 void Painter::drawColorPicker() {
@@ -451,4 +507,11 @@ void Painter::drawText(std::string text, int size, int x, int y, Color color) {
     // Set the font size and render a small text.
     font.FaceSize(size);
     font.Render(text.c_str(), -1, FTPoint(), FTPoint(), FTGL::RENDER_ALL);
+}
+
+void Painter::drawLoading(){
+    
+     getPNG(loading->getBackground(), (WIDTH/2) - (150/2), (HEIGHT/2) - (150/2));
+     
+     
 }

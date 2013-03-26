@@ -23,7 +23,7 @@ class Login;
 class ScreenInterpreter {
 public:
     ScreenInterpreter();
-    ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l, FileList *fl,ColorPicker *cp, SizePicker *sp);
+    ScreenInterpreter(ScribbleArea *s, Menu *m, Login *l, FileList *fl,ColorPicker *cp, SizePicker *sp, Alert *a);
     ScreenInterpreter(const ScreenInterpreter& orig);
     virtual ~ScreenInterpreter();
     void screenPressEvent(Point* point);
@@ -36,16 +36,18 @@ public:
     void showAlert(bool show);
     void showColorPicker(bool show);
     void showSizePicker(bool show);
+    void showLoading(bool show);
     
     bool getShowLogin();
     bool getShowFile();
     bool getShowAlert();
     bool getShowColorPicker();
     bool getShowSizePicker();
+    bool getShowLoading();
     
     FileList *getFileList();
     Menu *getMenu();
-    
+    Alert *getAlert();
 private:
     ScribbleArea *scribbleArea;
     Menu *menu;
@@ -79,11 +81,16 @@ private:
     void sizePickerMove(Point *point);
     void sizePickerRelease();
     
+    void alertPress(Point *point);
+    void alertMove(Point *point);
+    void alertRelease();
+    
     bool loginShown;
     bool filelistShown;
     bool alertShown;
     bool colorpickerShown;
     bool sizepickerShown;
+    bool loadingShown;
 };
 
 #endif	/* SCREENINTERPRETER_H */

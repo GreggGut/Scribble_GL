@@ -40,6 +40,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/InputData.o \
 	${OBJECTDIR}/Point.o \
 	${OBJECTDIR}/main.o \
+	${OBJECTDIR}/AlertButton.o \
 	${OBJECTDIR}/Painter.o \
 	${OBJECTDIR}/RequestMessage.o \
 	${OBJECTDIR}/Document.o \
@@ -62,7 +63,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/NetworkClient.o \
 	${OBJECTDIR}/ScreenAreas.o \
 	${OBJECTDIR}/Sender.o \
-	${OBJECTDIR}/ScribbleArea.o
+	${OBJECTDIR}/ScribbleArea.o \
+	${OBJECTDIR}/Loading.o
 
 
 # C Compiler Flags
@@ -113,6 +115,11 @@ ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/main.o main.cpp
+
+${OBJECTDIR}/AlertButton.o: AlertButton.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/AlertButton.o AlertButton.cpp
 
 ${OBJECTDIR}/Painter.o: Painter.cpp 
 	${MKDIR} -p ${OBJECTDIR}
@@ -228,6 +235,11 @@ ${OBJECTDIR}/ScribbleArea.o: ScribbleArea.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ScribbleArea.o ScribbleArea.cpp
+
+${OBJECTDIR}/Loading.o: Loading.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -I. -I/usr/local/include/freetype2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/Loading.o Loading.cpp
 
 # Subprojects
 .build-subprojects:

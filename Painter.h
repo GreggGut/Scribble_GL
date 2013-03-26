@@ -22,6 +22,7 @@
 #include "lodepng.h"
 #include <FTGL/ftgl.h>
 #include "Color.h"
+#include "Loading.h"
 
 class Painter {
    
@@ -51,6 +52,7 @@ private:
     FileList *filelist;
     ColorPicker *colorPicker;
     SizePicker *sizePicker;
+    Loading *loading;
     
     void drawPaths();
     void drawMenu();
@@ -61,6 +63,7 @@ private:
     void drawAlert();
     void drawColorPicker();
     void drawSizePicker();
+    void drawLoading();
     
     void getPNG(std::string imagePath, int _x, int _y);
     void drawText(std::string text, int size, int x, int y, Color color);

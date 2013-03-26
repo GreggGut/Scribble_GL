@@ -3,8 +3,11 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f2" displayName="Header Files" projectFiles="true">
       <itemPath>Alert.h</itemPath>
+      <itemPath>AlertButton.cpp</itemPath>
+      <itemPath>AlertButton.h</itemPath>
       <itemPath>Button.h</itemPath>
       <itemPath>Color.h</itemPath>
+      <itemPath>ColorPicker.h</itemPath>
       <itemPath>Document.h</itemPath>
       <itemPath>FileList.h</itemPath>
       <itemPath>FileListButton.h</itemPath>
@@ -19,12 +22,14 @@
       <itemPath>Painter.h</itemPath>
       <itemPath>PalmRejection.h</itemPath>
       <itemPath>Path.h</itemPath>
+      <itemPath>Picker.h</itemPath>
       <itemPath>Point.h</itemPath>
       <itemPath>RequestMessage.h</itemPath>
       <itemPath>ScreenAreas.h</itemPath>
       <itemPath>ScreenInterpreter.h</itemPath>
       <itemPath>ScribbleArea.h</itemPath>
       <itemPath>Sender.h</itemPath>
+      <itemPath>SizePicker.h</itemPath>
       <itemPath>defines.h</itemPath>
       <itemPath>lodepng.h</itemPath>
       <itemPath>main.h</itemPath>
@@ -36,13 +41,14 @@
       <itemPath>Button.cpp</itemPath>
       <itemPath>Color.cpp</itemPath>
       <itemPath>ColorPicker.cpp</itemPath>
-      <itemPath>ColorPicker.h</itemPath>
       <itemPath>Document.cpp</itemPath>
       <itemPath>FileList.cpp</itemPath>
       <itemPath>FileListButton.cpp</itemPath>
       <itemPath>FileListCell.cpp</itemPath>
       <itemPath>InputData.cpp</itemPath>
       <itemPath>Keyboard.cpp</itemPath>
+      <itemPath>Loading.cpp</itemPath>
+      <itemPath>Loading.h</itemPath>
       <itemPath>Login.cpp</itemPath>
       <itemPath>LoginButton.cpp</itemPath>
       <itemPath>Menu.cpp</itemPath>
@@ -52,7 +58,6 @@
       <itemPath>PalmRejection.cpp</itemPath>
       <itemPath>Path.cpp</itemPath>
       <itemPath>Picker.cpp</itemPath>
-      <itemPath>Picker.h</itemPath>
       <itemPath>Point.cpp</itemPath>
       <itemPath>RequestMessage.cpp</itemPath>
       <itemPath>ScreenAreas.cpp</itemPath>
@@ -60,7 +65,6 @@
       <itemPath>ScribbleArea.cpp</itemPath>
       <itemPath>Sender.cpp</itemPath>
       <itemPath>SizePicker.cpp</itemPath>
-      <itemPath>SizePicker.h</itemPath>
       <itemPath>lodepng.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>

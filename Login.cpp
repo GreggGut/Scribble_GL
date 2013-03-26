@@ -189,6 +189,9 @@ void Login::login() {
     if (screenInterpreter->getScribbleArea()->getSender()->connectToServer()) {
         screenInterpreter->getScribbleArea()->getSender()->sendLogin(username, password);
         while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_LOGIN);
+        
+        screenInterpreter->showLoading(1);
+        
         if (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::LOGIN_FAILED) {
             std::cout << "Login Failed!!!\n";
             return;

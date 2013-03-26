@@ -316,10 +316,14 @@ void Menu::callAction(int action) {
             break;
         case CLEAR_ALL_C:
             if (screenInterpreter->getScribbleArea()->getEnabled() == 1) {
-                screenInterpreter->getScribbleArea()->clearAll(screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage());
+                
+                screenInterpreter->getAlert()->setAlert("Clear All", "Are you sure you want to clear all?", CLEAR_ALL_ALERT);
+                screenInterpreter->showAlert(1);
+                
+                /*screenInterpreter->getScribbleArea()->clearAll(screenInterpreter->getScribbleArea()->getDocument()->getCurrentPage());
                 if (network == 1) {
                     screenInterpreter->getScribbleArea()->getSender()->sendCleanAll(screenInterpreter->getScribbleArea()->getCurrentPage());
-                }
+                }*/
             }
             break;
         case ERASE_C:

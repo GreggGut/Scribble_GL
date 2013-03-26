@@ -52,7 +52,7 @@ FileList::FileList(int x_, int y_, int w_, int h_) {
     buttonArray = new std::vector<FileListButton *>;
     fileTable = new std::vector<FileListCell *>;
 
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 2; ++i) {
 
         int type;
         int action;
@@ -65,15 +65,6 @@ FileList::FileList(int x_, int y_, int w_, int h_) {
         switch (i) {
             case 0:
                 type = MOMENTARY;
-                action = NEW_DOCUMENT_FL;
-                buttonImage = "AddDocument.png";
-                btnx = 604;
-                btny = 9;
-                btnw = 40;
-                btnh = 40;
-                break;
-            case 1:
-                type = MOMENTARY;
                 action = NEXT_PAGE_FL;
                 buttonImage = "NextPage.png";
                 btnx = 604;
@@ -81,12 +72,21 @@ FileList::FileList(int x_, int y_, int w_, int h_) {
                 btnw = 40;
                 btnh = 40;
                 break;
-            case 2:
+            case 1:
                 type = MOMENTARY;
                 action = PREVIOUS_PAGE_FL;
                 buttonImage = "PreviousPage.png";
                 btnx = 559;
                 btny = 688;
+                btnw = 40;
+                btnh = 40;
+                break;
+            case 2:
+                type = MOMENTARY;
+                action = NEW_DOCUMENT_FL;
+                buttonImage = "AddDocument.png";
+                btnx = 604;
+                btny = 9;
                 btnw = 40;
                 btnh = 40;
                 break;
@@ -169,9 +169,9 @@ void FileList::screenPressEvent(Point* point) {
             while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_FOR_FILE_DOWNLOAD);
 
             screenInterpreter->getMenu()->setPageIndicator();
-            
+
             screenInterpreter->showFilelist(0);
-            
+
 #warning //show download alert
         }
     }
@@ -213,8 +213,7 @@ void FileList::callAction(int action) {
 
                 if (page + 1 == numberOfPages) {
                     size = fileList.size() % 10;
-                }
-                else {
+                } else {
                     size = 10;
                 }
 
@@ -231,8 +230,7 @@ void FileList::callAction(int action) {
 
                 if (page + 1 == numberOfPages) {
                     size = fileList.size() % 10;
-                }
-                else {
+                } else {
                     size = 10;
                 }
 
@@ -260,17 +258,16 @@ std::vector <std::string> FileList::getFileList() {
 
 void FileList::setFileList(std::vector <std::string> fl) {
     fileList = fl;
-    
-    if (fileList.size()%10 == 0){
-        numberOfPages = (fileList.size()/10);
+
+    if (fileList.size() % 10 == 0) {
+        numberOfPages = (fileList.size() / 10);
     }
-    
     else {
         numberOfPages = (fileList.size() / 10) + 1;
     }
-    
-    std::cout<<fileList.size();
-    
+
+    std::cout << fileList.size();
+
     if (fileList.size() <= 10) {
         size = fileList.size();
     } else {
@@ -312,8 +309,8 @@ std::string FileList::getNumberOfPages() {
 }
 
 std::string FileList::getCurrentPage() {
-    
+
     std::stringstream ss;
-    ss << page+1;
+    ss << page + 1;
     return ss.str();
 }

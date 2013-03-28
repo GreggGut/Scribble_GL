@@ -399,17 +399,21 @@ void Menu::handleOwnership() {
 
     if (ownership == 0) { //ME
         //release it since I already have it
+        screenInterpreter->showLoading(1);
         screenInterpreter->getScribbleArea()->getSender()->sendReleaseOwnership();
 
         while (screenInterpreter->getScribbleArea()->getOwnershipValue() != 2);
-
+        screenInterpreter->showLoading(0);
+        
     } else if (ownership == 1) { //Taken
         //busy
     } else if (ownership == 2) { //Free
         //send to get it
+        screenInterpreter->showLoading(1);
         screenInterpreter->getScribbleArea()->getSender()->sendRequestOwnership();
 
         while (screenInterpreter->getScribbleArea()->getOwnershipValue() == 2);
+        screenInterpreter->showLoading(0);
 
     } else {
         std::cout << "ERROR WITH OWNERSHIP\n";
@@ -422,14 +426,17 @@ MenuButton *Menu::getOwnershipBTN() {
 
 void Menu::getFilelist() {
 
+    screenInterpreter->showLoading(1);
     screenInterpreter->getScribbleArea()->getSender()->sendGetFilesList();
     while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_FOR_FILE_LIST);
 
     if (screenInterpreter->getScribbleArea()->getFilesOnServer().size() > 0) {
 
         screenInterpreter->getFileList()->setFileList(screenInterpreter->getScribbleArea()->getFilesOnServer());
+        screenInterpreter->showLoading(0);
         screenInterpreter->showFilelist(1);
     } else {
+        screenInterpreter->showLoading(0);
         std::cout << "ERROR: No files on server\n";
     }
 }

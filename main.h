@@ -23,6 +23,7 @@
 #include "RequestMessage.h"
 #include "Sender.h"
 #include "NetworkClient.h"
+#include <sstream>
 
 Painter *painter;
 InputData *inputData;

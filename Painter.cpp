@@ -119,7 +119,7 @@ void Painter::Draw() {
         glDisable(GL_BLEND);
 
     } catch (...) {
-        std::cout<<"ERROR";
+        std::cout << "ERROR";
         scribbleArea->setLockForNetworkPath(0);
         scribbleArea->setLockForPath(0);
         scribbleArea->setLockForTempPath(0);
@@ -347,8 +347,14 @@ void Painter::drawLogin() {
 
     getPNG(login->getImagePath(), login->getX(), login->getY());
 
-    drawText(login->getUserName(), 35, login->getX() + 78, login->getY() + 128, Color(DARK_GRAY));
-    drawText(login->getPassword(), 35, login->getX() + 78, login->getY() + 205, Color(DARK_GRAY));
+    if (login->getTypingPassword() == 1) {
+        drawText(login->getUserName(), 35, login->getX() + 78, login->getY() + 128, Color(DARK_GRAY));
+        drawText(login->getPassword(), 35, login->getX() + 78, login->getY() + 205, Color(GREEN));
+    }
+    else if (login->getTypingUser() == 1) {
+        drawText(login->getUserName(), 35, login->getX() + 78, login->getY() + 128, Color(GREEN));
+        drawText(login->getPassword(), 35, login->getX() + 78, login->getY() + 205, Color(DARK_GRAY));
+    }
 }
 
 void Painter::drawKeyboard() {
@@ -428,8 +434,7 @@ void Painter::getPNG(std::string imagePath, int _x, int _y) {
         glRasterPos2i(_x, _y);
         glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
 
-    }
-    else {
+    } else {
         drawPixels(_x, _y, width, height, image);
     }
 }
@@ -573,7 +578,7 @@ void Painter::drawLoading() {
     }
 
     drawPixels(x, y, width_1, height_1, image_1);
-    
+
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
 
@@ -601,7 +606,7 @@ void Painter::drawLoading() {
     }
 
     drawPixels(x, y, width_2, height_2, image_2);
-    
+
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
 

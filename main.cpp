@@ -21,7 +21,7 @@ void glInit(int argc, char** argv) {
 
     glMatrixMode(GL_PROJECTION);
     gluOrtho2D(0.0, WIDTH, HEIGHT, 0.0);
-  
+
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
     glutKeyboardFunc(key);
@@ -44,15 +44,57 @@ void resize(int width, int height) {
     glLoadIdentity();
 }
 
-
 void key(unsigned char key, int x, int y) {
 
+    if (key == '\t') {
+        if (painter->getInterpreter()->getLogin()->getTypingUser() == 1) {
+            painter->getInterpreter()->getLogin()->setPasswordTyping();
+        }
+        else if (painter->getInterpreter()->getLogin()->getTypingPassword() == 1) {
+            painter->getInterpreter()->getLogin()->setUserTyping();
+        }
+    }
+    else if (key == '\r') {
+        painter->getInterpreter()->getLogin()->callAction(LOGIN_C);
+    }
+    else if (key == '\b') {
+        if (painter->getInterpreter()->getLogin()->getTypingUser() == 1) {
+            
+            if (painter->getInterpreter()->getLogin()->getTrueUserName().size() > 0){
+                std::string str = painter->getInterpreter()->getLogin()->getTrueUserName();
+                str.resize(str.length() - 1);
+                
+                painter->getInterpreter()->getLogin()->setUserName(str);
+            }
+        }
+        else if (painter->getInterpreter()->getLogin()->getTypingPassword() == 1) {
+           if (painter->getInterpreter()->getLogin()->getTruePassword().size() > 0){
+                std::string str = painter->getInterpreter()->getLogin()->getTruePassword();
+                str.resize(str.length() - 1);
+                
+                painter->getInterpreter()->getLogin()->setPassword(str);
+            }
+        }
+    }
+    else {
+        if (painter->getInterpreter()->getLogin()->getTypingPassword() == 1) {
+            stringstream ss;
+            ss << painter->getInterpreter()->getLogin()->getTruePassword() << key;
+            painter->getInterpreter()->getLogin()->setPassword(ss.str());
+        }
+
+        if (painter->getInterpreter()->getLogin()->getTypingUser() == 1) {
+            stringstream ss;
+            ss << painter->getInterpreter()->getLogin()->getTrueUserName() << key;
+            painter->getInterpreter()->getLogin()->setUserName(ss.str());
+        }
+    }
 
 }
 
-void specialKey(int key, int x, int y){
-    switch (key){
-         case GLUT_KEY_F1:
+void specialKey(int key, int x, int y) {
+    switch (key) {
+        case GLUT_KEY_F1:
             painter->getLogin()->setUserName("user");
             painter->getLogin()->setPassword("Password");
             break;

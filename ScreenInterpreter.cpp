@@ -149,8 +149,6 @@ void ScreenInterpreter::scribblePress(Point * point) {
         menuState = 1;
         menu->screenPressEvent(point);
 
-#warning //can add hidding menu buttons here
-
     } else {
         //only scribble area
         scribbleState = 1;

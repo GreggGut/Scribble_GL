@@ -13,7 +13,7 @@
 #include "Color.h"
 #include "defines.h"
 #include "ScreenAreas.h"
-
+#include <GL/gl.h>
 #include <iostream>
 
 class Path
@@ -25,7 +25,7 @@ public:
     virtual ~Path();
     void addPoint(Point* point);
     std::vector<Point*> getPath();
-    std::vector<float> getPointPath();
+    std::vector <GLfloat> getPointPath();
     int getPenWidth();
     Color getPenColor() const;
      int getPenColorInt();
@@ -52,7 +52,7 @@ private:
     int myPenWidth;
     Color myPenColor;
     std::vector<Point *> mPointsVector;
-    std::vector<float> pointsVector;
+    std::vector<GLfloat> pointsVector;
     int ID;
     bool active;
     /*! Used to determine if the path is really what the user wanted to write or not*/

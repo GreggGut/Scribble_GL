@@ -136,29 +136,45 @@ void Painter::drawPaths() {
         glColor3f(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenColor().getRed(), scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenColor().getGreen(), scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenColor().getBlue());
         glLineWidth(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenWidth());
 
-        /*glEnableClientState( GL_VERTEX_ARRAY );
+        if (NEW_DRAWING == 1) {
+            
+            int size = scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPointPath().size();
+            
+            std::vector<GLfloat> test(size);
+            test = scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPointPath();
+            
+            glEnableClientState( GL_VERTEX_ARRAY );
+             
+            glVertexPointer(2,GL_FLOAT,0,&test[0]);
+            glDrawArrays(GL_LINE_STRIP,0,size/2);
+           
+            if (scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenWidth() > 2) {
+                 
+                 glPointSize(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenWidth() - 1);
+                 glDrawArrays(GL_POINTS,0,size/2);
+             }
+            
+            glDisableClientState( GL_VERTEX_ARRAY );
 
-        glVertexPointer(2,GL_INT,0,scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->pointsArray());
- 
-        glDrawArrays(GL_QUADS,0,2*scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPointsCount());
-         */
-
-        glBegin(GL_LINE_STRIP);
-        for (int j = 0; j < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().size(); ++j) {
-
-            glVertex3f(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getX(), scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getY(), 0.0f);
         }
-        glEnd();
-
-        if (scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenWidth() > 2) {
-            glPointSize(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenWidth() - 1);
-
-            glBegin(GL_POINTS);
+        else {
+            glBegin(GL_LINE_STRIP);
             for (int j = 0; j < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().size(); ++j) {
 
                 glVertex3f(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getX(), scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getY(), 0.0f);
             }
             glEnd();
+
+            if (scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenWidth() > 2) {
+                glPointSize(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPenWidth() - 1);
+
+                glBegin(GL_POINTS);
+                for (int j = 0; j < scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().size(); ++j) {
+
+                    glVertex3f(scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getX(), scribbleArea->getPathsOnPage().at(scribbleArea->getCurrentPage()).at(i)->getPath().at(j)->getY(), 0.0f);
+                }
+                glEnd();
+            }
         }
     }
 
@@ -170,24 +186,44 @@ void Painter::drawPaths() {
         glColor3f(scribbleArea->getTempPath()->getPenColor().getRed(), scribbleArea->getTempPath()->getPenColor().getGreen(), scribbleArea->getTempPath()->getPenColor().getBlue());
         glLineWidth(scribbleArea->getTempPath()->getPenWidth());
 
-        glBegin(GL_LINE_STRIP);
-        for (int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j) {
-
-            glVertex3f(scribbleArea->getTempPath()->getPath().at(j)->getX(), scribbleArea->getTempPath()->getPath().at(j)->getY(), 0.0f);
+        if (NEW_DRAWING == 1) {
+            int size = scribbleArea->getTempPath()->getPointPath().size();
+            
+            std::vector<GLfloat> test(size);
+            test = scribbleArea->getTempPath()->getPointPath();
+            
+            glEnableClientState( GL_VERTEX_ARRAY );
+             
+            glVertexPointer(2,GL_FLOAT,0,&test[0]);
+            glDrawArrays(GL_LINE_STRIP,0,size/2);
+            
+             if (scribbleArea->getTempPath()->getPenWidth() > 2) {
+                 glPointSize(scribbleArea->getTempPath()->getPenWidth() - 1);
+                 glDrawArrays(GL_POINTS,0,size/2);
+             }
+            
+            glDisableClientState( GL_VERTEX_ARRAY );
         }
-
-        glEnd();
-
-        if (scribbleArea->getTempPath()->getPenWidth() > 2) {
-            glPointSize(scribbleArea->getTempPath()->getPenWidth() - 1);
-
-            glBegin(GL_POINTS);
+        else {
+            glBegin(GL_LINE_STRIP);
             for (int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j) {
 
                 glVertex3f(scribbleArea->getTempPath()->getPath().at(j)->getX(), scribbleArea->getTempPath()->getPath().at(j)->getY(), 0.0f);
             }
 
             glEnd();
+
+            if (scribbleArea->getTempPath()->getPenWidth() > 2) {
+                glPointSize(scribbleArea->getTempPath()->getPenWidth() - 1);
+
+                glBegin(GL_POINTS);
+                for (int j = 0; j < scribbleArea->getTempPath()->getPath().size(); ++j) {
+
+                    glVertex3f(scribbleArea->getTempPath()->getPath().at(j)->getX(), scribbleArea->getTempPath()->getPath().at(j)->getY(), 0.0f);
+                }
+
+                glEnd();
+            }
         }
     }
     scribbleArea->setLockForTempPath(0);
@@ -199,24 +235,44 @@ void Painter::drawPaths() {
         glColor3f(scribbleArea->getNetworkPath()->getPenColor().getRed(), scribbleArea->getNetworkPath()->getPenColor().getGreen(), scribbleArea->getNetworkPath()->getPenColor().getBlue());
         glLineWidth(scribbleArea->getNetworkPath()->getPenWidth());
 
-        glBegin(GL_LINE_STRIP);
-        for (int j = 0; j < scribbleArea->getNetworkPath()->getPath().size(); ++j) {
-
-            glVertex3f(scribbleArea->getNetworkPath()->getPath().at(j)->getX(), scribbleArea->getNetworkPath()->getPath().at(j)->getY(), 0.0f);
+        if (NEW_DRAWING == 1) {
+           int size = scribbleArea->getNetworkPath()->getPointPath().size();
+            
+            std::vector<GLfloat> test(size);
+            test = scribbleArea->getNetworkPath()->getPointPath();
+            
+            glEnableClientState( GL_VERTEX_ARRAY );
+             
+            glVertexPointer(2,GL_FLOAT,0,&test[0]);
+            glDrawArrays(GL_LINE_STRIP,0,size/2);
+            
+           if (scribbleArea->getNetworkPath()->getPenWidth() > 2) {
+                glPointSize(scribbleArea->getNetworkPath()->getPenWidth() - 1);
+                 glDrawArrays(GL_POINTS,0,size/2);
+             }
+            
+            glDisableClientState( GL_VERTEX_ARRAY );
         }
-
-        glEnd();
-
-        if (scribbleArea->getNetworkPath()->getPenWidth() > 2) {
-            glPointSize(scribbleArea->getNetworkPath()->getPenWidth() - 1);
-
-            glBegin(GL_POINTS);
+        else {
+            glBegin(GL_LINE_STRIP);
             for (int j = 0; j < scribbleArea->getNetworkPath()->getPath().size(); ++j) {
 
                 glVertex3f(scribbleArea->getNetworkPath()->getPath().at(j)->getX(), scribbleArea->getNetworkPath()->getPath().at(j)->getY(), 0.0f);
             }
 
             glEnd();
+
+            if (scribbleArea->getNetworkPath()->getPenWidth() > 2) {
+                glPointSize(scribbleArea->getNetworkPath()->getPenWidth() - 1);
+
+                glBegin(GL_POINTS);
+                for (int j = 0; j < scribbleArea->getNetworkPath()->getPath().size(); ++j) {
+
+                    glVertex3f(scribbleArea->getNetworkPath()->getPath().at(j)->getX(), scribbleArea->getNetworkPath()->getPath().at(j)->getY(), 0.0f);
+                }
+
+                glEnd();
+            }
         }
     }
     scribbleArea->setLockForNetworkPath(0);
@@ -350,12 +406,10 @@ void Painter::drawLogin() {
     if (login->getTypingPassword() == 1) {
         drawText(login->getUserName(), 35, login->getX() + 78, login->getY() + 128, Color(DARK_GRAY));
         drawText(login->getPassword(), 35, login->getX() + 78, login->getY() + 205, Color(GREEN));
-    }
-    else if (login->getTypingUser() == 1) {
+    } else if (login->getTypingUser() == 1) {
         drawText(login->getUserName(), 35, login->getX() + 78, login->getY() + 128, Color(GREEN));
         drawText(login->getPassword(), 35, login->getX() + 78, login->getY() + 205, Color(DARK_GRAY));
     }
-    
     else {
         drawText(login->getUserName(), 35, login->getX() + 78, login->getY() + 128, Color(DARK_GRAY));
         drawText(login->getPassword(), 35, login->getX() + 78, login->getY() + 205, Color(DARK_GRAY));

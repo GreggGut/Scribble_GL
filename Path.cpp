@@ -33,6 +33,10 @@ Path::Path(Point* point, int mode, Color color, int width, int id, bool fin/*, b
     mX = point->getX();
     mY = point->getY();
     mPointsVector.push_back(point);
+    
+    pointsVector.push_back((GLfloat)point->getX());
+    pointsVector.push_back((GLfloat)point->getY());
+    
     area = new ScreenAreas();
     area->set(point->getColumn(), point->getRow());
 
@@ -89,7 +93,8 @@ Path::~Path()
         delete mPointsVector[i];
     }
     mPointsVector.clear();
-
+    pointsVector.clear();
+    
     delete area;
     //std::cout<<"Path "<<this->ID<<" deleted"<<std::endl;
 }
@@ -108,6 +113,8 @@ void Path::addPoint(Point* point)
 //    totalLength += sqrt(dX * dX + dY * dY);
 //    area->set(point->getColumn(), point->getRow());
     mPointsVector.push_back(point);
+    pointsVector.push_back((GLfloat)point->getX());
+    pointsVector.push_back((GLfloat)point->getY());
 }
 
 /** Get the path
@@ -278,4 +285,9 @@ void Path::setPenColor(Color color)
 int Path::getPointsCount()
 {
     return mPointsVector.size();
+}
+
+std::vector<GLfloat> Path::getPointPath(){
+    
+    return pointsVector;
 }

@@ -35,8 +35,17 @@ public:
     void setScreenInterpreter(ScreenInterpreter *s);
     std::string getUserName();
     std::string getPassword();
+    std::string getTrueUserName();
+    std::string getTruePassword();
     void setUserName(std::string user_);
     void setPassword(std::string pass_);
+    bool getTypingUser();
+    bool getTypingPassword();
+    bool pointInsideArea(Point *point);
+    void eraseUsername();
+    void erasePassword();
+    void setUserTyping();
+    void setPasswordTyping();
     
 private:
     int x;
@@ -47,6 +56,8 @@ private:
     std::vector<LoginButton *> *buttonArray;
     std::string username;
     std::string password;
+    bool typingUser;
+    bool typingPassword;
     ScreenInterpreter *screenInterpreter;
     void login();
 };

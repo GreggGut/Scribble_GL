@@ -66,7 +66,7 @@ private:
     void drawColorPicker();
     void drawSizePicker();
     void drawLoading();
-    
+    void getLoadingPNG(std::string imagePath, int _x, int _y);
     void getPNG(std::string imagePath, int _x, int _y);
     void drawText(std::string text, int size, int x, int y, Color color);
     void drawPixels(int _x, int _y, int width, int height, std::vector<unsigned char> _image);

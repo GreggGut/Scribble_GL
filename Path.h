@@ -25,6 +25,7 @@ public:
     virtual ~Path();
     void addPoint(Point* point);
     std::vector<Point*> getPath();
+    std::vector<float> getPointPath();
     int getPenWidth();
     Color getPenColor() const;
      int getPenColorInt();
@@ -43,7 +44,6 @@ public:
     void setPenColor(Color color);
 
     int getPointsCount();
-    int *pointsArray();
 
 private:
     int sqrt(const int x);
@@ -52,6 +52,7 @@ private:
     int myPenWidth;
     Color myPenColor;
     std::vector<Point *> mPointsVector;
+    std::vector<float> pointsVector;
     int ID;
     bool active;
     /*! Used to determine if the path is really what the user wanted to write or not*/

@@ -337,7 +337,7 @@ void Painter::drawPDF() {
 
     if (GL_FUCKUP == 0) {
         glRasterPos2f(_x, _y);
-        glDrawPixels(width, height, GL_RGBA, GL_UNSIGNED_BYTE, &_image[0]);
+        glDrawPixels(width, height, GL_BGRA, GL_UNSIGNED_BYTE, &_image[0]);
     } else {
         drawPixels(_x, _y, width, height, _image);
     }
@@ -353,6 +353,11 @@ void Painter::drawLogin() {
     }
     else if (login->getTypingUser() == 1) {
         drawText(login->getUserName(), 35, login->getX() + 78, login->getY() + 128, Color(GREEN));
+        drawText(login->getPassword(), 35, login->getX() + 78, login->getY() + 205, Color(DARK_GRAY));
+    }
+    
+    else {
+        drawText(login->getUserName(), 35, login->getX() + 78, login->getY() + 128, Color(DARK_GRAY));
         drawText(login->getPassword(), 35, login->getX() + 78, login->getY() + 205, Color(DARK_GRAY));
     }
 }
@@ -514,7 +519,7 @@ void Painter::drawPixels(int _x, int _y, int width, int height, char* _image) {
     glEnable(GL_TEXTURE_2D);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); //GL_NEAREST = no smoothing
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, 4, u2, v2, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image2[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, 4, u2, v2, 0, GL_BGRA, GL_UNSIGNED_BYTE, &image2[0]);
 
     // Draw the texture on a quad, using u3 and v3 to correct non power of two texture size.
     glBegin(GL_QUADS);

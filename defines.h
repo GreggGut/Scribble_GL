@@ -44,6 +44,8 @@
 #define IMAGE_PATH              "./resources/images/"
 #define NETWORK 1
 #define GL_FUCKUP 0
+#define SHIFTY_SCREEN 0
+#define NEW_DRAWING 1
 
 #endif	/* DEFINES_H */
 

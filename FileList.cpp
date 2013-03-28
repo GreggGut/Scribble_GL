@@ -163,16 +163,15 @@ void FileList::screenPressEvent(Point* point) {
     for (int i = 0; i < fileTable->size(); ++i) {
 
         if (fileTable->at(i)->pointInsideArea(point) == 1) {
-
+            screenInterpreter->showLoading(1);
             screenInterpreter->getScribbleArea()->getSender()->sendDownloadFile(fileTable->at(i)->getFileName());
 
             while (screenInterpreter->getScribbleArea()->getNetworkActivity() == ScribbleArea::NetworkActivity::WAITING_FOR_FILE_DOWNLOAD);
 
             screenInterpreter->getMenu()->setPageIndicator();
-
+            screenInterpreter->showLoading(0);
             screenInterpreter->showFilelist(0);
-
-#warning //show download alert
+           
         }
     }
 

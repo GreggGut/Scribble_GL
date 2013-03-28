@@ -279,14 +279,3 @@ int Path::getPointsCount()
 {
     return mPointsVector.size();
 }
-
-int * Path::pointsArray(){
-
-    int vertexs[2*mPointsVector.size()];
-
-    for (int i = 0; i<mPointsVector.size(); ++i){
-        *(vertexs + 2*i) = mPointsVector.at(i)->getX();
-        *(vertexs + 2*(i+1)) = mPointsVector.at(i)->getY();
-    }
-
-}

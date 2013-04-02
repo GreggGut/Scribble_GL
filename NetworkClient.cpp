@@ -314,6 +314,12 @@ void NetworkClient::decodeRequest(std::string msg)
             }
             break;
         }
+        case Sender::UPDATE_FILE_CONTENT:
+        {
+            scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::DOWNLOAD_COMPLETED);
+            std::cout << "Update file completed!\n";
+            break;
+        }
         default:
             std::cout << "Should not be here " << choice << std::endl;
 

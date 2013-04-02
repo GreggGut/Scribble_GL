@@ -283,7 +283,6 @@ void Sender::sendDownloadFile(std::string filename)
 
     client->getScribbleArea()->loadFile(filenameDir);
     sendUpdateFileContent();
-    scribbleArea->setNetworkActivity(ScribbleArea::NetworkActivity::DOWNLOAD_COMPLETED);
 }
 
 void Sender::sendUpdateFileContent()
